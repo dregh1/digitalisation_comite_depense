@@ -1,0 +1,80 @@
+    plugins {
+        id 'io.quarkus'
+        id 'java'
+
+    }
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+        implementation 'io.quarkus:quarkus-arc'
+        implementation 'io.quarkus:quarkus-resteasy-reactive'
+        testImplementation 'io.quarkus:quarkus-junit5'
+        testImplementation 'io.rest-assured:rest-assured'
+
+    //    base de donnée
+        implementation 'io.quarkus:quarkus-hibernate-orm-panache'
+        implementation 'io.quarkus:quarkus-jdbc-postgresql'
+    //    implementation 'com.google.code.gson:gson:2.8.8' // Utilisez la dernière version disponible
+        implementation 'io.quarkus:quarkus-resteasy-reactive-jackson'
+        implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+
+    // fournisseur de token
+    //    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    //    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+//    tsy miasa aloha    //implementation 'io.smallrye:smallrye-jwt:3.0.1'
+
+        //officiel RETO 2 RETO ALOHA COMMENTEKO
+//        implementation("io.quarkus:quarkus-smallrye-jwt")
+//        implementation("io.quarkus:quarkus-smallrye-jwt-build")
+
+//raha misy version tsy milamina
+// implementation 'io.quarkus:quarkus-smallrye-jwt:3.2.6'
+
+        implementation 'io.quarkus:quarkus-smallrye-openapi'
+//        implementation 'io.quarkus:quarkus-smallrye-security:2.10.2.Final'
+//        implementation 'io.quarkus:quarkus-smallrye-security'
+
+    // keycloack
+        implementation("io.quarkus:quarkus-keycloak-admin-client-reactive")
+        implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
+
+        implementation 'io.quarkus:quarkus-oidc'
+        implementation 'io.quarkus:quarkus-keycloak-authorization'
+//        implementation 'io.quarkus:quarkus-resteasy-jackson'
+//        implementation 'io.quarkus:quarkus-undertow'
+//        implementation 'io.quarkus:quarkus-resteasy'
+//        implementation 'javax.servlet:javax.servlet-api:4.0.0'
+
+    // RETO LE JJWT
+        implementation 'io.jsonwebtoken:jjwt-api:0.11.1'
+        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.1'
+        implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+
+    // RETO LE OAUTH
+        implementation("io.quarkus:quarkus-elytron-security-oauth2")
+    }
+
+    group 'org.dre'
+    version '1.0.0-SNAPSHOT'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    test {
+        systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+    }
+    compileJava {
+        options.encoding = 'UTF-8'
+        options.compilerArgs << '-parameters'
+    }
+
+    compileTestJava {
+        options.encoding = 'UTF-8'
+    }

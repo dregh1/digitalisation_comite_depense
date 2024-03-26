@@ -1,0 +1,31 @@
+
+<div class="card border col-md w-lg-500 text-center shadow-lg p-3 mb-5 bg-body-tertiary" style="width: 500px;">
+    <h1 class="text-primary p-3">Authentification</h1>
+    <div class="error-message" *ngIf="errorStatus">
+      <p style="color: red;">{{ errorMessage }}</p>
+      
+  </div>
+      <div  class="row input-group input-group-lg p-3">
+        <span class="input-group-text" id="inputGroup-sizing-lg"> USERNAME</span>
+        <input type="text" class="form-control" name="username" aria-label="Votre nom" aria-describedby="inputGroup-sizing-lg" [(ngModel)]="this.logindata.username" >
+        <span class="input-group-text" id="inputGroup-sizing-lg">PASSWORD</span>
+        
+        <input type="password" class="form-control" name="password" aria-label="Votre nom" aria-describedby="inputGroup-sizing-lg" [(ngModel)]="this.logindata.password" >
+        
+        <div class="flex">
+          <button class="m-2 btn btn-secondary" style="width: 100px;"  (click)="onSubmit()">Connexion</button>
+          
+          
+          <button class="m-2 btn btn-primary" style="width: 100px;" ><a routerLinkActive="active" routerLink="/personnel">Inscription</a>
+          </button>
+        </div>
+      </div>
+      <div class="login-container">
+        
+        <button (click)="login()">Se connecter avec Keycloak</button>
+      </div>
+             
+</div>
+
+
+
