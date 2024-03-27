@@ -16,28 +16,61 @@ public class Demande extends PanacheEntity {
     private String  motif ;
     @JsonProperty("id_fournisseur") // Annotation pour personnaliser le nom de la propriété dans JSON
     private Long id_fournisseur ;
-    private  String coms_prescripteur;
-    @JsonProperty("montant_ht") // Annotation pour personnaliser le nom de la propriété dans JSON
-    private double montant_ht ;
-//    @JsonProperty("id_rubrique") // Annotation pour personnaliser le nom de la propriété dans JSON
-//    private Long id_rubrique ;
+
     @JsonProperty("is_regularisation") // Annotation pour personnaliser le nom de la propriété dans JSON
     private boolean is_regularisation ;
+    private  String coms_prescripteur;
+
+    private Integer id_direction;
     @JsonProperty("id_periode") // Annotation pour personnaliser le nom de la propriété dans JSON
     private  Long id_periode ;
-    @JsonProperty("is_deleted") // Annotation pour personnaliser le nom de la propriété dans JSON
-    private boolean is_deleted;
+
+    private  String  type_reference;
 
     private  String nom_reference;
-    private  Long id_reference;
 
-    private Integer id_devise;
-    private Integer id_direction;
-    private Integer id_etat_final;
+    private String  type_devise;
+    @JsonProperty("montant_ht") // Annotation pour personnaliser le nom de la propriété dans JSON
+    private double montant_ht ;
+
+    private String etat_final;
+
+
+    private  Integer id_rubrique ;
+    private String sousrubrique ;
+
+    public Integer getId_rubrique() {
+        return id_rubrique;
+    }
+
+    public void setId_rubrique(Integer id_rubrique) {
+        this.id_rubrique = id_rubrique;
+    }
+
+    public String getSousrubrique() {
+        return sousrubrique;
+    }
+
+    public void setSousrubrique(String sousrubrique) {
+        this.sousrubrique = sousrubrique;
+    }
+
+    //    @JsonProperty("id_rubrique") // Annotation pour personnaliser le nom de la propriété dans JSON
+    //    private Long id_rubrique ;
+
+
+
+
+
+
+
     private boolean is_valdby_ach;
     private boolean is_valdby_pres;
     private boolean is_valdby_cdg;
 
+
+    @JsonProperty("is_deleted") // Annotation pour personnaliser le nom de la propriété dans JSON
+    private boolean is_deleted;
     public String getNom_reference() {
         return nom_reference;
     }
@@ -46,12 +79,32 @@ public class Demande extends PanacheEntity {
         this.nom_reference = nom_reference;
     }
 
-    public Long getId_reference() {
-        return id_reference;
+    public String type_reference() {
+        return type_reference;
     }
 
-    public void setId_reference(Long id_reference) {
-        this.id_reference = id_reference;
+    public String getType_reference() {
+        return type_reference;
+    }
+
+    public void setType_reference(String type_reference) {
+        this.type_reference = type_reference;
+    }
+
+    public String getType_devise() {
+        return type_devise;
+    }
+
+    public void setType_devise(String type_devise) {
+        this.type_devise = type_devise;
+    }
+
+    public String getEtat_final() {
+        return etat_final;
+    }
+
+    public void setEtat_final(String etat_final) {
+        this.etat_final = etat_final;
     }
 
     public String getComs_prescripteur() {
@@ -66,13 +119,7 @@ public class Demande extends PanacheEntity {
         return is_deleted;
     }
 
-    public Integer getId_devise() {
-        return id_devise;
-    }
 
-    public void setId_devise(Integer id_devise) {
-        this.id_devise = id_devise;
-    }
 
     public Integer getId_direction() {
         return id_direction;
@@ -82,13 +129,6 @@ public class Demande extends PanacheEntity {
         this.id_direction = id_direction;
     }
 
-    public Integer getId_etat_final() {
-        return id_etat_final;
-    }
-
-    public void setId_etat_final(Integer id_etat_final) {
-        this.id_etat_final = id_etat_final;
-    }
 
     public boolean isIs_valdby_ach() {
         return is_valdby_ach;
