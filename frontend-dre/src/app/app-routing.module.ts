@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PersonnelComponent } from './components/personnel/personnel/personnel.component';
-import { LoginComponent } from './login/login.component';
-import { AccueilComponent } from './accueil/accueil.component';
+import { HomeComponent } from './home/home.component';
+import { LogComponent } from './log/log.component';
+import { EditComponent } from './edit/edit.component';
+import { PrescripteurComponent } from './prescripteur/prescripteur.component';
 const routes: Routes = [
-  { path: 'personnel', component: PersonnelComponent },
-  {path:'login',component:LoginComponent},
-  {path:'accueil',component:AccueilComponent},
-
-
+  {path:'',component:LogComponent},
+  {path:'home',component:HomeComponent},
+  {path:'edit',component:EditComponent},
+  {path:'prescripteur',component:PrescripteurComponent},
 ];
 
 @NgModule({

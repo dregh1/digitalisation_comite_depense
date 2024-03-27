@@ -1,49 +1,63 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { PersonnelComponent } from './components/personnel/personnel/personnel.component';
-import { HTTP_INTERCEPTORS, HttpClientModule, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { PersonnelService } from './services/personnel.service';
 import { FormsModule } from '@angular/forms';
-
 import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
-import { Observable } from 'rxjs';
-import { AccueilComponent } from './accueil/accueil.component';
+import { LogComponent } from './log/log.component';
+import { EditComponent } from './edit/edit.component';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { HeaderComponent } from './header/header.component';
+import { PrescripteurComponent } from './prescripteur/prescripteur.component';
+import { FilterByTitlePipe } from './models/FilterByTitle';
 
-// import { KeycloakService } from '@keycloak/keycloak-js';
-
-// function corsInterceptor(): HttpInterceptor {
-//   return {
-//     intercept(req: HttpRequest<any>, handler: HttpHandler): Observable<HttpEvent<any>> {
-//       const modifiedReq = req.clone({
-//         setHeaders: {
-//           'Access-Control-Allow-Origin': 'http://localhost:8081', // Remplacer par l'origine autorisée si nécessaire
-//         },
-//       });
-//       return handler.handle(modifiedReq);
+// function initializeKeyCloak(keycloak: KeycloakService)
+// {
+//   return ()=>
+//   keycloak.init({
+//     config:{
+//       url:'http://localhost:8081/auth',
+//       realm :'oma',
+//       clientId:'angular-client',
 //     },
-//   };
+//     initOptions:{
+//       onLoad:'login-required',
+//       flow:"standard"
+//     }
+//   })
 // }
+
+
 @NgModule({
   declarations: [
     AppComponent,
-    PersonnelComponent,
-    LoginComponent,
     HomeComponent,
-    AccueilComponent
+    LogComponent,
+    EditComponent,
+    HeaderComponent,
+    PrescripteurComponent,
+    FilterByTitlePipe,
   ],
   imports: [
     BrowserModule,
     HttpClientModule ,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    KeycloakAngularModule,
+   
   ],
   providers: [
     PersonnelService,
-    // { provide: HTTP_INTERCEPTORS, useFactory: corsInterceptor, multi: true },
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory : initializeKeyCloak,
+    //   multi: true,
+    //   deps:[KeycloakService],
+
+    // }
   ],
   bootstrap: [AppComponent]
 })
