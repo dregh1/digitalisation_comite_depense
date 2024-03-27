@@ -108,10 +108,10 @@ create database oma;
 					);
 
 
-		create sequence avis_cdg_req INCREMENT by 1;
+		create sequence avis_cdg_seq INCREMENT by 1;
 		create table avis_cdg
 					(
-						id bigint primary key default nextval ('avis_cdg_req') ,
+						id bigint primary key default nextval ('avis_cdg_seq') ,
 						id_demande bigint,
 						commentaire text,
 						id_rubrique bigint,
@@ -121,10 +121,10 @@ create database oma;
 						);
 
 
-		create sequence etat_final_req INCREMENT by 1;
+		create sequence etat_final_seq INCREMENT by 1;
 		create table etat_final 
 			(
-				id bigint primary key default nextval ('etat_final_req'),
+				id bigint primary key default nextval ('etat_final_seq'),
 				designation varchar(20) 
 				);
 
@@ -207,13 +207,13 @@ create database oma;
 			alter table demande add foreign key (id_direction) references direction(id);
 			alter table demande add foreign key (id_etat_final) references etat_final(id);
 			alter table demande add foreign key (id_reference) references reference(id);
+			alter table demande add foreign key (id_rubrique) references rubrique(id);
 
 			alter table avis_cdg add foreign key (id_rubrique) references rubrique(id);
 			alter table avis_cdg add foreign key(id_demande) references demande(id);
 
 			alter table avis_achat add foreign key (id_demande) references demande(id);
 
-			alter table demande add foreign key (id_rubrique) references rubrique(id);
 
 
 
