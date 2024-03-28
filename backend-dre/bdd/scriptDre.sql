@@ -65,29 +65,60 @@ create database oma;
 
 		-- DEMANDE
 		create sequence demande_seq INCREMENT BY 1;
-		create table demande
-				(
-					id bigint primary key default nextval('demande_seq'),
-					id_titre_depense bigint,
-					motif text not null,
-					id_fournisseur bigint,
-					montant_ht decimal(32,3) not null,
-					is_regularisation boolean default false not null,
-					id_reference bigint ,
-					nom_reference varchar(50),
-					id_periode bigint,
-					coms_prescripteur text,
-					id_devise bigint,
-					id_direction bigint,
-					id_etat_final bigint,
-					is_valdby_ach boolean default false,
-					is_valdby_pres boolean default false,
-					is_valdby_cdg boolean default false,
+			create table demande
+					(
+						id bigint primary key default nextval('demande_seq'),
+						id_titre_depense bigint,
+						motif text not null,
+						id_fournisseur bigint not null,
+						is_regularisation boolean default false not null,
+						
+						coms_prescripteur text,
+						id_direction bigint,
+						id_periode bigint not null,
+						
+						type_reference varchar(10),
+						nom_reference varchar(50),
+						
+						type_devise varchar(10) not null, --
+						montant_ht decimal(32,3) not null,
 
-					is_deleted boolean default false
 
-				);
+						
+						etat_final varchar(10),
 
+						is_valdby_ach boolean default false,
+						is_valdby_pres boolean default false,
+						is_valdby_cdg boolean default false,
+
+						is_deleted boolean default false
+
+					);
+
+
+		-- create sequence demande_seq INCREMENT BY 1;
+		-- create table demandes
+		-- 		(
+		-- 			id bigint primary key default nextval('demande_seq'),
+		-- 			id_titre_depense bigint,
+		-- 			motif text not null,
+		-- 			id_fournisseur bigint,
+		-- 			montant_ht decimal(32,3) not null,
+		-- 			is_regularisation boolean default false not null,
+		-- 			id_reference bigint ,   
+		-- 			nom_reference varchar(50),
+		-- 			id_periode bigint,
+		-- 			coms_prescripteur text,
+		-- 			id_devise bigint,
+		-- 			id_direction bigint,
+		-- 			id_etat_final bigint,
+		-- 			is_valdby_ach boolean default false,
+		-- 			is_valdby_pres boolean default false,
+		-- 			is_valdby_cdg boolean default false,
+
+		-- 			is_deleted boolean default false
+
+		-- 		);
 
 
 -- insert into demande (motif,id_fournisseur,montant_ht,id_periode,coms_prescripteur,id_devise,id_direction,is_valdby_ach,is_valdby_cdg,is_valdby_pres)
@@ -200,14 +231,14 @@ create database oma;
 	-- ALTER 			------------------------------------------
 			alter table session_cd add foreign key (id_direction) references direction(id);
 					
-			alter table demande add foreign key (id_titre_depense) references titre_depense(id);
 			alter table demande add foreign key (id_periode) references periode_dmd(id);
-			alter table demande add foreign key (id_fournisseur) references fournisseur(id);
-			alter table demande add foreign key (id_devise) references devise(id);
 			alter table demande add foreign key (id_direction) references direction(id);
-			alter table demande add foreign key (id_etat_final) references etat_final(id);
-			alter table demande add foreign key (id_reference) references reference(id);
-			alter table demande add foreign key (id_rubrique) references rubrique(id);
+			alter table demande add foreign key (id_titre_depense) references titre_depense(id);
+			alter table demande add foreign key (id_fournisseur) references fournisseur(id);
+--			alter table demande add foreign key (id_rubrique) references rubrique(id);
+			-- alter table demande add foreign key (id_devise) references devise(id);
+			-- alter table demande add foreign key (id_etat_final) references etat_final(id);
+			-- alter table demande add foreign key (id_reference) references reference(id);
 
 			alter table avis_cdg add foreign key (id_rubrique) references rubrique(id);
 			alter table avis_cdg add foreign key(id_demande) references demande(id);
