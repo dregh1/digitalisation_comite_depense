@@ -6,37 +6,35 @@ import jakarta.persistence.Entity;
 
 @Entity
 public class Brouillon extends PanacheEntity {
-    private long id;
-    @Nullable
-    private Long id_titre;
-    private String titre;
-    private String motif;
-    private double montant_ht;
-    private boolean is_regularisation;
-    private String coms_prescripteur;
+ private   Integer id ;
+ private  Integer id_titre ;
+ private    String  titre ;
+ private  String motif ;
+ private  double montant_ht ;
+ private  String  type_reference ;
+ private  String  reference ;
+ private  boolean is_regularisation ;
+ private  String  coms_prescripteur ;
+ private  Integer id_periode ;
+ private  String  periode ;
+ private  Integer id_direction ;
+ private  String  devise ;
+ private  Integer id_fournisseur ;
+ private  String  fournisseur;
 
-    private long id_periode;
-    private String periode;
-    private long id_direction;
-    private String direction;
-    private long id_devise;
-    private String devise;
-    private long id_fournisseur;
-    private String fournisseur;
-
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Long getId_titre() {
+    public Integer getId_titre() {
         return id_titre;
     }
 
-    public void setId_titre(Long id_titre) {
+    public void setId_titre(Integer id_titre) {
         this.id_titre = id_titre;
     }
 
@@ -64,6 +62,22 @@ public class Brouillon extends PanacheEntity {
         this.montant_ht = montant_ht;
     }
 
+    public String getType_reference() {
+        return type_reference;
+    }
+
+    public void setType_reference(String type_reference) {
+        this.type_reference = type_reference;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
     public boolean isIs_regularisation() {
         return is_regularisation;
     }
@@ -80,13 +94,11 @@ public class Brouillon extends PanacheEntity {
         this.coms_prescripteur = coms_prescripteur;
     }
 
-
-
-    public long getId_periode() {
+    public Integer getId_periode() {
         return id_periode;
     }
 
-    public void setId_periode(long id_periode) {
+    public void setId_periode(Integer id_periode) {
         this.id_periode = id_periode;
     }
 
@@ -98,28 +110,12 @@ public class Brouillon extends PanacheEntity {
         this.periode = periode;
     }
 
-    public long getId_direction() {
+    public Integer getId_direction() {
         return id_direction;
     }
 
-    public void setId_direction(long id_direction) {
+    public void setId_direction(Integer id_direction) {
         this.id_direction = id_direction;
-    }
-
-    public String getDirection() {
-        return direction;
-    }
-
-    public void setDirection(String direction) {
-        this.direction = direction;
-    }
-
-    public long getId_devise() {
-        return id_devise;
-    }
-
-    public void setId_devise(long id_devise) {
-        this.id_devise = id_devise;
     }
 
     public String getDevise() {
@@ -130,11 +126,11 @@ public class Brouillon extends PanacheEntity {
         this.devise = devise;
     }
 
-    public long getId_fournisseur() {
+    public Integer getId_fournisseur() {
         return id_fournisseur;
     }
 
-    public void setId_fournisseur(long id_fournisseur) {
+    public void setId_fournisseur(Integer id_fournisseur) {
         this.id_fournisseur = id_fournisseur;
     }
 

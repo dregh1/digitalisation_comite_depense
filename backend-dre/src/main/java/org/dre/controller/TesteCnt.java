@@ -25,6 +25,8 @@ public class TesteCnt {
     @Inject
     Periode_dmdService periodeDmdService;
     @Inject
+    DirectionService directionService;
+    @Inject
     RubriqueService rubriqueService;
 
     @Inject
@@ -105,22 +107,7 @@ public class TesteCnt {
         List<Demande> demande = demandeService.getAll ();
         return Response.ok(demande).build();
     }
-    @GET
-    @Path("/rubrique/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllRubrique() {
-        // Récupérer les données depuis PostgreSQL
-        List<Rubrique> rubriques = rubriqueService.getAll ();
-        return Response.ok(rubriques).build();
-    }
-    @GET
-    @Path("/sousrubrique/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSousRubrique() {
-        // Récupérer les données depuis PostgreSQL
-        List<Sousrubrique> rubriques = sousrubriqueService.getAll ();
-        return Response.ok(rubriques).build();
-    }
+
     @GET
     @Path("/fournisseur/get")
     @Produces(MediaType.APPLICATION_JSON)
@@ -152,6 +139,34 @@ public class TesteCnt {
         demandeService.create(demande);
         return Response.status(Response.Status.CREATED).entity(demande).build();
     }
+
+    //get id direction by name of direction
+    @GET
+    @Path("/getDir")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getIdDirByName(@QueryParam("nom") String nomDir) {
+
+        Long idDir ;
+        if(nomDir!= null)
+        {
+            idDir = directionService.getIdDirByName(nomDir).getId();
+        }else idDir= null;
+
+        return Response.ok(idDir).build();
+    }
+    @POST
+    @Path("/getIdDir")
+    public Response createUser(String nomDir) {
+        Long idDir ;
+
+        if(nomDir!= null)
+        {
+            idDir = directionService.getIdDirByName(nomDir).getId();
+        }else idDir= null;
+
+        return Response.ok(idDir).build();
+    }
+
 }
 
 
