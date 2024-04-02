@@ -2,6 +2,7 @@ package org.dre.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.dre.model.Titre_dmd;
 import org.dre.repository.Titre_dmdRepository;
@@ -12,7 +13,13 @@ import java.util.List;
 public class Titre_dmdService {
     @Inject
     Titre_dmdRepository titre_dmdRepository;
+    @Inject
+    private EntityManager em;
 
+    public Long getNextSequenceValue(String sequenceName) {
+        return (Long) em.createNativeQuery("SELECT nextval(:sequenceName)").setParameter("sequenceName", sequenceName).getSingleResult();
+
+    }
     @Transactional
     public void create(Titre_dmd personnel) {
         Titre_dmd personnelMerged = titre_dmdRepository.getEntityManager().merge(personnel);
