@@ -21,6 +21,12 @@ public class PrescripteurCnt {
     Active_dmdService active_dmdService;
     @Inject
     DeviseService deviseService;
+    @Inject
+    RubriqueService rubriqueService;
+
+    @Inject
+    SousrubriqueService sousrubriqueService;
+
 
     @Inject
     DemandeService demandeService;
@@ -30,6 +36,8 @@ public class PrescripteurCnt {
     BrouillonService brouillonService;
     @Inject
     FournisseurService fournisseurService;
+    @Inject
+    Titre_dmdService titre_dmdService;
 
     @POST
     @Path("demande/create")
@@ -100,5 +108,46 @@ public class PrescripteurCnt {
         return Response.ok(references).build();
     }
 
+    @GET
+    @Path("/titre/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTitre() {
+        // Récupérer les données depuis PostgreSQL
+        List<Titre_dmd> titre_dmds = titre_dmdService.getAll ();
+        return Response.ok(titre_dmds).build();
+    }
+    @POST
+    @Path("/titre/create")
+    public Response creatTitre(Titre_dmd titre_Dmd) {
+        // Récupérer les données depuis PostgreSQL
 
+        titre_dmdService.create(titre_Dmd);
+
+        return Response.status(Response.Status.CREATED).entity(titre_Dmd).build();
+
+    }
+    @GET
+    @Path("/idtitre/next")
+    public void getNextVal() {
+       Long id =  titre_dmdService.getNextSequenceValue("titre_depense_seq");
+        System.out.println(id);
+    }
+
+    //rubrique et sous rubrique
+    @GET
+    @Path("/rubrique/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllRubrique() {
+        // Récupérer les données depuis PostgreSQL
+        List<Rubrique> rubriques = rubriqueService.getAll ();
+        return Response.ok(rubriques).build();
+    }
+    @GET
+    @Path("/sousrubrique/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllSousRubrique() {
+        // Récupérer les données depuis PostgreSQL
+        List<Sousrubrique> rubriques = sousrubriqueService.getAll ();
+        return Response.ok(rubriques).build();
+    }
 }
