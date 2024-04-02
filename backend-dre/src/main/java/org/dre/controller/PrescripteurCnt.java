@@ -142,12 +142,5 @@ public class PrescripteurCnt {
         List<Rubrique> rubriques = rubriqueService.getAll ();
         return Response.ok(rubriques).build();
     }
-    @GET
-    @Path("/sousrubrique/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSousRubrique() {
-        // Récupérer les données depuis PostgreSQL
-        List<Sousrubrique> rubriques = sousrubriqueService.getAll ();
-        return Response.ok(rubriques).build();
-    }
+ 
 }
