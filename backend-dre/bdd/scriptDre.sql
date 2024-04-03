@@ -82,7 +82,8 @@ create database oma;
 						
 						type_devise varchar(10) not null, --
 						montant_ht decimal(32,3) not null,
-
+                        id_rubrique bigint,
+                        rubrique varchar(50),
 
 						
 						etat_final varchar(10),
@@ -235,7 +236,7 @@ create database oma;
 			alter table demande add foreign key (id_direction) references direction(id);
 			alter table demande add foreign key (id_titre_depense) references titre_depense(id);
 			alter table demande add foreign key (id_fournisseur) references fournisseur(id);
---			alter table demande add foreign key (id_rubrique) references rubrique(id);
+			alter table demande add foreign key (id_rubrique) references rubrique(id);
 			-- alter table demande add foreign key (id_devise) references devise(id);
 			-- alter table demande add foreign key (id_etat_final) references etat_final(id);
 			-- alter table demande add foreign key (id_reference) references reference(id);
@@ -268,42 +269,78 @@ create database oma;
 				(
 
 					select 
-						dm.id as id,
-						
-						dm.id_titre_depense as id_titre,
-						coalesce(td.designation, 'sans titre')  as titre,
-						dm.motif as motif,
-						dm.montant_ht as montant_ht,
-						
-						dm.is_regularisation as is_regularisation,
-						
-						dm.coms_prescripteur as coms_prescripteur,
-						-- dm.id_etat_final as id_etat_final,
-						
-						
-						dm.id_periode as id_periode,
-						p.designation as periode,
+                    dm.id as id,
 
-						-- ef.designation as etat_final,
+                        dm.id_titre_depense as id_titre,
+                        coalesce(td.designation, 'sans titre')  as titre,
+                        dm.motif as motif,
+                        dm.montant_ht as montant_ht,
+                        dm.type_reference as type_reference,
+                        dm.nom_reference as reference,
+                        dm.is_regularisation as is_regularisation,
 
-						dm.id_direction as id_direction,
-						dr.designation as direction,
+                        dm.coms_prescripteur as coms_prescripteur,
+                    -- dm.id_etat_final as id_etat_final,
 
-						dm.id_devise as id_devise,
-						dv.designation as devise,
 
-						f.id as id_fournisseur,
-						f.nom as fournisseur
-					from demande dm join direction dr on dm.id_direction= dr.id
-									join devise dv on dm.id_devise = dv.id
-									join periode_dmd p on dm.id_periode =p.id 
-									join fournisseur f on dm.id_fournisseur = f.id
+                        dm.id_periode as id_periode,
+                        p.designation as periode,
+
+                        dm.id_direction as id_direction,
+
+                        dm.type_devise as devise,
+
+                        f.id as id_fournisseur,
+                        f.nom as fournisseur
+					from demande dm join fournisseur f on dm.id_fournisseur = f.id
+					                join periode_dmd p on p.id= dm.id_periode
 									full join titre_depense td on dm.id_titre_depense = td.id
 					where is_valdby_pres = false and dm.is_valdby_ach=false and dm.is_valdby_cdg=false
-					group by id_titre,dm.id , dr.designation, dv.designation, p.designation,f.id,td.id
+					group by id_titre,dm.id ,f.id,td.id,p.id
 
 
 					);
+
+--			create or replace view brouillon as
+--				(
+--
+--					select
+--						dm.id as id,
+--
+--						dm.id_titre_depense as id_titre,
+--						coalesce(td.designation, 'sans titre')  as titre,
+--						dm.motif as motif,
+--						dm.montant_ht as montant_ht,
+--
+--						dm.is_regularisation as is_regularisation,
+--
+--						dm.coms_prescripteur as coms_prescripteur,
+--						-- dm.id_etat_final as id_etat_final,
+--
+--
+--						dm.id_periode as id_periode,
+--						p.designation as periode,
+--
+--						-- ef.designation as etat_final,
+--
+--						dm.id_direction as id_direction,
+--						dr.designation as direction,
+--
+--						dm.id_devise as id_devise,
+--						dv.designation as devise,
+--
+--						f.id as id_fournisseur,
+--						f.nom as fournisseur
+--					from demande dm join direction dr on dm.id_direction= dr.id
+--									join devise dv on dm.id_devise = dv.id
+--									join periode_dmd p on dm.id_periode =p.id
+--									join fournisseur f on dm.id_fournisseur = f.id
+--									full join titre_depense td on dm.id_titre_depense = td.id
+--					where is_valdby_pres = false and dm.is_valdby_ach=false and dm.is_valdby_cdg=false
+--					group by id_titre,dm.id , dr.designation, dv.designation, p.designation,f.id,td.id
+--
+--
+--					);
 
 
 
