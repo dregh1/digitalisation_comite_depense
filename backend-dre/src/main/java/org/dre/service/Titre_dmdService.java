@@ -22,8 +22,15 @@ public class Titre_dmdService {
     }
     @Transactional
     public void create(Titre_dmd personnel) {
-        Titre_dmd personnelMerged = titre_dmdRepository.getEntityManager().merge(personnel);
-//        Titre_dmdRepository.persist(Titre_dmd);
+//  Titre_dmd personnelMerged = titre_dmdRepository.getEntityManager().merge(personnel);
+        //        Titre_dmdRepository.persist(Titre_dmd);
+
+        // Persister l'entité (éviter d'utiliser merge ici)
+        titre_dmdRepository.persist(personnel);
+
+        // Forcer explicitement la validation de la transaction
+        em.flush();
+
     }
 
     public List<Titre_dmd> getAll() {

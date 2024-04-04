@@ -5,9 +5,11 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-@Entity
-public class Login extends PanacheEntity {
+import jakarta.persistence.Id;
 
+@Entity
+public class Login  {
+@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
 

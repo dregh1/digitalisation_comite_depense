@@ -1,13 +1,18 @@
 package org.dre.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Titre_depense")
-public class Titre_dmd extends PanacheEntity {
-    private Long id ;
+public class Titre_dmd  {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    private Long id;
+    // ... autres champs
+
+
     private  String designation;
 
     public Long getId() {
