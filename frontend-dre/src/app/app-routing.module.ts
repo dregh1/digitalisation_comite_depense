@@ -1,16 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-<<<<<<< Updated upstream
-import { PersonnelComponent } from './components/personnel/personnel/personnel.component';
-import { LoginComponent } from './login/login.component';
-import { AccueilComponent } from './accueil/accueil.component';
-const routes: Routes = [
-  { path: 'personnel', component: PersonnelComponent },
-  {path:'login',component:LoginComponent},
-  {path:'accueil',component:AccueilComponent},
-
-
-=======
 import { HomeComponent } from './component/creation_session/home.component';
 import { LogComponent } from './component/log/log.component';
 import { EditComponent } from './component/prescripteur/prescripteur.component';
@@ -43,7 +32,6 @@ const routes: Routes = [
         ]
   },
   {path:'validation',component:ValidationComponent},
->>>>>>> Stashed changes
 ];
 
 @NgModule({
