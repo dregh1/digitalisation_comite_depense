@@ -5,6 +5,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.dre.model.*;
+import org.dre.repository.BrouillonRepository;
 import org.dre.service.*;
 
 import java.util.List;
@@ -39,11 +40,21 @@ public class PrescripteurCnt {
     @Inject
     Titre_dmdService titre_dmdService;
 
+    @Inject
+    BrouillonRepository brouillonRepository;
     @POST
     @Path("demande/create")
     public Response createDemande(Demande demande) {
         demandeService.create(demande);
         return Response.status(Response.Status.CREATED).entity(demande).build();
+    }
+
+    @PUT
+    @Path("demande/{id}")
+    public Response updateDemande(@PathParam("id") Long id, Demande demande) {
+        demande.setId(id); // Assure que l'ID de l'utilisateur est correctement défini
+        demandeService.updateDemande(demande);
+        return Response.ok(demande).build();
     }
     @GET
     @Path("/periode/get")
@@ -72,14 +83,7 @@ public class PrescripteurCnt {
         return Response.ok(active_dmds).build();
     }
 
-    @GET
-    @Path("/brouillon/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllBrouillon() {
-        // Récupérer les données depuis PostgreSQL
-        List<Brouillon> brouillons = brouillonService.getAll ();
-        return Response.ok(brouillons).build();
-    }
+
 
     @GET
     @Path("/avis_achat/get")
@@ -150,4 +154,30 @@ public class PrescripteurCnt {
         List<Sousrubrique> rubriques = sousrubriqueService.getAll ();
         return Response.ok(rubriques).build();
     }
+
+    //select BROUILLON
+    @GET
+    @Path("/brouillon/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllBrouillon() {
+        // Récupérer les données depuis PostgreSQL
+        List<Brouillon> brouillons = brouillonService.getAll ();
+        return Response.ok(brouillons).build();
+    }
+
+    // select brouillon by id
+    @GET
+    @Path("brouillon/{id}")
+    public Brouillon getBrouillonById(@PathParam("id") Long id) {
+        return brouillonRepository.findById(id);
+    }
+
+    //update du demande en forme de brouillon
+//    @PUT
+//    @Path("//{id}")
+//    public Response updateUser(@PathParam("id") Long id, Personnel updatedPersonnel) {
+//        updatedPersonnel.setId(id); // Assure que l'ID de l'utilisateur est correctement défini
+//        personnelService.updatePersonnel(updatedPersonnel);
+//        return Response.ok(updatedPersonnel).build();
+//    }
 }

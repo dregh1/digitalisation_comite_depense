@@ -4,11 +4,11 @@ create database oma;
 
 -- 			--	table tsy ilaina
 
-						create  sequence  Personnel_SEQ INCREMENT BY 1;
+
 
 							create table personnel
 								(
-									id bigint primary key default (nextval('Personnel_SEQ')),
+									id serial primary key)),
 									nom varchar(50) ,
 									prenom varchar(50) ,
 									age integer
@@ -16,10 +16,10 @@ create database oma;
 
 						alter table login add foreign key (idPersonnel) references personnel(id);
 
-						create  sequence  Login_SEQ INCREMENT BY 1;
+
 							create table login
 								(
-									id bigint primary key default (nextval('Login_seq')),
+									id serial primary key)),
 									username varchar(50) not null,
 									password varchar(50) not null,
 									idPersonnel bigint 
@@ -36,10 +36,10 @@ create database oma;
 	-- creation session
 
 		--SESSION	
-		create sequence  session_cd_seq INCREMENT BY 1;
+
 		create table session_cd
 				(
-					id bigint primary key default nextval('session_cd_seq'),
+					id serial primary key,
 					ref varchar(11) not null ,
 					date_cloture timestamp not null,				
 					is_deleted boolean default false,
@@ -55,19 +55,18 @@ create database oma;
         -- insert into session_cd (ref,date_cloture,taux_eur,taux_gbp,taux_usd,taux_mga) values('CD-24022024','2024-02-24',4000.5,5000.25,6000.2,1500.2);
 
         -- DEVISE
-		create sequence devise_seq INCREMENT BY 1;
+
 		create table devise
 				(
-					id bigint primary key default nextval ('devise_seq'),
+					id serial primary key,
 					designation varchar(3) not null
 				);
 
 
 		-- DEMANDE
-		create sequence demande_seq INCREMENT BY 1;
 			create table demande
 					(
-						id bigint primary key default nextval('demande_seq'),
+						id serial primary key ,
 						id_titre_depense bigint,
 						motif text not null,
 						id_fournisseur bigint not null,
@@ -83,7 +82,7 @@ create database oma;
 						type_devise varchar(10) not null, --
 						montant_ht decimal(32,3) not null,
                         id_rubrique bigint,
-                        rubrique varchar(50),
+                        sousrubrique varchar(50),
 
 						
 						etat_final varchar(10),
@@ -97,11 +96,10 @@ create database oma;
 					);
 
 
-		-- create sequence demande_seq INCREMENT BY 1;
+
 		-- create table demandes
 		-- 		(
-		-- 			id bigint primary key default nextval('demande_seq'),
-		-- 			id_titre_depense bigint,
+		-- 			id serial primary key 			id_titre_depense bigint,
 		-- 			motif text not null,
 		-- 			id_fournisseur bigint,
 		-- 			montant_ht decimal(32,3) not null,
@@ -130,10 +128,10 @@ create database oma;
 
 		
 
-		create sequence avis_achat_seq INCREMENT by 1;
+
 		create table avis_achat
 					(
-						id bigint primary key default nextval ('avis_achat_seq') ,
+						id serial primary key ,
 						id_demande bigint,
 						commentaire text,
 						daty timestamp default currenttimestamp()
@@ -143,7 +141,7 @@ create database oma;
 		create sequence avis_cdg_seq INCREMENT by 1;
 		create table avis_cdg
 					(
-						id bigint primary key default nextval ('avis_cdg_seq') ,
+						id serial primary key ,
 						id_demande bigint,
 						commentaire text,
 						id_rubrique bigint,
@@ -156,7 +154,7 @@ create database oma;
 		create sequence etat_final_seq INCREMENT by 1;
 		create table etat_final 
 			(
-				id bigint primary key default nextval ('etat_final_seq'),
+				id serial primary key,
 				designation varchar(20) 
 				);
 
@@ -165,14 +163,14 @@ create database oma;
 		create sequence rubrique_seq INCREMENT by 1;
 		create table rubrique 
 				(
-					id bigint primary key default nextval('rubrique_seq'),
+					id serial primary key,
 					designation varchar(50)
 				);
 		-- sousrubrique
 		create sequence sousrubrique_seq INCREMENT by 1;
 		create table sousrubrique 
 				(
-					id bigint primary key default nextval('sousrubrique_seq'),
+					id serial primary key,
 					id_rubrique bigint,
 					designation varchar(50) not null
 				);
@@ -180,7 +178,7 @@ create database oma;
 		create sequence direction_seq INCREMENT by 1;
 		create table direction 
 				(
-					id bigint primary key default nextval('direction_seq'),
+					id serial primary key,
 					designation varchar(50)
 
 				);
@@ -188,16 +186,18 @@ create database oma;
 		create sequence titre_depense_seq INCREMENT by 1;
 		create table titre_depense 
 				(
-					id bigint primary key default nextval('titre_depense_seq'),
+					id serial primary key  ,
 					designation varchar(50)
 
 				);
+--default nextval('titre_depense_seq')
+
 
 
 		create sequence periode_dmd_seq INCREMENT by 1;
 		create table periode_dmd
 		(
-			id bigint primary key default nextval('periode_dmd_seq'),
+			id serial primary key,
 			designation varchar(20) not null 
 		);
 
@@ -206,15 +206,15 @@ create database oma;
 		create sequence fournisseur_seq INCREMENT by 1; 
 		create table fournisseur 
 		(
-			id bigint primary key default nextval('fournisseur_seq'),
+			id serial primary key,
 			nom varchar(80)
 		);
 
 
-		create sequence demande_et_session_seq INCREMENT by 1;	
+
 		create  table demande_et_session 
 			(
-				id bigint primary key default nextval ('demande_et_session_seq'),
+				id serial primary key ,
 				id_session bigint not null,
 				id_demande bigint not null
 			);
@@ -223,7 +223,7 @@ create database oma;
 		create sequence reference_seq INCREMENT by 1;	
 		create table reference 
 			(
-				id bigint primary key default nextval('reference_seq'),
+				id serial primary key,
 				designation varchar(50)
 			 );
 

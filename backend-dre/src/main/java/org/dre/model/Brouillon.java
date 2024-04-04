@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 
 @Entity
 public class Brouillon extends PanacheEntity {
- private   Integer id ;
+ private   Long id ;
  private  Integer id_titre ;
  private    String  titre ;
  private  String motif ;
@@ -22,11 +22,11 @@ public class Brouillon extends PanacheEntity {
  private  Integer id_fournisseur ;
  private  String  fournisseur;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

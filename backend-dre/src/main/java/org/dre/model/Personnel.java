@@ -5,13 +5,14 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.util.Calendar;
 import java.util.Date;
 
 @Entity
 
-public class Personnel extends PanacheEntity  {
+public class Personnel   extends  PanacheEntity{
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
