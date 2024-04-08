@@ -15,7 +15,6 @@ export class MenuService {
   // maka ny brouillon
 getBrouillon():  Observable<Brouillon[]> {
   return this.http.get<Brouillon[]>(this.baseUrl2+'/brouillon/get');
-  
 }
 
 }
