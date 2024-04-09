@@ -9,8 +9,8 @@ import jakarta.persistence.Id;
 
 @Entity
 
-public class Demande  {
-    @Id
+public class Demande  extends  PanacheEntity{
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
     @JsonProperty("id_titre_depense") // Annotation pour personnaliser le nom de la propriété dans JSON

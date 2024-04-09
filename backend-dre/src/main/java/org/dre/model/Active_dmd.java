@@ -4,25 +4,23 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 
 @Entity
-public class Active_dmd extends PanacheEntity {
-  private  Long id;
-  private  Integer id_titre;
-  private  String  titre;
-  private  String  motif;
-  private  double montant_ht;
-  private  boolean is_regularisation;
-  private  String coms_prescripteur;
-  private  Integer id_periode;
-  private  String periode;
-  private  Integer id_direction;
-  private  String direction;
-  private  Integer id_devise;
-  private  String devise;
-  private  Integer id_fournisseur;
-  private  String fournisseur;
-  private  Integer id_session;
-  private  boolean etat_session;
 
+public class Active_dmd extends PanacheEntity {
+    private   Long id ;
+    private  Integer id_titre ;
+    private    String  titre ;
+    private  String motif ;
+    private  double montant_ht ;
+    private  String  type_reference ;
+    private  String  reference ;
+    private  boolean is_regularisation ;
+    private  String  coms_prescripteur ;
+    private  Integer id_periode ;
+    private  String  periode ;
+    private  Integer id_direction ;
+    private  String  devise ;
+    private  Integer id_fournisseur ;
+    private  String  fournisseur;
 
     public Long getId() {
         return id;
@@ -62,6 +60,22 @@ public class Active_dmd extends PanacheEntity {
 
     public void setMontant_ht(double montant_ht) {
         this.montant_ht = montant_ht;
+    }
+
+    public String getType_reference() {
+        return type_reference;
+    }
+
+    public void setType_reference(String type_reference) {
+        this.type_reference = type_reference;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
     public boolean isIs_regularisation() {
@@ -104,22 +118,6 @@ public class Active_dmd extends PanacheEntity {
         this.id_direction = id_direction;
     }
 
-    public String getDirection() {
-        return direction;
-    }
-
-    public void setDirection(String direction) {
-        this.direction = direction;
-    }
-
-    public Integer getId_devise() {
-        return id_devise;
-    }
-
-    public void setId_devise(Integer id_devise) {
-        this.id_devise = id_devise;
-    }
-
     public String getDevise() {
         return devise;
     }
@@ -142,21 +140,5 @@ public class Active_dmd extends PanacheEntity {
 
     public void setFournisseur(String fournisseur) {
         this.fournisseur = fournisseur;
-    }
-
-    public Integer getId_session() {
-        return id_session;
-    }
-
-    public void setId_session(Integer id_session) {
-        this.id_session = id_session;
-    }
-
-    public boolean isEtat_session() {
-        return etat_session;
-    }
-
-    public void setEtat_session(boolean etat_session) {
-        this.etat_session = etat_session;
     }
 }

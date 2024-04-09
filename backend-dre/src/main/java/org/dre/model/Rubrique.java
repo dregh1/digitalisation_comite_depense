@@ -8,8 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Rubrique {
-@Id
+public class Rubrique extends PanacheEntity{
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

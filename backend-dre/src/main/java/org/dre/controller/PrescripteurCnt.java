@@ -1,17 +1,22 @@
 package org.dre.controller;
 
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.dre.model.*;
+import org.dre.repository.Active_dmdRepository;
+import org.dre.repository.BrouillonRepository;
 import org.dre.service.*;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 
 import java.util.List;
 
 @Path("/prescripteur")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+//@Authenticated
 public class PrescripteurCnt {
     @Inject
     Periode_dmdService periodeDmdService;
@@ -39,11 +44,24 @@ public class PrescripteurCnt {
     @Inject
     Titre_dmdService titre_dmdService;
 
+    @Inject
+    BrouillonRepository brouillonRepository;
+
+    @Inject
+    Active_dmdRepository active_dmdRepository;
     @POST
     @Path("demande/create")
     public Response createDemande(Demande demande) {
         demandeService.create(demande);
         return Response.status(Response.Status.CREATED).entity(demande).build();
+    }
+
+    @PUT
+    @Path("demande/{id}")
+    public Response updateDemande(@PathParam("id") Long id, Demande demande) {
+        demande.setId(id); // Assure que l'ID de l'utilisateur est correctement défini
+        demandeService.updateDemande(demande);
+        return Response.ok(demande).build();
     }
     @GET
     @Path("/periode/get")
@@ -63,23 +81,9 @@ public class PrescripteurCnt {
         return Response.ok(rubriques).build();
     }
 
-    @GET
-    @Path("/active_dmd/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllActive_dmd() {
-        // Récupérer les données depuis PostgreSQL
-        List<Active_dmd> active_dmds = active_dmdService.getAll ();
-        return Response.ok(active_dmds).build();
-    }
 
-    @GET
-    @Path("/brouillon/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllBrouillon() {
-        // Récupérer les données depuis PostgreSQL
-        List<Brouillon> brouillons = brouillonService.getAll ();
-        return Response.ok(brouillons).build();
-    }
+
+
 
     @GET
     @Path("/avis_achat/get")
@@ -149,5 +153,45 @@ public class PrescripteurCnt {
         // Récupérer les données depuis PostgreSQL
         List<Sousrubrique> rubriques = sousrubriqueService.getAll ();
         return Response.ok(rubriques).build();
+    }
+
+    //select BROUILLON
+    @GET
+    @Path("/brouillon/get")
+    @Produces(MediaType.APPLICATION_JSON)
+//    @SecurityRequirement(name = "Keycloak")
+    public Response getAllBrouillon() {
+        // Récupérer les données depuis PostgreSQL
+
+            // mila misy filtre
+
+
+        List<Brouillon> brouillons = brouillonService.getAll ();
+        return Response.ok(brouillons).build();
+    }
+
+    // select brouillon by id
+    @GET
+    @Path("brouillon/{id}")
+    public Brouillon getBrouillonById(@PathParam("id") Long id) {
+        return brouillonRepository.findById(id);
+    }
+
+
+// LIST DEMANDE ACTIVE
+    @GET
+    @Path("/active_dmd/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllActive_dmd() {
+        // Récupérer les données depuis PostgreSQL
+        List<Active_dmd> active_dmds = active_dmdService.getAll ();
+        return Response.ok(active_dmds).build();
+    }
+
+//GET DEMANDE ACTIVE BY ID
+    @GET
+    @Path("active_dmd/{id}")    
+    public Active_dmd getActiveDmdById(@PathParam("id") Long id) {
+        return active_dmdRepository.findById(id);
     }
 }

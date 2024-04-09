@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 @Entity
 public class Session_cd extends PanacheEntity {
-@Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id  ;
     @JsonProperty("ref")

@@ -7,8 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Reference  {
-    @Id
+public class Reference  extends  PanacheEntity{
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
     private  String Designation;

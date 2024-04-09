@@ -12,8 +12,8 @@ import java.util.Date;
 
 @Entity
 
-public class Personnel   {
-    @Id
+public class Personnel   extends  PanacheEntity{
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -12,6 +12,10 @@ import org.dre.model.*;
 import org.dre.model.Periode_dmd;
 import org.dre.service.*;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.keycloak.AuthorizationContext;
+import org.keycloak.KeycloakPrincipal;
+import org.keycloak.KeycloakSecurityContext;
+import org.keycloak.representations.AccessToken;
 
 import java.util.List;
 
@@ -142,7 +146,7 @@ public class TesteCnt {
 
     //get id direction by name of direction
     @GET
-    @Path("/getDir")
+    @Path("/getIdDir")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getIdDirByName(@QueryParam("nom") String nomDir) {
 
@@ -166,6 +170,46 @@ public class TesteCnt {
 
         return Response.ok(idDir).build();
     }
+//    TESTE KEYCLOAK QUARKUS
+
+
+//    @Inject
+//    KeycloakSecurityContext securityContext;
+//
+//    @Inject
+//    KeycloakPrincipal keycloakPrincipal;
+//    @Inject
+//    AuthorizationContext authorizationContext;
+//
+//    @GET
+//    @Path("/getGroupe")
+//    public List<String> getUserGroups() {
+//        if (securityContext instanceof KeycloakSecurityContext) {
+//            KeycloakSecurityContext keycloakSecurityContext = (KeycloakSecurityContext) securityContext;
+//            AccessToken accessToken = keycloakSecurityContext.getToken();
+//            return (List<String>) accessToken.getRealmAccess().getRoles(); // Récupère les rôles du realm
+//            // Ou utilisez accessToken.getResourceAccess("votre-client").getRoles()
+//            // pour récupérer les rôles spécifiques à un client
+//        }
+//        return null; // Gérer le cas où l'utilisateur n'est pas authentifié via Keycloak
+//    }
+//    List<String> groups = authorizationContext.getGroups();
+
+
+//    @GET
+//    public String getGroups() {
+//        KeycloakSecurityContext securityContext = KeycloakSecurityContext.getIn();
+//        List<String> groups = securityContext.getGroups();
+//
+//        StringBuilder sb = new StringBuilder();
+//        for (String group : groups) {
+//            sb.append(group).append("\n");
+//        }
+//
+//        return sb.toString();
+//    }
+
+// maka id direction
 
 }
 
