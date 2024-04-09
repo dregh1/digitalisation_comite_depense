@@ -21,6 +21,24 @@ public class Active_dmd extends PanacheEntity {
     private  String  devise ;
     private  Integer id_fournisseur ;
     private  String  fournisseur;
+    private Integer id_rubrique;
+    private String nomRubrique;
+
+    public Integer getId_rubrique() {
+        return id_rubrique;
+    }
+
+    public void setId_rubrique(Integer id_rubrique) {
+        this.id_rubrique = id_rubrique;
+    }
+
+    public String getNomRubrique() {
+        return nomRubrique;
+    }
+
+    public void setNomRubrique(String nomRubrique) {
+        this.nomRubrique = nomRubrique;
+    }
 
     public Long getId() {
         return id;

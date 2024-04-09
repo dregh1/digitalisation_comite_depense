@@ -20,6 +20,9 @@ public class Brouillon extends PanacheEntity {
  private  Integer id_direction ;
  private  String  devise ;
  private  Integer id_fournisseur ;
+
+ private Integer id_rubrique;
+ private String nomRubrique;
  private  String  fournisseur;
 
     public Long getId() {
@@ -140,5 +143,21 @@ public class Brouillon extends PanacheEntity {
 
     public void setFournisseur(String fournisseur) {
         this.fournisseur = fournisseur;
+    }
+
+    public Integer getId_rubrique() {
+        return id_rubrique;
+    }
+
+    public void setId_rubrique(Integer id_rubrique) {
+        this.id_rubrique = id_rubrique;
+    }
+
+    public String getNomRubrique() {
+        return nomRubrique;
+    }
+
+    public void setNomRubrique(String nomRubrique) {
+        this.nomRubrique = nomRubrique;
     }
 }

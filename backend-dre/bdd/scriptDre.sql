@@ -2,6 +2,7 @@ create database oma;
 	alter database oma owner to dre;
 
 
+
 -- 			--	table tsy ilaina
 
 
@@ -64,6 +65,7 @@ create database oma;
 
 
 		-- DEMANDE
+		create sequence demande_seq increment by 1;
 			create table demande
 					(
 						id serial primary key ,
@@ -144,8 +146,6 @@ create database oma;
 						id serial primary key ,
 						id_demande bigint,
 						commentaire text,
-						id_rubrique bigint,
-						sousrubrique varchar(60),
 						montant_budget_mensuel decimal(32,3) default 0,
 						montant_engage decimal(32,3) default 0
 						);
@@ -253,7 +253,7 @@ create database oma;
 			insert into etat_final(designation) values ('OK'),('NOK'),('En attente');
 			insert into reference (designation) values ('BC'),('DED');
 			insert into devise (designation) values ('EUR'),('USD');
-			insert into direction (designation) values ('DTI'),('ODC');
+			insert into direction (designation) values ('DTI'),('ODC'),('DF'),('DRH');
 			
 
 			insert into fournisseur(nom) values ('Socobis'),('Chocolat Robert');
@@ -282,6 +282,11 @@ create database oma;
                         dm.coms_prescripteur as coms_prescripteur,
                     -- dm.id_etat_final as id_etat_final,
 
+                        dm.id_rubrique as id_rubrique,
+                        r.designation as nomRubrique,
+
+                        dm.sousrubrique as sousrubrique,
+
 
                         dm.id_periode as id_periode,
                         p.designation as periode,
@@ -294,13 +299,56 @@ create database oma;
                         f.nom as fournisseur
 					from demande dm join fournisseur f on dm.id_fournisseur = f.id
 					                join periode_dmd p on p.id= dm.id_periode
+									join rubrique r on r.id =  dm.id_rubrique
 									full join titre_depense td on dm.id_titre_depense = td.id
+
 					where is_valdby_pres = false and dm.is_valdby_ach=false and dm.is_valdby_cdg=false
-					group by id_titre,dm.id ,f.id,td.id,p.id
+					group by id_titre,dm.id ,f.id,td.id,p.id,r.id
 
 
 					);
+        -- active_dmd
 
+        -- BROUILLON
+        create or replace view active_dmd as
+            (
+
+                select
+                dm.id as id,
+
+                    dm.id_titre_depense as id_titre,
+                    coalesce(td.designation, 'sans titre')  as titre,
+                    dm.motif as motif,
+                    dm.montant_ht as montant_ht,
+                    dm.type_reference as type_reference,
+                    dm.nom_reference as reference,
+                    dm.is_regularisation as is_regularisation,
+
+                    dm.coms_prescripteur as coms_prescripteur,
+                -- dm.id_etat_final as id_etat_final,
+
+                        dm.id_rubrique as id_rubrique,
+                        r.designation as nomRubrique,
+
+                    dm.id_periode as id_periode,
+                    p.designation as periode,
+
+                    dm.id_direction as id_direction,
+
+                    dm.type_devise as devise,
+
+                    f.id as id_fournisseur,
+                    f.nom as fournisseur
+                from demande dm join fournisseur f on dm.id_fournisseur = f.id
+                                join periode_dmd p on p.id= dm.id_periode
+                                join rubrique r on r.id =  dm.id_rubrique
+
+                                full join titre_depense td on dm.id_titre_depense = td.id
+                where is_valdby_pres = TRUE
+                group by id_titre,dm.id ,f.id,td.id,p.id,r.id
+
+
+                );
 --			create or replace view brouillon as
 --				(
 --
