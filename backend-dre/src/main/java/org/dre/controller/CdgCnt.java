@@ -7,9 +7,11 @@ import jakarta.ws.rs.core.Response;
 import org.dre.model.Avis_cdg;
 import org.dre.model.Personnel;
 import org.dre.model.Avis_cdg;
+import org.dre.model.Session_cd;
 import org.dre.service.Avis_cdgService;
 import org.dre.service.PersonnelService;
 import org.dre.service.SessionCdService;
+import org.hibernate.Session;
 
 import java.util.List;
 
@@ -21,6 +23,9 @@ public class CdgCnt {
 
     @Inject
     Avis_cdgService Avis_cdgService;
+
+    @Inject
+    SessionCdService sessionCdService;
 
     @GET
     @Path("/get")
@@ -34,7 +39,7 @@ public class CdgCnt {
     //CREATION DE SESSION
     @POST
     @Path("/session/create")
-    public Response createSessionCd(Avis_cdg avis_cdg) {
+    public Response createSessionCd(Session_cd sessionCd) {
 //     { daty: "2004-12-12", deviseEur: 1111, deviseUsd: 1, deviseGbp: 11 }
         /*
 					ref varchar(9) not null,
@@ -47,8 +52,8 @@ public class CdgCnt {
         * */
 
 
-        Avis_cdgService.create(avis_cdg);
-        return Response.status(Response.Status.CREATED).entity(avis_cdg).build();
+        sessionCdService.createSessionCd(sessionCd);
+        return Response.status(Response.Status.CREATED).entity(sessionCd).build();
     }
     @GET
     @Path("/avis_cdg/get")

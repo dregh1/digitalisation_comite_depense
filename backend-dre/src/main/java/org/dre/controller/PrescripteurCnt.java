@@ -1,18 +1,22 @@
 package org.dre.controller;
 
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.dre.model.*;
+import org.dre.repository.Active_dmdRepository;
 import org.dre.repository.BrouillonRepository;
 import org.dre.service.*;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 
 import java.util.List;
 
 @Path("/prescripteur")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+//@Authenticated
 public class PrescripteurCnt {
     @Inject
     Periode_dmdService periodeDmdService;
@@ -42,6 +46,9 @@ public class PrescripteurCnt {
 
     @Inject
     BrouillonRepository brouillonRepository;
+
+    @Inject
+    Active_dmdRepository active_dmdRepository;
     @POST
     @Path("demande/create")
     public Response createDemande(Demande demande) {
@@ -74,14 +81,7 @@ public class PrescripteurCnt {
         return Response.ok(rubriques).build();
     }
 
-    @GET
-    @Path("/active_dmd/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllActive_dmd() {
-        // Récupérer les données depuis PostgreSQL
-        List<Active_dmd> active_dmds = active_dmdService.getAll ();
-        return Response.ok(active_dmds).build();
-    }
+
 
 
 
@@ -159,8 +159,13 @@ public class PrescripteurCnt {
     @GET
     @Path("/brouillon/get")
     @Produces(MediaType.APPLICATION_JSON)
+//    @SecurityRequirement(name = "Keycloak")
     public Response getAllBrouillon() {
         // Récupérer les données depuis PostgreSQL
+
+            // mila misy filtre
+
+
         List<Brouillon> brouillons = brouillonService.getAll ();
         return Response.ok(brouillons).build();
     }
@@ -172,12 +177,21 @@ public class PrescripteurCnt {
         return brouillonRepository.findById(id);
     }
 
-    //update du demande en forme de brouillon
-//    @PUT
-//    @Path("//{id}")
-//    public Response updateUser(@PathParam("id") Long id, Personnel updatedPersonnel) {
-//        updatedPersonnel.setId(id); // Assure que l'ID de l'utilisateur est correctement défini
-//        personnelService.updatePersonnel(updatedPersonnel);
-//        return Response.ok(updatedPersonnel).build();
-//    }
+
+// LIST DEMANDE ACTIVE
+    @GET
+    @Path("/active_dmd/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllActive_dmd() {
+        // Récupérer les données depuis PostgreSQL
+        List<Active_dmd> active_dmds = active_dmdService.getAll ();
+        return Response.ok(active_dmds).build();
+    }
+
+//GET DEMANDE ACTIVE BY ID
+    @GET
+    @Path("active_dmd/{id}")    
+    public Active_dmd getActiveDmdById(@PathParam("id") Long id) {
+        return active_dmdRepository.findById(id);
+    }
 }
