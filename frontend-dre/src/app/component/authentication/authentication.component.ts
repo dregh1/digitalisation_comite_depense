@@ -8,6 +8,7 @@ import { LogService } from 'src/app/services/log.service';
 import * as qs from 'qs';
 //import jwtDecode from 'jwt-decode';
 import { HttpParams, HttpHeaders, HttpClient } from '@angular/common/http';
+import { AuthenticationService } from './authentication.service';
 @Component({
   selector: 'app-authentication',
   templateUrl: './authentication.component.html',
@@ -37,25 +38,43 @@ export class AuthenticationComponent implements OnInit {
   
   username: any;
   password: any;
-
-  // keycloak rehetra
-  // username: string;
-  // password: string;
-  // keycloak: Keycloak;
   
 
-  constructor(private http: HttpClient,private logService: LogService, private router: Router ,private personnelService: PersonnelService, private renderer: Renderer2, private el: ElementRef) {}
-  //,private readonly keycloakService: KeycloakService
+  constructor(private http: HttpClient,private authenticationService: AuthenticationService,private logService: LogService, private router: Router ,private personnelService: PersonnelService, private renderer: Renderer2, private el: ElementRef) {}
+ 
 
 // NG ON INIT
           ngOnInit(): void {
 
-
-
-            // this.personnelService.get().subscribe(data => {
-            //   this.personnels = data;
-            // });
           }
+
+          
+
+          // getInfo(token :  string)
+          // {
+
+          //   var headers = {
+          //     'Authorization': 'bearer '+token,
+          //     'Content-Type': 'application/x-www-form-urlencoded'
+          //   };
+          //   var request = this.http.('GET', Uri.parse('http://localhost:8081/realms/oma/protocol/openid-connect/userinfo'));
+          //   request.bodyFields = {
+          //     'grant_type': 'password',
+          //     'client_id': 'angular-client',
+          //     'client_secret': 'eIRXkLaEnLubyFr1mqwv6bu862oHIIn9'
+          //   };
+          //   request.headers.addAll(headers);
+            
+          //   http.StreamedResponse response = await request.send();
+            
+          //   if (response.statusCode == 200) {
+          //     print(await response.stream.bytesToString());
+          //   }
+          //   else {
+          //     print(response.reasonPhrase);
+          //   }
+          // }
+
 
 //ENVOYE LOGIN & MDP > KEYCLOAK
           sendToKc(){
@@ -70,7 +89,7 @@ export class AuthenticationComponent implements OnInit {
               headers: new HttpHeaders()
                 .set('Content-Type', 'application/x-www-form-urlencoded')
             })
-            // // TY RAHA ERREUR TOKEN TSOTRA
+            // // TY RAHA ERREUR TOKEN TSOTRA ///////////////////////
             // // .subscribe(
             // //   response  => {
             // //     // Gérer la réponse du jeton avec succès
@@ -93,12 +112,18 @@ export class AuthenticationComponent implements OnInit {
                 console.log('\n\n\n\n\n\n Jeton reçu: \n\n\n\n\n\n ', token);
 
                 // Stocker le jeton dans la session storage du navigateur
+                sessionStorage.removeItem("token");
                 sessionStorage.setItem('token', token);
 
                 // recherche ny role
-                this.getUserInfo(token);
-                //redirection
-              //  window.location.href = 'main/menu';
+                //this.getUserInfo(token);
+                // console.log("TTTTYYY");
+                
+                // console.log(this.getUserInfo(token));
+                // redirection
+                // this.getUserInfo(token)
+                this.router.navigate(['/main/menu']);
+
 
                 
               } else {
@@ -110,93 +135,22 @@ export class AuthenticationComponent implements OnInit {
             });
           }
 
-   // requete xhr
-   requet() : void {
-    var data = "client_id=angular-client&client_secret=eIRXkLaEnLubyFr1mqwv6bu862oHIIn9&grant_type=password&username="+this.logindata.username+"&password="+this.logindata.password;
-    var statErr =false;
-  
-        this.errorStatus = true;
-        this.errorMessage = 'Identifiants incorrects';
-  
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-
-    xhr.addEventListener("readystatechange", function() {
-      if(this.readyState === 4 && this.status == 200) {
-        console.log(this.responseText);
-        // this.readyState == 4 && this.status == 200
+    getIdOfDirection ( ) 
+    {
+      const nomDirection  : string = "DTI";
       
-          statErr = true;
-          
-          // errorMessage ='' ;
-      }
+      this.authenticationService.getIdDirectionByName(nomDirection)
+              .subscribe(response => {
+                              console.log( response);
+                            }
+                        ); 
+      console.log("GGGGGGGGGGGGGG");
 
-
-    });
-
-    xhr.open("POST", "http://localhost:8081/realms/oma/protocol/openid-connect/token");
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    xhr.send(data);
     }
 
-    getUserInfo(token : string){
-      var data = "";
+    
+    
 
-        var xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
-
-        xhr.addEventListener("readystatechange", function() {
-          if(this.readyState === 4  && this.status == 200) {
-            console.log('ATO: ');
-            console.log(this.response);
-            const data = JSON.parse(xhr.responseText);
-            if(data.hasOwnProperty('groups'))
-            {
-              const tableRole = data.groups;
-
-              console.log('GROUPE: '+tableRole);
-
-              console.log(data.groups);
-              // // return this.response.groups;
-
-              // for(let i =0 ; i <tableRole.length ; i++)
-              // {
-              //   if(tableRole[i]==='CDG')
-              //   {
-              //     console.log('C EST UN CDG!!!!!!!!!!!!!!!!!!!!!!');
-              //     window.location.href = '/cdg';
-              //     break;
-              //   }else
-              //   if(tableRole[i]==='PRS')
-              //   {
-              //     console.log('C EST UN PRESCRIPTEUR!!!!!!!!!!!!!!!!!!!!!!');
-              //     window.location.href = '/main/menu';
-              //     break;
-              //   }else
-              //   if(tableRole[i]==='ACH')
-              //   {
-              //     console.log('C EST UN ACHAT!!!!!!!!!!!!!!!!!!!!!!');
-              //     window.location.href = '/achat';
-              //     break;
-
-              //   }else
-              //   {
-              //     window.location.href = '/user';
-              //   }
-
-              // }
-              // //sessionStorage.setItem("role",data);
-
-            }else console.log('TSIS ROLE');
-          }
-        });
-
-        xhr.open("GET", "http://localhost:8081/realms/oma/protocol/openid-connect/userinfo");
-        xhr.setRequestHeader("Authorization", "Bearer "+token);
-
-        xhr.send(data);
-    }
 
     isCdg(tableRole : string[])
     {
@@ -208,18 +162,7 @@ export class AuthenticationComponent implements OnInit {
       }
 
 
-      // keycloak 
-          logToKeyCloak(): void {
-            // this.keycloak.login({ username: this.logindata.username, password: this.logindata.password })
-            //   .then((success:any) => {
-            //     // Rediriger vers l'application après une connexion réussie
-            //     window.location.href = '/home';
-            //   })
-            //   .catch((error:any) => {
-            //     // Afficher un message d'erreur en cas d'échec de la connexion
-            //     console.error('Echec de la connexion : ', error);
-            //   });
-          }
+
 
 
        
@@ -278,19 +221,9 @@ export class AuthenticationComponent implements OnInit {
             });
           }
 
-          deletePersonnel(id: number): void {
-            this.personnelService.delete(id).subscribe(response => {
-              console.log(response);
-              window.location.reload();
-            });
-          }
+          
 
-          updateRecord(id: any, newData: any): void {
-            this.personnelService.update(id, newData).subscribe(response => {
-              console.log(response);
-              window.location.reload();
-            });
-          }
+         
           ///////////////////////////Animation slide///////////////////////////////////////
           // ngAfterViewInit() {
           //   const signup = this.el.nativeElement.querySelector('.signup');

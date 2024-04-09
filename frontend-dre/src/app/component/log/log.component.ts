@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Personnel } from 'src/app/models/Personnel';
 import { PersonnelService } from 'src/app/services/personnel.service';
 import { LogService } from '../../services/log.service';
-import { HttpParams, HttpHeaders } from '@angular/common/http';
 
 
 @Component({
@@ -31,7 +30,6 @@ export class LogComponent implements OnInit, AfterViewInit {
     password: '',
     
   }
-  http: any;
 
 
 
@@ -43,123 +41,6 @@ export class LogComponent implements OnInit, AfterViewInit {
     });
   }
 
-  
-//ENVOYE LOGIN & MDP > KEYCLOAK
-sendToKc(){
-  const body = new HttpParams()
-  .set('username', this.logindata.username)
-  .set('password', this.logindata.password)
-  .set('grant_type', 'password')
-  .set('client_id', 'angular-client')
-  .set('client_secret', 'eIRXkLaEnLubyFr1mqwv6bu862oHIIn9');
-
-  return this.http.post('http://localhost:8081/realms/oma/protocol/openid-connect/token', body.toString(), {
-    headers: new HttpHeaders()
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-  })
-  // // TY RAHA ERREUR TOKEN TSOTRA
-  // // .subscribe(
-  // //   response  => {
-  // //     // Gérer la réponse du jeton avec succès
-  // //     console.log('Jeton reçu:', response);
-  // //     console.log('\n\n\n\n\n\n');
-      
-  // //   },
-  // //   error => {
-  // //     // Gérer les erreurs pendant la requête
-  // //     console.error('Erreur lors de l\'obtention du jeton:', error);
-  // //     this.logError();
-  // //   }
-  // );
-  .subscribe((response: any) => {
-    // Si la requête est réussie, le token est accessible ici
-    if (response.hasOwnProperty('access_token')) {
-      const token = response.access_token;
-  
-      // Stockez le token dans le stockage du navigateur ou utilisez-le directement
-      console.log('\n\n\n\n\n\n Jeton reçu: \n\n\n\n\n\n ', token);
-
-      // Stocker le jeton dans la session storage du navigateur
-      sessionStorage.setItem('token', token);
-
-      // recherche ny role
-      this.getUserInfo(token);
-      //redirection
-     // window.location.href = '/home';
-
-      
-    } else {
-      // Une erreur s'est produite
-      console.error('Erreur lors de l\'obtention du jeton:', response);
-      this.logError();
-
-    }
-  });
-}
-getUserInfo(token : string){
-  var data = "";
-
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-
-    xhr.addEventListener("readystatechange", function() {
-      if(this.readyState === 4  && this.status == 200) {
-        console.log('ATO: ');
-        console.log(this.response);
-        const data = JSON.parse(xhr.responseText);
-        if(data.hasOwnProperty('groups'))
-        {
-          const tableRole = data.groups;
-
-          console.log('GROUPE: '+tableRole);
-
-          console.log(data.groups);
-          //return this.response.groups;
-
-          for(let i =0 ; i <tableRole.length ; i++)
-          {
-            if(tableRole[i]==='CDG')
-            {
-              console.log('C EST UN CDG!!!!!!!!!!!!!!!!!!!!!!');
-              window.location.href = '/cdg';
-              break;
-            }else
-            if(tableRole[i]==='PRS')
-            {
-              console.log('C EST UN PRESCRIPTEUR!!!!!!!!!!!!!!!!!!!!!!');
-              window.location.href = '/prescripteur';
-              break;
-            }else
-            if(tableRole[i]==='ACH')
-            {
-              console.log('C EST UN ACHAT!!!!!!!!!!!!!!!!!!!!!!');
-              window.location.href = '/achat';
-              break;
-
-            }else
-            {
-              window.location.href = '/user';
-            }
-
-          }
-          //sessionStorage.setItem("role",data);
-
-        }else console.log('TSIS ROLE');
-      }
-    });
-
-    xhr.open("GET", "http://localhost:8081/realms/oma/protocol/openid-connect/userinfo");
-    xhr.setRequestHeader("Authorization", "Bearer "+token);
-
-    xhr.send(data);
-}
-
-
-logError()  : void
-{
-    this.errorStatus = true;
-    this.errorMessage = 'Identifiants incorrects';
-}
 // verifier login  //
 
 verifierLogin(): void {
