@@ -29,7 +29,7 @@
                               
                           </div>
                       </li>
-                    </ul>
+                  </ul>
               </div>
           </div>
 
@@ -44,32 +44,17 @@
               Liste des demandes CD Actives 
             </div>
             <div class="card-body scrollspy-example" data-spy="scroll" data-target="#navbarExample" data-offset="50">    
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item justify-content-between d-flex ">
-                        <div>
-                          <h6>Titre: <p>sous titre</p></h6>
-                        </div>
-                         <div>
-                            <button type="button" class="btn"><i class=" icon fas fa-chevron-circle-right"  routerLink="/achat"></i></button>
-                        </div>
-                     </li>
-                     <li class="list-group-item justify-content-between d-flex ">
-                        <div>
-                          <h6>Titre: <p>sous titre</p></h6>
-                        </div>
-                         <div>
-                            <button type="button" class="btn"><i class="icon fas fa-chevron-circle-right"  routerLink="/achat"></i></button>
-                        </div>
-                     </li>
-                     <li class="list-group-item justify-content-between d-flex ">
-                        <div>
-                          <h6>Titre: <p>sous titre</p></h6>
-                        </div>
-                         <div>
-                            <button type="button" class="btn"><i class="icon fas fa-chevron-circle-right"  routerLink="achat"></i></button>
-                        </div>
-                     </li>
-                  </ul>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item justify-content-between d-flex " *ngFor="let activeDmd of activeDmds">
+                  <div>
+                    <h6 >{{activeDmd.titre}} <p>{{activeDmd.motif}}</p></h6>
+                  </div>
+                    <div>
+                        <button type="button" class="btn"><i class="icon fas fa-chevron-circle-right" [routerLink]="['/main/achat/', activeDmd.id]" ></i></button>
+                        
+                    </div>
+                </li>
+            </ul>
             </div>
 
 

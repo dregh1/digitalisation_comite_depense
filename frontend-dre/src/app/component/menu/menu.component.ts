@@ -15,17 +15,9 @@ export class MenuComponent implements OnInit {
   token : string | null = '' ;
 
   brouillons : Brouillon [] = [];
-// brouillons={
-//   titre : '',
-//    motif : '',
-//  montant_ht : '',
-//  is_regularisation : '',
-//   coms_prescripteur : '',
-//    periode : '',
-//   direction : '',
-//  devise : '',
-//   fournisseur :'',
-// }
+
+  activeDmds : Brouillon [] = [];
+
   constructor(private MenuSerice:MenuService , private autheticationServ : AuthenticationService){
       this.token = sessionStorage.getItem("token");
       if(this.token !== null )
@@ -39,16 +31,21 @@ export class MenuComponent implements OnInit {
  
   ngOnInit(): void {
    
-    this.MenuSerice.getBrouillon().subscribe(brouillons => {
-      this.brouillons = brouillons;
+    //MAKA BROUILLON
+      this.MenuSerice.getBrouillon().subscribe(brouillons => {
+        this.brouillons = brouillons;
+        // window.location.reload();
+        //maka direction sy role
+        //Direction
+        //Role
+      });
 
-      // window.location.reload();
-      //maka direction sy role
-
-      //Direction
-      //Role
-    });
-   
+    //MAKA ACTIVE_DMD
+      this.MenuSerice.getActiveDmd().subscribe(active_dmd => {
+        this.activeDmds = active_dmd;
+        console.log("active_dmd:");
+        console.log(active_dmd);
+      });
    
      
       

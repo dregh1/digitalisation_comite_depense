@@ -13,9 +13,14 @@ export class MenuService {
  
   constructor(private http: HttpClient) { }
   // maka ny brouillon
-getBrouillon():  Observable<Brouillon[]> {
-  return this.http.get<Brouillon[]>(this.baseUrl2+'/brouillon/get');
-  
-}
+      getBrouillon():  Observable<Brouillon[]> {
+        return this.http.get<Brouillon[]>(this.baseUrl2+'/brouillon/get');
+      }
+
+  // maka ny active
+      getActiveDmd():  Observable<Brouillon[]> {
+        return this.http.get<Brouillon[]>(this.baseUrl2+'/active_dmd/get');
+      }
+
 
 }

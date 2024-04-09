@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Brouillon } from 'src/app/models/Brouillon'; 
 import { Demande } from 'src/app/models/Demande';
+import { Periode } from 'src/app/models/Periode';
+import { Fournisseur } from 'src/app/models/Fournisseur';
 @Injectable({
   providedIn: 'root'
 })
@@ -32,6 +34,11 @@ posttitre(formData: any): Observable<any> {
 getBrouillonbyId(id:number):  Observable<Brouillon> {
   return this.http.get<Brouillon>(`${this.baseUrl2}/brouillon/${id}`);
 }
+
+// maka ny brouillon
+getActiveDmdbyId(id:number):  Observable<Brouillon> {
+  return this.http.get<Brouillon>(`${this.baseUrl2}/brouillon/${id}`);
+}
 //modication demande
 update(id:number,data:any):Observable<any>{
   return this.http.put<any>(`${this.baseUrl2}/demande/${id}`,data);
@@ -44,4 +51,12 @@ delete(id:number):Observable<any>{
 searchByName(name:any):Observable<any>{
   return this.http.get<any>(`${this.baseUrl2}/brouillon/?name=${name}`);
 }
+// maka periode
+  getPeriode(): Observable<Periode[]> {
+    return this.http.get<Periode[]>(this.baseUrl+'/periode/get');
+  }
+  // maka periode
+  getFournisseur(): Observable<Fournisseur[]> {
+    return this.http.get<Fournisseur[]>(this.baseUrl+'/fournisseur/get');
+  }
 }
