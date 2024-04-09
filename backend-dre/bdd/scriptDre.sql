@@ -18,7 +18,7 @@ create database oma;
 						alter table login add foreign key (idPersonnel) references personnel(id);
 
 
-							create table login
+							create table login  
 								(
 									id serial primary key)),
 									username varchar(50) not null,
