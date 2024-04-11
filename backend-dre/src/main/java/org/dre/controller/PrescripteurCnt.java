@@ -22,7 +22,7 @@ public class PrescripteurCnt {
     PeriodeService periodeService;
     ActiveService activeService ;
     @Inject
-    Avis_achatService avis_achatService;
+    AvisAchatService avis_achatService;
     @Inject
     DeviseService deviseService;
     @Inject
@@ -87,9 +87,9 @@ public class PrescripteurCnt {
     @GET
     @Path("/avis_achat/get")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAvis_achat() {
+    public Response getAvisAchat() {
         // Récupérer les données depuis PostgreSQL
-        List<Avis_achat> avis_achat = avis_achatService.getAll ();
+        List<AvisAchat> avis_achat = avis_achatService.getAll ();
         return Response.ok(avis_achat).build();
     }
 

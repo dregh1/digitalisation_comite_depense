@@ -97,29 +97,29 @@ create database oma;
 					);
 
 
-
-		create table avis_achat
+        create sequence avisAchat_seq increment by 1;
+		create table avisAchat
 					(
 						id serial primary key ,
-						id_demande bigint,
+						idDemande bigint,
 						commentaire text,
-						daty timestamp default currenttimestamp()
+						daty timestamp default now()
 					);
 
 
-		create sequence avis_cdg_seq INCREMENT by 1;
-		create table avis_cdg
+		create sequence avisCdg_seq INCREMENT by 1;
+		create table avisCdg
 					(
 						id serial primary key ,
-						id_demande bigint,
+						idDemande bigint,
 						commentaire text,
-						montant_budget_mensuel decimal(32,3) default 0,
-						montant_engage decimal(32,3) default 0
+						montantBudgetMensuel decimal(32,3) default 0,
+						montantEngage decimal(32,3) default 0
 						);
 
 
-		create sequence etat_final_seq INCREMENT by 1;
-		create table etat_final 
+		create sequence etatFinal_seq INCREMENT by 1;
+		create table etatFinal
 			(
 				id serial primary key,
 				designation varchar(20) 
@@ -133,14 +133,7 @@ create database oma;
 					id serial primary key,
 					designation varchar(50)
 				);
-		-- sousrubrique
-		create sequence sousrubrique_seq INCREMENT by 1;
-		create table sousrubrique 
-				(
-					id serial primary key,
-					id_rubrique bigint,
-					designation varchar(50) not null
-				);
+
 
 		create sequence direction_seq INCREMENT by 1;
 		create table direction 
@@ -177,11 +170,11 @@ create sequence titredepense_seq increment by 1;
 
 
 
-		create  table demande_et_session 
+		create  table demandeEtSession
 			(
 				id serial primary key ,
-				id_session bigint not null,
-				id_demande bigint not null
+				idSession bigint not null,
+				idDemande bigint not null
 			);
 
 
@@ -203,19 +196,19 @@ create sequence titredepense_seq increment by 1;
 			alter table demande add foreign key (idFournisseur) references fournisseur(id);
 			alter table demande add foreign key (idRubrique) references rubrique(id);
 			-- alter table demande add foreign key (id_devise) references devise(id);
-			-- alter table demande add foreign key (id_etat_final) references etat_final(id);
+			-- alter table demande add foreign key (id_etatFinal) references etatFinal(id);
 			-- alter table demande add foreign key (id_reference) references reference(id);
 
-			alter table avis_cdg add foreign key (id_rubrique) references rubrique(id);
-			alter table avis_cdg add foreign key(id_demande) references demande(id);
+			alter table avisCdg add foreign key (idRubrique) references rubrique(id);
+			alter table avisCdg add foreign key(idDemande) references demande(id);
 
-			alter table avis_achat add foreign key (id_demande) references demande(id);
+			alter table avisAchat add foreign key (idDemande) references demande(id);
 
 
 
 
 	-- INSERTION 		------------------------------------------
-			insert into etat_final(designation) values ('OK'),('NOK'),('En attente');
+			insert into etatFinal(designation) values ('OK'),('NOK'),('En attente');
 			insert into reference (designation) values ('BC'),('DED');
 			insert into devise (designation) values ('EUR'),('USD');
 			insert into direction (designation) values ('DTI'),('ODC'),('DF'),('DRH');
@@ -223,7 +216,7 @@ create sequence titredepense_seq increment by 1;
 
 			insert into fournisseur(nom) values ('Socobis'),('Chocolat Robert');
 			insert into rubrique(designation) values('achat nourrire');
-	        insert into titre_depense (designation) values ("Team Building");
+	        insert into titreDepense (designation) values ("Team Building");
 			insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('année');
 
 
@@ -245,7 +238,7 @@ create sequence titredepense_seq increment by 1;
                         dm.estRegularisation as estRegularisation,
 
                         dm.comsPrescripteur as comsPrescripteur,
-                    -- dm.id_etat_final as id_etat_final,
+                    -- dm.id_etatFinal as id_etatFinal,
 
                         dm.idRubrique as idRubrique,
                         r.designation as nomRubrique,
@@ -290,7 +283,7 @@ create sequence titredepense_seq increment by 1;
                         dm.estRegularisation as estRegularisation,
 
                         dm.comsPrescripteur as comsPrescripteur,
-                    -- dm.id_etat_final as id_etat_final,
+                    -- dm.id_etatFinal as id_etatFinal,
 
                         dm.idRubrique as idRubrique,
                         r.designation as nomRubrique,
