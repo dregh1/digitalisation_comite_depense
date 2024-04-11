@@ -18,7 +18,7 @@ create database oma;
 						alter table login add foreign key (idPersonnel) references personnel(id);
 
 
-							create table login  
+							create table login
 								(
 									id serial primary key)),
 									username varchar(50) not null,
@@ -38,18 +38,17 @@ create database oma;
 
 		--SESSION	
 
-		create table session_cd
+		create table sessionCd
 				(
 					id serial primary key,
 					ref varchar(11) not null ,
-					date_cloture timestamp not null,				
-					is_deleted boolean default false,
-					id_direction bigint,
-					taux_eur numeric(32,3) not null,
-					taux_usd numeric(32,3) not null,
-					taux_gbp numeric(32,3) not null,
-					taux_mga numeric(32,3) not null,
-					is_closed boolean default false
+					dateCloture timestamp not null,
+					estSupprime boolean default false,
+					idDirection bigint,
+					tauxEur numeric(32,3) not null,
+					tauxUsd numeric(32,3) not null,
+					tauxMga numeric(32,3) not null,
+					estFerme boolean default false
 				);
 		
 
