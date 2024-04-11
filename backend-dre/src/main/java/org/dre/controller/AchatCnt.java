@@ -5,13 +5,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.dre.model.Avis_achat;
-import org.dre.model.Avis_achat;
 import org.dre.model.Demande;
-import org.dre.model.Personnel;
-import org.dre.service.Avis_achatService;
 import org.dre.service.Avis_achatService;
 import org.dre.service.DemandeService;
-import org.dre.service.Periode_dmdService;
 
 @Path("/achat")
 @Produces(MediaType.APPLICATION_JSON)
@@ -49,7 +45,7 @@ public class AchatCnt {
         //find by id demande
         Demande d = Demande.findById(id);
 
-        d.setIs_valdby_ach(true);
+        d.setValidationAchat(true);
         demandeService.updateDemande(d);
 
         return Response.ok(d).build();

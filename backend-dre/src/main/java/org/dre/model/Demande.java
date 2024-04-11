@@ -5,154 +5,43 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 @Entity
 
-public class Demande  extends  PanacheEntity{
+public class Demande  extends  PanacheEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id ;
-    @JsonProperty("id_titre_depense") // Annotation pour personnaliser le nom de la propriété dans JSON
-    private Long id_titre_depense ;
+    private Long id;
+    @JsonProperty("idTitreDepense") // Annotation pour personnaliser le nom de la propriété dans JSON
+    private Long idTitreDepense;
     @JsonProperty("motif") // Annotation pour personnaliser le nom de la propriété dans JSON
-    private String  motif ;
-    @JsonProperty("id_fournisseur") // Annotation pour personnaliser le nom de la propriété dans JSON
-    private Long id_fournisseur ;
+    private String motif;
+    @JsonProperty("idFournisseur") // Annotation pour personnaliser le nom de la propriété dans JSON
+    private Long idFournisseur;
 
-    @JsonProperty("is_regularisation") // Annotation pour personnaliser le nom de la propriété dans JSON
-    private boolean is_regularisation ;
-    private  String coms_prescripteur;
+    @JsonProperty("estRegularisation") // Annotation pour personnaliser le nom de la propriété dans JSON
+    private boolean estregularisation;
+    private String comsPrescripteur;
 
-    private Integer id_direction;
-    @JsonProperty("id_periode") // Annotation pour personnaliser le nom de la propriété dans JSON
-    private  Long id_periode ;
+    private Integer idDirection;
+    @JsonProperty("idPeriode") // Annotation pour personnaliser le nom de la propriété dans JSON
+    private Long idPeriode;
 
-    private  String  type_reference;
+    private String typeReference;
 
-    private  String nom_reference;
-    private Integer id_rubrique;
-    private String sousrubrique;
+    private String nomReference;
+    private Integer idRubrique;
+    private String sousRubrique;
+    private String typeDevise;
+    @JsonProperty("montantHt") // Annotation pour personnaliser le nom de la propriété dans JSON
+    private double montantHt;
+    private String etatFinal;
 
-    private String  type_devise;
-    @JsonProperty("montant_ht") // Annotation pour personnaliser le nom de la propriété dans JSON
-    private double montant_ht ;
+    private boolean validationAchat;
+    private boolean validationPrescripteur;
+    private boolean validationCdg;
 
-    private String etat_final;
-
-
-
-
-
-    //    @JsonProperty("id_rubrique") // Annotation pour personnaliser le nom de la propriété dans JSON
-    //    private Long id_rubrique ;
-
-
-    public Integer getId_rubrique() {
-        return id_rubrique;
-    }
-
-    public void setId_rubrique(Integer id_rubrique) {
-        this.id_rubrique = id_rubrique;
-    }
-
-    public String getSousrubrique() {
-        return sousrubrique;
-    }
-
-    public void setSousrubrique(String sousrubrique) {
-        this.sousrubrique = sousrubrique;
-    }
-
-    private boolean is_valdby_ach;
-    private boolean is_valdby_pres;
-    private boolean is_valdby_cdg;
-
-
-    @JsonProperty("is_deleted") // Annotation pour personnaliser le nom de la propriété dans JSON
-    private boolean is_deleted;
-    public String getNom_reference() {
-        return nom_reference;
-    }
-
-    public void setNom_reference(String nom_reference) {
-        this.nom_reference = nom_reference;
-    }
-
-    public String type_reference() {
-        return type_reference;
-    }
-
-    public String getType_reference() {
-        return type_reference;
-    }
-
-    public void setType_reference(String type_reference) {
-        this.type_reference = type_reference;
-    }
-
-    public String getType_devise() {
-        return type_devise;
-    }
-
-    public void setType_devise(String type_devise) {
-        this.type_devise = type_devise;
-    }
-
-    public String getEtat_final() {
-        return etat_final;
-    }
-
-    public void setEtat_final(String etat_final) {
-        this.etat_final = etat_final;
-    }
-
-    public String getComs_prescripteur() {
-        return coms_prescripteur;
-    }
-
-    public void setComs_prescripteur(String coms_prescripteur) {
-        this.coms_prescripteur = coms_prescripteur;
-    }
-
-    public boolean isIs_deleted() {
-        return is_deleted;
-    }
-
-
-
-    public Integer getId_direction() {
-        return id_direction;
-    }
-
-    public void setId_direction(Integer id_direction) {
-        this.id_direction = id_direction;
-    }
-
-
-    public boolean isIs_valdby_ach() {
-        return is_valdby_ach;
-    }
-
-    public void setIs_valdby_ach(boolean is_valdby_ach) {
-        this.is_valdby_ach = is_valdby_ach;
-    }
-
-    public boolean isIs_valdby_pres() {
-        return is_valdby_pres;
-    }
-
-    public void setIs_valdby_pres(boolean is_valdby_pres) {
-        this.is_valdby_pres = is_valdby_pres;
-    }
-
-    public boolean isIs_valdby_cdg() {
-        return is_valdby_cdg;
-    }
-
-    public void setIs_valdby_cdg(boolean is_valdby_cdg) {
-        this.is_valdby_cdg = is_valdby_cdg;
-    }
+    private boolean estSupprime;
 
     public Long getId() {
         return id;
@@ -162,13 +51,12 @@ public class Demande  extends  PanacheEntity{
         this.id = id;
     }
 
-
-    public Long getId_titre_depense() {
-        return id_titre_depense;
+    public Long getIdTitreDepense() {
+        return idTitreDepense;
     }
 
-    public void setId_titre_depense(Long id_titre_depense) {
-        this.id_titre_depense = id_titre_depense;
+    public void setIdTitreDepense(Long idTitreDepense) {
+        this.idTitreDepense = idTitreDepense;
     }
 
     public String getMotif() {
@@ -179,51 +67,131 @@ public class Demande  extends  PanacheEntity{
         this.motif = motif;
     }
 
-    public Long getId_fournisseur() {
-        return id_fournisseur;
+    public Long getIdFournisseur() {
+        return idFournisseur;
     }
 
-    public void setId_fournisseur(Long id_fournisseur) {
-        this.id_fournisseur = id_fournisseur;
+    public void setIdFournisseur(Long idFournisseur) {
+        this.idFournisseur = idFournisseur;
     }
 
-    public double getMontant_ht() {
-        return montant_ht;
+    public boolean isEstregularisation() {
+        return estregularisation;
     }
 
-    public void setMontant_ht(double montant_ht) {
-        this.montant_ht = montant_ht;
+    public void setEstregularisation(boolean estregularisation) {
+        this.estregularisation = estregularisation;
     }
 
-//    public Long getId_rubrique() {
-//        return id_rubrique;
-//    }
-//
-//    public void setId_rubrique(Long id_rubrique) {
-//        this.id_rubrique = id_rubrique;
-//    }
-
-    public boolean isIs_regularisation() {
-        return is_regularisation;
+    public String getComsPrescripteur() {
+        return comsPrescripteur;
     }
 
-    public void setIs_regularisation(boolean is_regularisation) {
-        this.is_regularisation = is_regularisation;
+    public void setComsPrescripteur(String comsPrescripteur) {
+        this.comsPrescripteur = comsPrescripteur;
     }
 
-    public Long getId_periode() {
-        return id_periode;
+    public Integer getIdDirection() {
+        return idDirection;
     }
 
-    public void setId_periode(Long id_periode) {
-        this.id_periode = id_periode;
+    public void setIdDirection(Integer idDirection) {
+        this.idDirection = idDirection;
     }
 
-    public boolean is_deleted() {
-        return is_deleted;
+    public Long getIdPeriode() {
+        return idPeriode;
     }
 
-    public void setIs_deleted(boolean is_deleted) {
-        this.is_deleted = is_deleted;
+    public void setIdPeriode(Long idPeriode) {
+        this.idPeriode = idPeriode;
+    }
+
+    public String getTypeReference() {
+        return typeReference;
+    }
+
+    public void setTypeReference(String typeReference) {
+        this.typeReference = typeReference;
+    }
+
+    public String getNomReference() {
+        return nomReference;
+    }
+
+    public void setNomReference(String nomReference) {
+        this.nomReference = nomReference;
+    }
+
+    public Integer getIdRubrique() {
+        return idRubrique;
+    }
+
+    public void setIdRubrique(Integer idRubrique) {
+        this.idRubrique = idRubrique;
+    }
+
+    public String getSousRubrique() {
+        return sousRubrique;
+    }
+
+    public void setSousRubrique(String sousRubrique) {
+        this.sousRubrique = sousRubrique;
+    }
+
+    public String getTypeDevise() {
+        return typeDevise;
+    }
+
+    public void setTypeDevise(String typeDevise) {
+        this.typeDevise = typeDevise;
+    }
+
+    public double getMontantHt() {
+        return montantHt;
+    }
+
+    public void setMontantHt(double montantHt) {
+        this.montantHt = montantHt;
+    }
+
+    public String getEtatFinal() {
+        return etatFinal;
+    }
+
+    public void setEtatFinal(String etatFinal) {
+        this.etatFinal = etatFinal;
+    }
+
+    public boolean isValidationAchat() {
+        return validationAchat;
+    }
+
+    public void setValidationAchat(boolean validationAchat) {
+        this.validationAchat = validationAchat;
+    }
+
+    public boolean isValidationPrescripteur() {
+        return validationPrescripteur;
+    }
+
+    public void setValidationPrescripteur(boolean validationPrescripteur) {
+        this.validationPrescripteur = validationPrescripteur;
+    }
+
+    public boolean isValidationCdg() {
+        return validationCdg;
+    }
+
+    public void setValidationCdg(boolean validationCdg) {
+        this.validationCdg = validationCdg;
+    }
+
+    public boolean isEstSupprime() {
+        return estSupprime;
+    }
+
+    public void setEstSupprime(boolean estSupprime) {
+        this.estSupprime = estSupprime;
     }
 }

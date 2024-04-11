@@ -5,13 +5,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.dre.model.Avis_cdg;
-import org.dre.model.Personnel;
-import org.dre.model.Avis_cdg;
-import org.dre.model.Session_cd;
+import org.dre.model.SessionCd;
 import org.dre.service.Avis_cdgService;
-import org.dre.service.PersonnelService;
 import org.dre.service.SessionCdService;
-import org.hibernate.Session;
 
 import java.util.List;
 
@@ -39,7 +35,7 @@ public class CdgCnt {
     //CREATION DE SESSION
     @POST
     @Path("/session/create")
-    public Response createSessionCd(Session_cd sessionCd) {
+    public Response createSessionCd(SessionCd sessionCd) {
 //     { daty: "2004-12-12", deviseEur: 1111, deviseUsd: 1, deviseGbp: 11 }
         /*
 					ref varchar(9) not null,

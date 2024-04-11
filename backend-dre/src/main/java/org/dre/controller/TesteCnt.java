@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import org.dre.model.*;
-import org.dre.model.Periode_dmd;
+import org.dre.model.Periode;
 import org.dre.service.*;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.keycloak.AuthorizationContext;
@@ -27,7 +27,7 @@ public class TesteCnt {
     @Inject
     JsonWebToken jwt;
     @Inject
-    Periode_dmdService periodeDmdService;
+    PeriodeService periodeService;
     @Inject
     DirectionService directionService;
     @Inject
@@ -38,11 +38,6 @@ public class TesteCnt {
 
     @Inject
     FournisseurService fournisseurService;
-    @Inject
-    Avis_achatService avis_achatService;
-
-    @Inject
-    Active_dmdService active_dmdService;
 
     @Inject
     DemandeService demandeService;
@@ -99,7 +94,7 @@ public class TesteCnt {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllperiode() {
         // Récupérer les données depuis PostgreSQL
-        List<Periode_dmd> sessionCds = periodeDmdService.getAll ();
+        List<Periode> sessionCds = periodeService.getAll ();
         return Response.ok(sessionCds).build();
     }
 
@@ -129,16 +124,17 @@ public class TesteCnt {
 
     @POST
     @Path("/post/create")
-    public Response createSessionCd(Periode_dmd sessionDd) {
+    public Response createSessionCd(Periode sessionDd) {
 
 
 
-        periodeDmdService.create(sessionDd);
+        periodeService.create(sessionDd);
         return Response.status(Response.Status.CREATED).entity(sessionDd).build();
     }
 
     @POST
     @Path("demande/create")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createDemande(Demande demande) {
         demandeService.create(demande);
         return Response.status(Response.Status.CREATED).entity(demande).build();
@@ -170,46 +166,6 @@ public class TesteCnt {
 
         return Response.ok(idDir).build();
     }
-//    TESTE KEYCLOAK QUARKUS
-
-
-//    @Inject
-//    KeycloakSecurityContext securityContext;
-//
-//    @Inject
-//    KeycloakPrincipal keycloakPrincipal;
-//    @Inject
-//    AuthorizationContext authorizationContext;
-//
-//    @GET
-//    @Path("/getGroupe")
-//    public List<String> getUserGroups() {
-//        if (securityContext instanceof KeycloakSecurityContext) {
-//            KeycloakSecurityContext keycloakSecurityContext = (KeycloakSecurityContext) securityContext;
-//            AccessToken accessToken = keycloakSecurityContext.getToken();
-//            return (List<String>) accessToken.getRealmAccess().getRoles(); // Récupère les rôles du realm
-//            // Ou utilisez accessToken.getResourceAccess("votre-client").getRoles()
-//            // pour récupérer les rôles spécifiques à un client
-//        }
-//        return null; // Gérer le cas où l'utilisateur n'est pas authentifié via Keycloak
-//    }
-//    List<String> groups = authorizationContext.getGroups();
-
-
-//    @GET
-//    public String getGroups() {
-//        KeycloakSecurityContext securityContext = KeycloakSecurityContext.getIn();
-//        List<String> groups = securityContext.getGroups();
-//
-//        StringBuilder sb = new StringBuilder();
-//        for (String group : groups) {
-//            sb.append(group).append("\n");
-//        }
-//
-//        return sb.toString();
-//    }
-
-// maka id direction
 
 }
 

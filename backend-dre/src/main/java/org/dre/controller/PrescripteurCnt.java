@@ -6,7 +6,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.dre.model.*;
-import org.dre.repository.Active_dmdRepository;
+import org.dre.repository.ActiveRepository;
 import org.dre.repository.BrouillonRepository;
 import org.dre.service.*;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
@@ -19,11 +19,10 @@ import java.util.List;
 //@Authenticated
 public class PrescripteurCnt {
     @Inject
-    Periode_dmdService periodeDmdService;
+    PeriodeService periodeService;
+    ActiveService activeService ;
     @Inject
     Avis_achatService avis_achatService;
-    @Inject
-    Active_dmdService active_dmdService;
     @Inject
     DeviseService deviseService;
     @Inject
@@ -42,13 +41,13 @@ public class PrescripteurCnt {
     @Inject
     FournisseurService fournisseurService;
     @Inject
-    Titre_dmdService titre_dmdService;
+    TitreDemandeService titredemadeService;
 
     @Inject
     BrouillonRepository brouillonRepository;
 
     @Inject
-    Active_dmdRepository active_dmdRepository;
+    ActiveRepository activeRepository;
     @POST
     @Path("demande/create")
     public Response createDemande(Demande demande) {
@@ -68,7 +67,7 @@ public class PrescripteurCnt {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllperiode() {
         // Récupérer les données depuis PostgreSQL
-        List<Periode_dmd> sessionCds = periodeDmdService.getAll ();
+        List<Periode> sessionCds = periodeService.getAll ();
         return Response.ok(sessionCds).build();
     }
 
@@ -117,15 +116,15 @@ public class PrescripteurCnt {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTitre() {
         // Récupérer les données depuis PostgreSQL
-        List<Titre_dmd> titre_dmds = titre_dmdService.getAll ();
+        List<TitreDepense> titre_dmds = titredemadeService.getAll ();
         return Response.ok(titre_dmds).build();
     }
     @POST
     @Path("/titre/create")
-    public Response creatTitre(Titre_dmd titre_Dmd) {
+    public Response creatTitre(TitreDepense titre_Dmd) {
         // Récupérer les données depuis PostgreSQL
 
-        titre_dmdService.create(titre_Dmd);
+        titredemadeService.create(titre_Dmd);
 
         return Response.status(Response.Status.CREATED).entity(titre_Dmd).build();
 
@@ -133,7 +132,7 @@ public class PrescripteurCnt {
     @GET
     @Path("/idtitre/next")
     public void getNextVal() {
-       Long id =  titre_dmdService.getNextSequenceValue("titre_depense_seq");
+       Long id =  titredemadeService.getNextSequenceValue("titre_depense_seq");
         System.out.println(id);
     }
 
@@ -184,14 +183,14 @@ public class PrescripteurCnt {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllActive_dmd() {
         // Récupérer les données depuis PostgreSQL
-        List<Active_dmd> active_dmds = active_dmdService.getAll ();
+        List<Active> active_dmds = activeService.getAll ();
         return Response.ok(active_dmds).build();
     }
 
 //GET DEMANDE ACTIVE BY ID
     @GET
     @Path("active_dmd/{id}")    
-    public Active_dmd getActiveDmdById(@PathParam("id") Long id) {
-        return active_dmdRepository.findById(id);
+    public Active getActiveDmdById(@PathParam("id") Long id) {
+        return activeRepository.findById(id);
     }
 }

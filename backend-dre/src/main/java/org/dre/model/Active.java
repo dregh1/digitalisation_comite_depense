@@ -1,29 +1,29 @@
 package org.dre.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 
 @Entity
-public class Brouillon extends PanacheEntity {
- private   Long id ;
- private  Integer idTitre ;
- private    String  titre ;
- private  String motif ;
- private  double montantHt ;
- private  String  typeReference ;
- private  String  reference ;
- private  boolean estRegularisation ;
- private  String  comsPrescripteur ;
- private  Integer idPeriode ;
- private  String  periode ;
- private  Integer idDirection ;
- private  String  devise ;
- private  Integer idFournisseur ;
 
- private Integer idRubrique;
- private String nomRubrique;
- private  String  fournisseur;
+public class Active extends PanacheEntity {
+    private   Long id ;
+    private  Integer idTitre ;
+    private    String  titre ;
+    private  String motif ;
+    private  double montantHt ;
+    private  String  typeReference ;
+    private  String  reference ;
+    private  boolean estRegularisation ;
+    private  String  comsPrescripteur ;
+    private  Integer idPeriode ;
+    private  String  periode ;
+    private  Integer idDirection ;
+    private  String  devise ;
+    private  Integer idFournisseur ;
+
+    private Integer idRubrique;
+    private String nomRubrique;
+    private  String  fournisseur;
 
     public Long getId() {
         return id;
