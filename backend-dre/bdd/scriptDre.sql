@@ -188,7 +188,7 @@ create sequence titredepense_seq increment by 1;
 
 
 	-- ALTER 			------------------------------------------
-			alter table sessioncd add foreign key (id_direction) references direction(id);
+			alter table sessioncd add foreign key (idDirection) references direction(id);
 					
 			alter table demande add foreign key (idPeriode) references periode(id);
 			alter table demande add foreign key (idDirection) references direction(id);
