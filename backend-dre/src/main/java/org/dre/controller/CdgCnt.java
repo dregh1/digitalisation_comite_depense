@@ -53,7 +53,7 @@ public class CdgCnt {
     @GET
     @Path("avisCdgByIdDemande/{id}")
     public AvisCdg getAvisCdgByIdDemande(@PathParam("id") Long id) {
-        return avisCdgService.getAvisCdgByName(id);
+        return avisCdgService.getAvisCdgByIdDemande(id);
     }
 
 

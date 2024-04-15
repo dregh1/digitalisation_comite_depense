@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.dre.model.AvisAchat;
+import org.dre.model.AvisCdg;
 import org.dre.repository.AvisAchatRepository;
 
 import java.util.List;
@@ -43,5 +44,21 @@ public class AvisAchatService {
             return true;
         }
         return false;
+    }
+
+    public AvisAchat getAvisAchatByIdDemande(Long idDemande)
+    {
+        List<AvisAchat> avisAchat = this.getAll();
+
+
+        for (AvisAchat d : avisAchat )
+        {
+            if(d.getIdDemande()== idDemande)
+            {
+
+                return d;
+            }
+        }
+        return null;
     }
 }

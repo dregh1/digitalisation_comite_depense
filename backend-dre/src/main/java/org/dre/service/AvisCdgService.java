@@ -46,7 +46,7 @@ public class AvisCdgService {
         }
         return false;
     }
-    public AvisCdg getAvisCdgByName(Long idDemande)
+    public AvisCdg getAvisCdgByIdDemande(Long idDemande)
     {
         List<AvisCdg> avisCdg = this.getAll();
 
