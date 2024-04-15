@@ -8,8 +8,6 @@ public class AvisCdg extends PanacheEntity {
     private Long id;
     private  Long idDemande;
     private  String commentaire;
-    private  Long idRubrique;
-    private  String sousRubrique;
     private  double montantBudgetMensuel;
     private  double montantEngage;
 
@@ -21,11 +19,11 @@ public class AvisCdg extends PanacheEntity {
         this.id = id;
     }
 
-    public Long getId_demande() {
+    public Long getIdDemande() {
         return idDemande;
     }
 
-    public void setId_demande(Long idDemande) {
+    public void setIdDemande(Long idDemande) {
         this.idDemande = idDemande;
     }
 
@@ -37,21 +35,6 @@ public class AvisCdg extends PanacheEntity {
         this.commentaire = commentaire;
     }
 
-    public Long getId_rubrique() {
-        return idRubrique;
-    }
-
-    public void setId_rubrique(Long idRubrique) {
-        this.idRubrique = idRubrique;
-    }
-
-    public String getSousrubrique() {
-        return sousRubrique;
-    }
-
-    public void setSousrubrique(String sousRubrique) {
-        this.sousRubrique = sousRubrique;
-    }
 
     public double getMontantBudgetMensuel() {
         return montantBudgetMensuel;

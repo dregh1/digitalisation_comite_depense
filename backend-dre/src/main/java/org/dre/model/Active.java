@@ -24,6 +24,7 @@ public class Active extends PanacheEntity {
     private Integer idRubrique;
     private String nomRubrique;
     private  String  fournisseur;
+    private String sousRubrique;
 
     public Long getId() {
         return id;
@@ -31,6 +32,14 @@ public class Active extends PanacheEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSousRubrique() {
+        return sousRubrique;
+    }
+
+    public void setSousRubrique(String sousRubrique) {
+        this.sousRubrique = sousRubrique;
     }
 
     public Integer getIdTitre() {

@@ -22,8 +22,18 @@ public class Brouillon extends PanacheEntity {
  private  Integer idFournisseur ;
 
  private Integer idRubrique;
+ private String sousRubrique;
+
  private String nomRubrique;
  private  String  fournisseur;
+
+    public String getSousRubrique() {
+        return sousRubrique;
+    }
+
+    public void setSousRubrique(String sousRubrique) {
+        this.sousRubrique = sousRubrique;
+    }
 
     public Long getId() {
         return id;

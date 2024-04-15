@@ -5,7 +5,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.dre.model.AvisCdg;
+import org.dre.model.Brouillon;
 import org.dre.model.SessionCd;
+import org.dre.repository.AvisCdgRepository;
 import org.dre.service.AvisCdgService;
 import org.dre.service.SessionCdService;
 
@@ -19,18 +21,12 @@ public class CdgCnt {
 
     @Inject
     AvisCdgService avisCdgService;
+    @Inject
+    AvisCdgRepository avisCdgRepository;
 
     @Inject
     SessionCdService sessionCdService;
 
-    @GET
-    @Path("/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSessionCd() {
-        // Récupérer les données depuis PostgreSQL
-        List<AvisCdg> sessionCds = avisCdgService.getAll();
-        return Response.ok(sessionCds).build();
-    }
 
     //CREATION DE SESSION
     @POST
@@ -44,7 +40,29 @@ public class CdgCnt {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAvisCdg() {
         // Récupérer les données depuis PostgreSQL
-        List<AvisCdg> sessionCds = avisCdgService.getAll();
-        return Response.ok(sessionCds).build();
+        List<AvisCdg> avisCdg = avisCdgService.getAll();
+        return Response.ok(avisCdg).build();
     }
+
+    @GET
+    @Path("avisCdg/{id}")
+    public AvisCdg getAvisCdgById(@PathParam("id") Long id) {
+        return avisCdgRepository.findById(id);
+    }
+
+    @GET
+    @Path("avisCdgByIdDemande/{id}")
+    public AvisCdg getAvisCdgByIdDemande(@PathParam("id") Long id) {
+        return avisCdgService.getAvisCdgByName(id);
+    }
+
+
+    //creation validation,ajout commentaire, ajout montantbudgetmensuel | montantengage
+    @POST
+    @Path("/avisCdg/create")
+    public Response createAvisCdg(AvisCdg avisCdg) {
+        avisCdgService.create(avisCdg);
+        return Response.status(Response.Status.CREATED).entity(avisCdg).build();
+    }
+
 }

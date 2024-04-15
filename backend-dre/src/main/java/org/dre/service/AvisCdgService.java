@@ -4,9 +4,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.dre.model.AvisCdg;
+import org.dre.model.Direction;
 import org.dre.repository.AvisCdgRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 @ApplicationScoped
 public class AvisCdgService {
@@ -43,5 +45,20 @@ public class AvisCdgService {
             return true;
         }
         return false;
+    }
+    public AvisCdg getAvisCdgByName(Long idDemande)
+    {
+        List<AvisCdg> avisCdg = this.getAll();
+
+
+        for (AvisCdg d : avisCdg )
+        {
+            if(d.getIdDemande()== idDemande)
+            {
+
+                return d;
+            }
+        }
+        return null;
     }
 }

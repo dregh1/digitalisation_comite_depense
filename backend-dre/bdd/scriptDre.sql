@@ -65,7 +65,7 @@ create database oma;
 
 		-- DEMANDE
 		create sequence demande_seq increment by 1;
-			create table demande
+			create  table demande
 					(
 						id serial primary key ,
 						idTitreDepense bigint,
@@ -83,7 +83,7 @@ create database oma;
 						typeDevise varchar(10) not null, --
 						montantHt decimal(32,3) not null,
                         idRubrique bigint,
-                        sousrubrique varchar(50),
+                        sousRubrique varchar(50),
 
 						
 						etatFinal varchar(10),
@@ -219,6 +219,37 @@ create sequence titredepense_seq increment by 1;
 	        insert into titreDepense (designation) values ("Team Building");
 			insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('année');
 
+
+INSERT INTO demande (
+    idTitreDepense,
+    motif,
+    idFournisseur,
+    estRegularisation,
+    comsPrescripteur,
+    idDirection,
+    idPeriode,
+    typeReference,
+    nomReference,
+    typeDevise,
+    montantHt,
+    idRubrique,
+    sousrubrique
+)
+VALUES (
+    1,
+    'Achat de fournitures de bureau',
+    1,
+    false,
+    'Livraison urgente requise',
+    1,
+    1,
+    'BC',
+    'Facture A00000123',
+    'EUR',
+    542.75,
+    1,
+    'Papeterie'
+);
 
 
 	-- VIEW 			------------------------------------------

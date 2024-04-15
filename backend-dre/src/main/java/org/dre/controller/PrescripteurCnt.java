@@ -20,6 +20,7 @@ import java.util.List;
 public class PrescripteurCnt {
     @Inject
     PeriodeService periodeService;
+    @Inject
     ActiveService activeService ;
     @Inject
     AvisAchatService avis_achatService;
@@ -55,6 +56,7 @@ public class PrescripteurCnt {
         return Response.status(Response.Status.CREATED).entity(demande).build();
     }
 
+    //validation prescripteur
     @PUT
     @Path("demande/{id}")
     public Response updateDemande(@PathParam("id") Long id, Demande demande) {
@@ -189,7 +191,7 @@ public class PrescripteurCnt {
 
 //GET DEMANDE ACTIVE BY ID
     @GET
-    @Path("active_dmd/{id}")    
+    @Path("/active_dmd/{id}")
     public Active getActiveDmdById(@PathParam("id") Long id) {
         return activeRepository.findById(id);
     }

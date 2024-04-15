@@ -9,6 +9,8 @@ import org.dre.model.Demande;
 import org.dre.service.AvisAchatService;
 import org.dre.service.DemandeService;
 
+import java.util.List;
+
 @Path("/achat")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -21,7 +23,7 @@ public class AchatCnt {
 
     //COMMENTAIRE ACHAT
     @POST
-    @Path("/commentaire/create")
+    @Path("/avisAchat/create")
     public Response createCommentaireAchat(AvisAchat avis_achat) {
 
         avis_achatService.create(avis_achat);
@@ -39,7 +41,6 @@ public class AchatCnt {
 
     @PUT
     @Path("/validateDmd/{id}")
-//    @Produces(MediaType.APPLICATION_JSON)
     public Response validateDemande(@PathParam("id") Long id) {
 
         //find by id demande
@@ -50,6 +51,15 @@ public class AchatCnt {
 
         return Response.ok(d).build();
     }
+
+//    @POST
+//    @Path("/avis_achat/get")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response createCommentaireAchat(AvisAchat avis_achat) {
+//
+//        avis_achatService.create(avis_achat);
+//        return Response.status(Response.Status.CREATED).entity(avis_achat).build();
+//    }
 
 
 }
