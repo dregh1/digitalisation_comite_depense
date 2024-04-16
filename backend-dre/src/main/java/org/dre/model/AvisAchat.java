@@ -1,15 +1,15 @@
 package org.dre.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
 @Entity
-public class AvisAchat extends PanacheEntity {
-
+public class AvisAchat  {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
         private Long idDemande;
         private String commentaire;

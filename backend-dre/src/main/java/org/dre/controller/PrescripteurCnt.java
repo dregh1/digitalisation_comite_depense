@@ -24,19 +24,16 @@ public class PrescripteurCnt {
     ActiveService activeService ;
     @Inject
     AvisAchatService avis_achatService;
-    @Inject
-    DeviseService deviseService;
+
     @Inject
     RubriqueService rubriqueService;
 
-    @Inject
-    SousrubriqueService sousrubriqueService;
+
 
 
     @Inject
     DemandeService demandeService;
-    @Inject
-    ReferenceService referenceService;
+
     @Inject
     BrouillonService brouillonService;
     @Inject
@@ -95,23 +92,9 @@ public class PrescripteurCnt {
         return Response.ok(avis_achat).build();
     }
 
-    @GET
-    @Path("/devise/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getDevise() {
-        // Récupérer les données depuis PostgreSQL
-        List<Devise> devises = deviseService.getAll ();
-        return Response.ok(devises).build();
-    }
 
-    @GET
-    @Path("/reference/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getReference() {
-        // Récupérer les données depuis PostgreSQL
-        List<Reference> references = referenceService.getAll ();
-        return Response.ok(references).build();
-    }
+
+
 
     @GET
     @Path("/titre/get")
@@ -147,14 +130,7 @@ public class PrescripteurCnt {
         List<Rubrique> rubriques = rubriqueService.getAll ();
         return Response.ok(rubriques).build();
     }
-    @GET
-    @Path("/sousrubrique/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSousRubrique() {
-        // Récupérer les données depuis PostgreSQL
-        List<Sousrubrique> rubriques = sousrubriqueService.getAll ();
-        return Response.ok(rubriques).build();
-    }
+
 
     //select BROUILLON
     @GET

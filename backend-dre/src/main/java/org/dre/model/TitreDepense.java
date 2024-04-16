@@ -6,8 +6,9 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "TitreDepense")
-public class TitreDepense  extends PanacheEntity {
+public class TitreDepense   {
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.dre.model.AvisCdg;
 import org.dre.model.Brouillon;
+import org.dre.model.Demande;
 import org.dre.model.SessionCd;
 import org.dre.repository.AvisCdgRepository;
 import org.dre.service.AvisCdgService;
@@ -64,5 +65,15 @@ public class CdgCnt {
         avisCdgService.create(avisCdg);
         return Response.status(Response.Status.CREATED).entity(avisCdg).build();
     }
+
+    //UPDATE AVISCDG
+    @PUT
+    @Path("avisCdg/{id}")
+    public Response updateAvisCdg(@PathParam("id") Long id, AvisCdg avisCdg) {
+        avisCdg.setId(id); // Assure que l'ID de l'utilisateur est correctement défini
+        avisCdgService.updateAvisCdg(avisCdg);
+        return Response.ok(avisCdg).build();
+    }
+
 
 }

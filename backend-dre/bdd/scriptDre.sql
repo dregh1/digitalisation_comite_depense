@@ -1,35 +1,41 @@
 create database oma;
 	alter database oma owner to dre;
 
+--TRUNCATE
+--truncate table sessioncd cascade;
+--truncate table demande cascade;
+--truncate table titredepense cascade;
+--truncate table fournisseur cascade;
+--truncate table periode cascade;
+--truncate table avisAchat cascade;
+--truncate table avisCdg cascade;
+--truncate table etatFinal cascade;
+--truncate table rubrique cascade;
+--truncate table direction cascade;
+--truncate table demandeEtSession cascade;
+
+
+--DROP
+--drop table sessioncd cascade;
+--drop table demande cascade;
+--drop table titredepense cascade;
+--drop table fournisseur cascade;
+--drop table periode cascade;
+--drop table avisAchat cascade;
+--drop table avisCdg cascade;
+--drop table etatFinal cascade;
+--drop table rubrique cascade;
+--drop table direction cascade;
+--drop table demandeEtSession cascade;
 
 
 -- 			--	table tsy ilaina
 
 
 
-							create table personnel
-								(
-									id serial primary key)),
-									nom varchar(50) ,
-									prenom varchar(50) ,
-									age integer
-								);
-
-						alter table login add foreign key (idPersonnel) references personnel(id);
 
 
-							create table login
-								(
-									id serial primary key)),
-									username varchar(50) not null,
-									password varchar(50) not null,
-									idPersonnel bigint 
 
-								);
-
-
-						insert into login (username,password,idPersonnel) values ('rabe@gmail.com','rabe123',3) ;
-	
 
 	
 	
@@ -38,6 +44,7 @@ create database oma;
 
 		--SESSION	
 
+--create sequence sessionCd_seq increment by 1;
 		create table sessionCd
 				(
 					id serial primary key,
@@ -54,17 +61,10 @@ create database oma;
 
         -- insert into sessioncd (ref,date_cloture,taux_eur,taux_gbp,taux_usd,taux_mga) values('CD-24022024','2024-02-24',4000.5,5000.25,6000.2,1500.2);
 
-        -- DEVISE
-
-		create table devise
-				(
-					id serial primary key,
-					designation varchar(3) not null
-				);
 
 
 		-- DEMANDE
-		create sequence demande_seq increment by 1;
+--		create sequence demande_seq increment by 1;
 			create  table demande
 					(
 						id serial primary key ,
@@ -97,7 +97,7 @@ create database oma;
 					);
 
 
-        create sequence avisAchat_seq increment by 1;
+--        create sequence avisAchat_seq increment by 1;
 		create table avisAchat
 					(
 						id serial primary key ,
@@ -107,7 +107,7 @@ create database oma;
 					);
 
 
-		create sequence avisCdg_seq INCREMENT by 1;
+--		create sequence avisCdg_seq INCREMENT by 1;
 		create table avisCdg
 					(
 						id serial primary key ,
@@ -118,7 +118,7 @@ create database oma;
 						);
 
 
-		create sequence etatFinal_seq INCREMENT by 1;
+--		create sequence etatFinal_seq INCREMENT by 1;
 		create table etatFinal
 			(
 				id serial primary key,
@@ -127,7 +127,7 @@ create database oma;
 
 
 		-- rubrique
-		create sequence rubrique_seq INCREMENT by 1;
+--		create sequence rubrique_seq INCREMENT by 1;
 		create table rubrique 
 				(
 					id serial primary key,
@@ -135,14 +135,14 @@ create database oma;
 				);
 
 
-		create sequence direction_seq INCREMENT by 1;
+--		create sequence direction_seq INCREMENT by 1;
 		create table direction 
 				(
 					id serial primary key,
 					designation varchar(50)
 
 				);
-create sequence titredepense_seq increment by 1;
+--create sequence titredepense_seq increment by 1;
 
 		create table titreDepense
 				(
@@ -152,7 +152,7 @@ create sequence titredepense_seq increment by 1;
 				);
 
 
-		create sequence periode_seq INCREMENT by 1;
+--		create sequence periode_seq INCREMENT by 1;
 		create table periode
 		(
 			id serial primary key,
@@ -161,7 +161,7 @@ create sequence titredepense_seq increment by 1;
 
 
 		--
-		create sequence fournisseur_seq INCREMENT by 1; 
+--		create sequence fournisseur_seq INCREMENT by 1;
 		create table fournisseur 
 		(
 			id serial primary key,
@@ -178,12 +178,7 @@ create sequence titredepense_seq increment by 1;
 			);
 
 
-		create sequence reference_seq INCREMENT by 1;	
-		create table reference 
-			(
-				id serial primary key,
-				designation varchar(50)
-			 );
+
 
 
 
@@ -195,13 +190,10 @@ create sequence titredepense_seq increment by 1;
 			alter table demande add foreign key (idTitreDepense) references titreDepense(id);
 			alter table demande add foreign key (idFournisseur) references fournisseur(id);
 			alter table demande add foreign key (idRubrique) references rubrique(id);
-			-- alter table demande add foreign key (id_devise) references devise(id);
-			-- alter table demande add foreign key (id_etatFinal) references etatFinal(id);
-			-- alter table demande add foreign key (id_reference) references reference(id);
 
-			alter table avisCdg add foreign key (idRubrique) references rubrique(id);
+
+
 			alter table avisCdg add foreign key(idDemande) references demande(id);
-
 			alter table avisAchat add foreign key (idDemande) references demande(id);
 
 
@@ -209,15 +201,13 @@ create sequence titredepense_seq increment by 1;
 
 	-- INSERTION 		------------------------------------------
 			insert into etatFinal(designation) values ('OK'),('NOK'),('En attente');
-			insert into reference (designation) values ('BC'),('DED');
-			insert into devise (designation) values ('EUR'),('USD');
 			insert into direction (designation) values ('DTI'),('ODC'),('DF'),('DRH');
 			
 
 			insert into fournisseur(nom) values ('Socobis'),('Chocolat Robert');
 			insert into rubrique(designation) values('achat nourrire');
-	        insert into titreDepense (designation) values ("Team Building");
-			insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('année');
+	        insert into titreDepense (designation) values ('Team Building');
+			insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
 
 
 INSERT INTO demande (

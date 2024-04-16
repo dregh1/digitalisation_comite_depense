@@ -7,14 +7,14 @@ import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 @Entity
-public class SessionCd extends PanacheEntity {
-
+public class SessionCd  {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id  ;
     @JsonProperty("ref")
     private  String ref ;
 
-    @JsonProperty("date_cloture")
+    @JsonProperty("dateCloture")
     private Timestamp dateCloture;
     @JsonProperty("tauxEur")
     private float tauxEur;
@@ -62,7 +62,7 @@ public class SessionCd extends PanacheEntity {
         return tauxUsd;
     }
 
-    public void setTauxUsd(float taux_usd) {
+    public void setTauxUsd(float tauxUsd) {
         this.tauxUsd = tauxUsd;
     }
 

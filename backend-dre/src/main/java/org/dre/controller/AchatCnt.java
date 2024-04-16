@@ -40,7 +40,7 @@ public class AchatCnt {
     public Response validateDemande(@PathParam("id") Long id) {
 
         //find by id demande
-        Demande d = Demande.findById(id);
+        Demande d = demandeService.getDemandeById(id);
 
         d.setValidationAchat(true);
         demandeService.updateDemande(d);
@@ -72,6 +72,14 @@ public class AchatCnt {
         return avisAchatService.getAvisAchatByIdDemande(id);
     }
 
+    //UPDATE AVISACHAT
+    @PUT
+    @Path("avisAchat/{id}")
+    public Response updateAvisAchat(@PathParam("id") Long id, AvisAchat avisAchat) {
+        avisAchat.setId(id); // Assure que l'ID de l'utilisateur est correctement défini
+        avisAchatService.updateAvisAchat(avisAchat);
+        return Response.ok(avisAchat).build();
+    }
 
 
 
