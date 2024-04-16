@@ -1,10 +1,11 @@
 package org.dre.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Entity;
 
 @Entity
-public class AvisCdg extends PanacheEntity {
+public class AvisCdg extends PanacheEntityBase {
     private Long id;
     private  Long idDemande;
     private  String commentaire;

@@ -28,10 +28,10 @@ public class AchatCnt {
     //COMMENTAIRE ACHAT
     @POST
     @Path("/avisAchat/create")
-    public Response createCommentaireAchat(AvisAchat avis_achat) {
+    public Response createCommentaireAchat(AvisAchat avisAchat) {
 
-        avisAchatService.create(avis_achat);
-        return Response.status(Response.Status.CREATED).entity(avis_achat).build();
+        avisAchatService.create(avisAchat);
+        return Response.status(Response.Status.CREATED).entity(avisAchat).build();
     }
     
 
