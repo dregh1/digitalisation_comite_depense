@@ -102,13 +102,16 @@ public class TesteCnt {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getIdDirByName(@QueryParam("nom") String nomDir) {
 
-        Long idDir ;
+        Long idDir = null;
+        Direction d= null;
         if(nomDir!= null)
         {
-            idDir = directionService.getIdDirByName(nomDir).getId();
-        }else idDir= null;
+            d = directionService.getIdDirByName(nomDir);
+        }
 
-        return Response.ok(idDir).build();
+
+
+        return Response.ok(d).build();
     }
     @POST
     @Path("/getIdDir")

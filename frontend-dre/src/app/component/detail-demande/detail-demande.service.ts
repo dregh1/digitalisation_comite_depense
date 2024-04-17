@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Demande } from 'src/app/models/Demande';
-import { HttpClient } from '@angular/common/http';
-import { Periode } from 'src/app/models/Periode';
-import { Rubrique } from 'src/app/models/Rubrique';
-import { Fournisseur } from 'src/app/models/Fournisseur';
-import { Brouillon } from 'src/app/models/Brouillon';
 import { Titre } from 'src/app/models/TitreDepense';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Brouillon } from 'src/app/models/Brouillon'; 
+import { Demande } from 'src/app/models/Demande';
+import { Periode } from 'src/app/models/Periode';
+import { Fournisseur } from 'src/app/models/Fournisseur';
+import { Active } from 'src/app/models/Active';
+import { Rubrique } from 'src/app/models/Rubrique';
+
 @Injectable({
   providedIn: 'root'
 })
-export class AffichageService {
+export class DetailDemandeService {
   private url = 'http://localhost:8080';
 
   private baseUrl = 'http://localhost:8080/teste';
@@ -35,6 +37,10 @@ posttitre(formData: any): Observable<any> {
 getBrouillonbyId(id:number):  Observable<Brouillon> {
   return this.http.get<Brouillon>(`${this.baseUrl2}/brouillon/${id}`);
 }
+  // maka ny brouillon
+  getActiveId(id:number):  Observable<Active> {
+    return this.http.get<Active>(`${this.baseUrl2}/active_dmd/${id}`);
+  }
 //modication demande
 update(id:number,data:any):Observable<any>{
   return this.http.put<any>(`${this.baseUrl2}/demande/${id}`,data);
@@ -58,5 +64,9 @@ searchByName(name:any):Observable<any>{
   // maka rubrique
 getRubrique(): Observable<Rubrique[]> {
   return this.http.get<Rubrique[]>(this.baseUrl2+'/rubrique/get');
+}
+//avis cdg
+postCdg(id:number,formData: any): Observable<any> {
+  return this.http.post<any>(this.baseUrl2+'/titre/create',formData);
 }
 }

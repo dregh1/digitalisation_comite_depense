@@ -1,5 +1,19 @@
-projet
-authorization
-boky
-debug ny variable d'env
-	debug ny autoincrement
+    projet
+        consultation
+        refresh token
+        iddirection
+ok            insert iddirection à chaque session
+            insert iddirection à chaque demande
+ok            getAllbrouillon by iddirection
+ok            getAllactive by iddirection
+
+        idsession lié @ demande
+        titre par session
+        notification
+        envoie mail
+
+    authorization
+    boky
+    debug ny variable d'env
+ok	debug ny autoincrement
+    bpmn.js

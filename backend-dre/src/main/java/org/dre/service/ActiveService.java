@@ -4,8 +4,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.dre.model.Active;
+import org.dre.model.Brouillon;
 import org.dre.repository.ActiveRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,6 +46,20 @@ public class ActiveService {
             return true;
         }
         return false;
+    }
+    public List<Active> getAllByIdDir(Integer id) {
+
+        List<Active> actives= activeRepository.listAll();
+        List<Active> activesById = new ArrayList<>();
+
+        for(Active active : actives)
+        {
+            if(active.getIdDirection() == id)
+            {
+                activesById.add(active);
+            }
+        }
+        return activesById;
     }
 
 }

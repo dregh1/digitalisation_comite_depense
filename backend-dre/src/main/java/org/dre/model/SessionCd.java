@@ -11,6 +11,8 @@ public class SessionCd  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id  ;
+
+    private Integer idDirection;
     @JsonProperty("ref")
     private  String ref ;
 
@@ -32,6 +34,14 @@ public class SessionCd  {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getIdDirection() {
+        return idDirection;
+    }
+
+    public void setIdDirection(Integer idDirection) {
+        this.idDirection = idDirection;
     }
 
     public String getRef() {

@@ -146,6 +146,19 @@ public class PrescripteurCnt {
         List<Brouillon> brouillons = brouillonService.getAll ();
         return Response.ok(brouillons).build();
     }
+    @GET
+    @Path("/brouillon/getByIdDir/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+//    @SecurityRequirement(name = "Keycloak")
+    public Response getBrouillonsByIdDirection(@PathParam("id") Integer id) {
+        // Récupérer les données depuis PostgreSQL
+
+        // mila misy filtre
+
+        List<Brouillon> brouillons = brouillonService.getAllByIdDir (id);
+
+        return Response.ok(brouillons).build();
+    }
 
     // select brouillon by id
     @GET
@@ -165,6 +178,19 @@ public class PrescripteurCnt {
         return Response.ok(active_dmds).build();
     }
 
+    @GET
+    @Path("/active/getByIdDir/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+//    @SecurityRequirement(name = "Keycloak")
+    public Response getActiveByIdDirection(@PathParam("id") Integer id) {
+        // Récupérer les données depuis PostgreSQL
+
+        // mila misy filtre
+
+        List<Active> actives = activeService.getAllByIdDir (id);
+
+        return Response.ok(actives).build();
+    }
 //GET DEMANDE ACTIVE BY ID
     @GET
     @Path("/active_dmd/{id}")

@@ -1,0 +1,205 @@
+import { Component, OnInit } from '@angular/core';
+import { CreationPrescripteurService } from './creation-prescripteur.service';
+import { Fournisseur } from 'src/app/models/Fournisseur';
+import { Periode } from 'src/app/models/Periode';
+import { Brouillon } from 'src/app/models/Brouillon';
+import { Titre } from 'src/app/models/TitreDepense';
+import { Rubrique } from 'src/app/models/Rubrique';
+import { Route, Router } from '@angular/router';
+@Component({
+  selector: 'app-creation-prescripteur',
+  templateUrl: './creation-prescripteur.component.html',
+  styleUrls: ['./creation-prescripteur.component.scss']
+})
+export class CreationPrescripteurComponent implements OnInit {
+// donnee PRESCRIPTEUR
+periodes: Periode[]=[];
+fournisseurs : Fournisseur[] = [];
+titres : Titre[] = [];
+brouillons : Brouillon [] = [];
+rubriques: Rubrique [] = [];
+
+active_dmds : Brouillon [] = [];
+titresBr : any [] = [];
+titresAct : any [] = [];
+selectedTitleBr: string | undefined;
+selectedTitleAct: string | undefined;
+devises : any [] =  [];
+refences : any []= [];
+designation:string='';
+texte:string='';
+// valeur
+periode:any;
+estregularisation : boolean;  
+idSession : any = 3351;
+idTitredepense : any =  1;
+motif : any;
+montantHt : any;
+
+demande
+={
+estregularisation    :'',
+
+typeReference : '',
+idRubrique:'',
+Sousrubrique : '',
+motif               : '',
+typeDevise : '',
+comsPrescripteur :'',
+
+idTitreDepense    : '',
+nomReference : '',
+
+idFournisseur      :'',
+montantHt          :'',
+
+idPeriode          : '',
+
+}
+
+TitreDepense =
+{
+ designation :'',
+}
+
+errorStatus = false;
+errorMessage : string='';
+//  données ACHAT
+commentairesAch : string = '';
+constructor(private CreationPrescripteurService : CreationPrescripteurService,private router:Router)
+ {
+    this.estregularisation = false;
+   }
+ 
+ 
+ngOnInit(): void {
+ //maka titre
+ this.CreationPrescripteurService.getTitre().subscribe(data => {
+   this.titres = data;
+ });
+ 
+
+  // maka ny fournisseur
+  this.CreationPrescripteurService.getFournisseur().subscribe(data => {
+    this.fournisseurs = data;
+  });
+  
+ 
+
+  // maka ny periode
+  this.CreationPrescripteurService.getPeriode().subscribe(data => {
+    this.periodes = data;
+  });
+  //maka rubrique
+  this.CreationPrescripteurService.getRubrique().subscribe(data => {
+   this.rubriques = data;
+ });
+ 
+
+  //maka ny reference
+  this.CreationPrescripteurService.getReference().subscribe(data => {
+    this.refences = data;
+
+    console.log("references"); // ["Team Building", "sans titre"]
+   
+    console.log(this.refences); // ["Team Building", "sans titre"]
+    
+  });
+
+   //maka ny devise
+   this.CreationPrescripteurService.getDevise().subscribe(data => {
+    this.devises = data;
+
+    console.log("devises"); // ["Team Building", "sans titre"]
+   
+    console.log(this.devises); // ["Team Building", "sans titre"]
+    
+  });
+
+  //  CREATE DEMANDE
+  this.CreationPrescripteurService.createDemande(this.demande);
+
+
+}
+showDetailsBr(title: string) {
+  this.selectedTitleBr = title;
+}
+showDetailsAct(title: string) {
+  this.selectedTitleAct = title;
+}
+creerDemande()
+{
+   // TEST SI LES VALEURS SONT PRETES
+    console.log( 
+     "periode : "+this.demande.idPeriode + "\n " + 
+     "fournisseur : "+this.demande.idFournisseur + "\n " + 
+     "isregularisation : "+this.demande.estregularisation  + "\n " +
+     "devise" + this.demande.typeDevise + " \n"+
+     "idTitreDepense :  " + this.demande.idTitreDepense + " \n"+
+     "motif" + this.demande.motif + " \n"+"ref" + this.demande.typeReference + " \n"+
+     "commentaire" + this.demande.comsPrescripteur + " \n"+
+     "montantHt" + this.demande.montantHt + " \n"+"rerence" + this.demande.nomReference + " \n"
+     +"idtitrdepense"+this.demande.idTitreDepense
+   
+  
+    
+    );
+    // INSERTION DEMANDE
+    this.CreationPrescripteurService.createDemande(this.demande)
+    .subscribe(
+       response  => {
+         // Gérer la réponse du jeton avec succès
+         console.log(' reçu:', response);
+         console.log('\n\n\n\n\n\n');
+         window.location.reload();
+         this.errorMessage='Demande validé!';
+         setTimeout(() => {
+           this.errorStatus = false; // Hide the message by setting errorStatus to false
+           this.errorMessage = '';    // Optionally, clear the error message
+         }, 3000);
+          
+        },
+       error => {
+         // Gérer les erreurs pendant la requête
+         console.error('Erreur lors de l\'obtention du jeton:', error);
+        
+       }
+    );   
+
+}
+
+
+//ajout option
+ajoutOpt(id : any, text : string){
+ const selectelement = document.getElementById("idtitre");
+     const newOpt = document.createElement("option");
+     newOpt.value = id;
+     newOpt.text = text;
+
+     if(selectelement!==null)
+     {
+       selectelement.appendChild(newOpt);
+       newOpt.selected = true;
+       this.demande.idTitreDepense = id;
+     };
+}
+// set coms achat
+setComsAchat(){
+  
+}
+//Ajout titre
+// 
+
+//Ajout titre
+Ajouttitre() {
+
+ console.log(this.TitreDepense.designation);
+
+ this.CreationPrescripteurService.posttitre(this.TitreDepense)
+ .subscribe(response => {
+                 console.log( response);
+                 this.ajoutOpt(response.id , response.designation);
+               }
+           ); 
+}
+}

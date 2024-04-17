@@ -147,6 +147,7 @@ create database oma;
 		create table titreDepense
 				(
 					id serial primary key  ,
+
 					designation varchar(50)
 
 				);

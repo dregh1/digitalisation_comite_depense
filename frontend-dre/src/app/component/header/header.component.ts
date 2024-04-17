@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../authentication copy/authentication.service';
 
 @Component({
   selector: 'app-header',
@@ -6,16 +7,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  role: string | null | undefined;
-  constructor() { }
-
-  ngOnInit(): void {
-    
-    this.role =  sessionStorage.getItem("role");
-    // sessionStorage.removeItem("role");
-
-
+  token: string | null='';
+  role: string | null= 'prescripteur';
+  constructor(private autheticationServ:AuthenticationService) { 
+    this.token = sessionStorage.getItem("token");
+   
+    if(this.token !== null )
+    {
+      this.autheticationServ.getUserInfo(this.token);
+      this.role = sessionStorage.getItem("role");
+      // sessionStorage.removeItem("role");
+      // window.location.reload();
+    }
   }
 
+  ngOnInit(): void {
+  }
 
 }

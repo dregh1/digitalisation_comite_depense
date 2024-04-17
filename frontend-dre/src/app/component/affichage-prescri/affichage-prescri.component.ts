@@ -1,133 +1,266 @@
-import { Component, OnInit } from '@angular/core';
-import { Demande } from 'src/app/models/Demande';
-import { AffichageService } from './affichage.service';
-import { HttpClient } from '@angular/common/http';
-import { Periode } from 'src/app/models/Periode';
+
+ // donnee PRESCRIPTEUR
+ import { Component, OnInit, Renderer2, ElementRef} from '@angular/core';
+ import { ActivatedRoute ,Router} from '@angular/router';
+ import { Demande } from 'src/app/models/Demande';
+ import { Titre } from 'src/app/models/TitreDepense';
+ import { Brouillon } from 'src/app/models/Brouillon';
+ import { Periode } from 'src/app/models/Periode';
+ import { Fournisseur } from 'src/app/models/Fournisseur';
+ import { AffichageService } from './affichage.service';
 import { Rubrique } from 'src/app/models/Rubrique';
-import { Fournisseur } from 'src/app/models/Fournisseur';
-import { Sousrubrique } from 'src/app/models/Sousrubrique';
-import { Brouillon } from 'src/app/models/Brouillon';
-import { Active_dmd } from 'src/app/models/Active_dmd';
-import { ActivatedRoute } from '@angular/router';
-import { Prescripteur1Service } from '../prescripteur/prescripteur1.service';
-@Component({
+ @Component({
   selector: 'app-affichage-prescri',
   templateUrl: './affichage-prescri.component.html',
   styleUrls: ['./affichage-prescri.component.scss']
 })
 export class AffichagePrescriComponent implements OnInit {
- // donnee PRESCRIPTEUR
- periodes: Periode[]=[];
- fournisseurs : Fournisseur[] = [];
- //titres : Titre[] = [];
- brouillons : Brouillon [] = [];
- rubriques: Rubrique [] = [];
-
- active_dmds : Brouillon [] = [];
- titresBr : any [] = [];
- titresAct : any [] = [];
- selectedTitleBr: string | undefined;
- selectedTitleAct: string | undefined;
- devises : any [] =  [];
- refences : any []= [];
-designation:string='';
-texte:string='';
- // valeur
- periode:any;
- isregularisation : boolean;  
- id_session : any = 3351;
- id_titre_depense : any =  1;
- motif : any;
- montant_ht : any;
-
- brouillon = new Brouillon();
-  demandes=new Demande();
-  role : string | null ;
-
-  id:number; type:string='';devise:string='';
-
- demande
- ={
-  is_valdby_pres:false,
-  is_regularisation    :'',
-  type_reference : '',
-  id_rubrique:'',
-  sousrubrique : '',
-  motif               : '',
-  type_devise : '',
-  coms_prescripteur :'',
-
-  id_titre_depense    : '',
-  reference : '',
-
-  id_fournisseur      :'',
-  montant_ht          :'',
-
-  id_periode          : '',
-    titre:'',
-    id_direction:'',
-    id_titre:'',
-    fournisseur:'',
-    periode:'',
-    nom_reference:''
-  } 
-
-titre_depense =
-{
-  designation :'',
-}
-item: Demande | null = null;
-  errorMessage: string | null = null;
-  activatedRoute: any;
-
-
-  constructor(private AffichageService:  AffichageService,private route: ActivatedRoute,private prescriptService : Prescripteur1Service) { 
-    this.isregularisation = false;
-    this.role  = sessionStorage.getItem("role");
-    this.id = this.activatedRoute.snapshot.params['id'];
-  }
-  
-
-  ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id')); // Access ID from route
-    // this.apiService.getItemById(id).subscribe({
-    //   next: (data) => (this.item = data),
-    //   error: (error) => (this.errorMessage = error.message)
-    // });
+   role: string = 'prescripteur';
+   isUp1 = false; // Initial state for first button
+   isUp2 = false; // Initial state for second button
+   isUp3 = false;
+   item:any;errorMessage:string='';
+   rubriques:Rubrique[]=[];
+   periodes: Periode[]=[];errorStatus = false;errorStatus1 = false;errorStatus2 = false;
+   demande
+     ={
+         validationPrescripteur:false,
+         estRegularisation    :'',
+         typeReference : '',
+         idRubrique:'',
+         sousRubrique : '',
+         motif               : '',
+         typeDevise : '',
+         comsPrescripteur :'',
+         idTitreDepense    : '',
+         Reference : '',
+         idFournisseur      :'',
+         montantHt          :'',
+       rubrique:'',
+         idPeriode          : '',
+           idDirection:'',
+           
+           fournisseur:'',
+           periode:'',
+           nomReference:''
+         }  
+   Titredepense =
+   {
+     designation :'',
+   }
+ id:number;type:string='';devise:string='';
+   titres : Titre[] = [];  fournisseurs : Fournisseur[] = [];
+   brouillons = new Brouillon();
+   demandes=new Demande();
+  message:string='';
+   constructor( private AffichageService:AffichageService,private activatedRoute: ActivatedRoute,private router:Router) {
+    
+     this.id = this.activatedRoute.snapshot.params['id'];
    
-
-    //maka ny active_dmd
-    // ny active_demande
-    this.prescriptService.getActiveDmdbyId(this.id).subscribe(response=> {
-        this.brouillon = response;
-        this.demande.is_regularisation = this.brouillon.is_regularisation?.toString() ?? "";
-        this.demande.titre = this.brouillon.titre ?? "";
+   }
+   
+   ngOnInit(): void {
+     //maka titre
+     this.AffichageService.getTitre().subscribe(data => {
+       this.titres = data;
+      
+     });
+      // maka ny periode
+      this.AffichageService.getPeriode().subscribe(data => {
+       this.periodes = data;
+     });
+     // maka ny fournisseur
+     this.AffichageService.getFournisseur().subscribe(data => {
+       this.fournisseurs = data;
+     });
+    // maka demande
+     //  this.AffichageService.getdemande(this.id).subscribe(response=> {
+     // this.demandes = response;
+     //  this.demande.id_periode= this.demande.id_periode;
+     // });
+      //maka rubrique
+  this.AffichageService.getRubrique().subscribe(data => {
+    this.rubriques = data;
+  });
+     //  //maka titre
+     //maka par detail
+     this.AffichageService.getBrouillonbyId(this.id).subscribe(response=> {
+       this.brouillons = response;
+       console.log(response);
+       
+       this.demande.estRegularisation = this.brouillons.estRegularisation?.toString() ?? "";
         
-        this.demande.type_reference = this.brouillon.type_reference ?? "";
-        this.type=this.demande.type_reference;
-        this.demande.nom_reference = this.brouillon.reference ?? "";
-        this.demande.motif = this.brouillon.motif ?? "";
-        this.demande.type_devise = this.brouillon.devise ?? "";
-        this.devise=this.demande.type_devise ;
-        this.demande.coms_prescripteur = this.brouillon.coms_prescripteur ?? "";
-        this.demande.fournisseur = this.brouillon.fournisseur ?? "";
-        this.demande.montant_ht = this.brouillon.montant_ht?.toString() ?? "";
-        this.demande.periode = this.brouillon.periode ?? ""; 
-        this.demande.id_periode = this.brouillon.id_periode?.toString() ?? ""; 
-        this.demande.id_direction = this.brouillon.id_direction?.toString() ?? ""; 
-        this.demande.id_fournisseur = this.brouillon.id_fournisseur?.toString() ?? ""; 
-        this.demande.id_titre_depense = this.brouillon.id_titre?.toString() ?? ""; 
-        this.setSelected(this.demande.id_titre_depense);
-    });
-   
-  }
-  setSelected(id_titre_depense: string) {
-    throw new Error('Method not implemented.');
-  }
-   //Affichage demande
-  // this.AffichageService.getDemandeById(this.DemandeId).subscribe(demande =>{
-  //   this.rubrique = demande;
-  //   });
-    // maka ny periode
+       this.demande.typeReference= this.brouillons.typeReference ?? "";
+       this.type=this.demande.typeReference;
+       this.demande.nomReference = this.brouillons.reference ?? "";
+       this.demande.motif = this.brouillons.motif ?? "";
+       this.demande.typeDevise = this.brouillons.devise ?? "";
+       this.devise=this.demande.typeDevise ;
+       this.demande.comsPrescripteur = this.brouillons.comsPrescripteur ?? "";
+       this.demande.fournisseur = this.brouillons.fournisseur ?? "";
+       this.demande.montantHt = this.brouillons.montantHt?.toString() ?? "";
+       this.demande.periode = this.brouillons.periode ?? ""; 
+       this.demande.idPeriode = this.brouillons.idPeriode?.toString() ?? ""; 
+       this.demande.idDirection = this.brouillons.idDirection?.toString() ?? ""; 
+       this.demande.idFournisseur = this.brouillons.idFournisseur?.toString() ?? ""; 
+       this.demande.idTitreDepense = this.brouillons.idTitre?.toString() ?? ""; 
+       this.demande.idRubrique= this.brouillons.idRubrique?.toString() ??"";
+      this.demande.rubrique=this.brouillons.nomRubrique?.toString() ??"";
+      this.demande.sousRubrique=this.brouillons.sousRubrique?.toString()?? "";
+       this.setSelected(this.demande.idTitreDepense);
+   });
+   }
+ 
+   toggleUp() {
+     this.isUp1 = !this.isUp1;
+   }
+ 
+   toggleDown() {
+     this.isUp2 = !this.isUp2;
+   }
   
-}
+ 
+   isUp = true; // Initial state
+ 
+   toggleIcon() {
+     this.isUp3 = !this.isUp3;
+   }
+   setSelected(id : string)
+   {
+     const selectelement = document.getElementById("idtitre");
+     if(selectelement!==null)
+     {
+       const lesOptions = selectelement?.querySelectorAll('option');
+         for(let i = 0 ; i < lesOptions.length ; i++)
+         {
+           const unOption =  lesOptions[i];
+           if(unOption.value === id) 
+           {
+             console.log("TEHAKA",id);
+             
+             unOption.selected = true;
+             this.demande.idTitreDepense= unOption.value; 
+           }
+         }
+     };
+    
+   }
+  //ajout option
+  ajoutOpt(id : any, text : string){
+   console.log(this.id);
+   const selectelement = document.getElementById("idtitre");
+       const newOpt = document.createElement("option");
+       newOpt.value = id;
+       newOpt.text = text;
+ 
+       if(selectelement!==null)
+       {
+         selectelement.appendChild(newOpt);
+         newOpt.selected = true;
+         this.demande.idTitreDepense = id;
+       };
+  }
+ 
+ valider():void{
+   this.demande.validationPrescripteur = true;
+   this.AffichageService.update(this.id,this.demande).subscribe(Response=>{
+     console.log(Response);
+ 
+     this.message='updat!';
+   });
+   this.errorMessage='Demande validé!';
+   setTimeout(() => {
+     this.errorStatus1 = false; // Hide the message by setting errorStatus to false
+     this.errorMessage = '';    // Optionally, clear the error message
+   }, 3000);
+   console.log(this.message);
+ }
+  //modication
+  update():void{
+   
+   console.log("moulle");
+   console.log(this.demande);
+         this.AffichageService.update(this.id,this.demande).subscribe(Response=>{
+ 
+           console.log(Response);
+           this.message='updat!';
+         });
+         this.errorMessage='Demande enregistré!';
+         setTimeout(() => {
+           this.errorStatus1 = false; // Hide the message by setting errorStatus to false
+           this.errorMessage = '';    // Optionally, clear the error message
+         }, 3000);
+         console.log(this.message);
+         // window.location.reload();
+  }
+  oup(){
+    this.ajout =! this.ajout;
+  }
+  ajout=false;
+  // nouveau(){
+  //   this.demande.is_regularisation = "";
+  //      this.demande.titre = "";
+  //      this.demande.id_titre="";
+  //      this.demande.type_reference =   "";
+  //      this.type="";
+  //      this.demande.nom_reference =  "";
+  //      this.demande.motif = "";
+  //      this.demande.type_devise = "";
+  //      this.devise="";
+  //      this.demande.coms_prescripteur = "";
+  //      this.demande.fournisseur = "";
+  //      this.demande.montant_ht = "";
+  //      this.demande.periode =""; 
+  //      this.demande.id_periode =""; 
+  //      this.demande.id_direction = ""; 
+  //      this.demande.id_fournisseur = ""; 
+  //      this.demande.id_titre_depense = ""; 
+  //      this.demande.id_rubrique="";
+  //      this.demande.rubrique="";
+  //      this.demande.Sousrubrique="";
+  //      console.log("vide");
+  //      this.ajout =! this.ajout;
+  // }
+  
+  //suppression
+ //  delete():void{
+ //   this.AffichageService.delete(this.id,this.demande).subscribe(Response=>{
+ //     console.log(Response);
+ //     this.router.navigate(['/main/menu']);
+ //     this.message='delete!';
+ //   }, error =>{
+ //     console.log(error);
+ //   });
+ //  }
+  // set coms achat
+  setComsAchat(){
+    
+  }
+  //Ajout titre
+ // 
+ 
+ //Ajout titre
+ Ajouttitre() {
+   
+ 
+   this.AffichageService.posttitre(this.Titredepense)
+   .subscribe(response => {
+                   console.log( response);
+                   this.ajoutOpt(response.id , response.designation);
+                   
+                 }
+             );
+             this.errorMessage='Demande enregistré!';
+           setTimeout(() => {
+             this.errorStatus2 = false; // Hide the message by setting errorStatus to false
+             this.errorMessage = '';    // Optionally, clear the error message
+           }, 3000); 
+ }
+ 
+ 
+ 
+ ////////////////////
+ //this.AffichageService.getDemandeById(this.DemandeId).subscribe(demande=>{
+   //this.demande=demande;
+  // });
+ }

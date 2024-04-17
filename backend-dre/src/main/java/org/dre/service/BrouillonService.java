@@ -7,6 +7,7 @@ import org.dre.model.Brouillon;
 import org.dre.repository.BrouillonRepository;
 import org.dre.repository.BrouillonRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
@@ -24,6 +25,20 @@ public class BrouillonService {
         return brouillonRepository.listAll();
     }
 
+    public List<Brouillon> getAllByIdDir(Integer id) {
+
+        List<Brouillon> brouillons= brouillonRepository.listAll();
+        List<Brouillon> brouillonsById = new ArrayList<>();
+
+        for(Brouillon brouillon : brouillons)
+        {
+            if(brouillon.getIdDirection() == id)
+            {
+                brouillonsById.add(brouillon);
+            }
+        }
+        return brouillonsById;
+    }
 
 
     public Brouillon getBrouillonById(Long id) {

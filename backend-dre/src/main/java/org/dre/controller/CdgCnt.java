@@ -33,6 +33,13 @@ public class CdgCnt {
     @POST
     @Path("/session/create")
     public Response createSessionCd(SessionCd sessionCd) {
+
+        String dateString  = sessionCd.getDateCloture().toString();
+        String [] parts = dateString.split(" ");
+        String formatDate =  parts[0];
+        String [] date = formatDate.split("-");
+        String ref = "CD-"+date[2]+date[1]+date[0] ;
+        sessionCd.setRef(ref);
         sessionCdService.createSessionCd(sessionCd);
         return Response.status(Response.Status.CREATED).entity(sessionCd).build();
     }
