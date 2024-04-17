@@ -147,7 +147,7 @@ create database oma;
 		create table titreDepense
 				(
 					id serial primary key  ,
-
+                    idSession integer,
 					designation varchar(50)
 
 				);
@@ -197,6 +197,8 @@ create database oma;
 			alter table avisCdg add foreign key(idDemande) references demande(id);
 			alter table avisAchat add foreign key (idDemande) references demande(id);
 
+			alter table titreDepense add foreign key (idSession) references sessionCd(id);
+
 
 
 
@@ -245,51 +247,11 @@ VALUES (
 
 	-- VIEW 			------------------------------------------
 		-- BROUILLON
-			create or replace view brouillon as 
-				(
+			                      this.session.idDirection = this.direction.id;
 
-					select 
-                    dm.id as id,
-
-                        dm.idTitreDepense as idTitre,
-                        coalesce(td.designation, 'sans titre')  as titre,
-                        dm.motif as motif,
-                        dm.montantHt as montantHt,
-                        dm.typeReference as typeReference,
-                        dm.nomReference as reference,
-                        dm.estRegularisation as estRegularisation,
-
-                        dm.comsPrescripteur as comsPrescripteur,
-                    -- dm.id_etatFinal as id_etatFinal,
-
-                        dm.idRubrique as idRubrique,
-                        r.designation as nomRubrique,
-
-                        dm.sousRubrique as sousRubrique,
-
-
-                        dm.idPeriode as idPeriode,
-                        p.designation as periode,
-
-                        dm.idDirection as idDirection,
-
-                        dm.typeDevise as devise,
-
-                        f.id as idFournisseur,
-                        f.nom as fournisseur
-					from demande dm join fournisseur f on dm.idFournisseur = f.id
-					                join periode p on p.id= dm.idPeriode
-									join rubrique r on r.id =  dm.idRubrique
-									full join titreDepense td on dm.idTitreDepense = td.id
-
-					where validationPrescripteur = false and dm.validationAchat=false and dm.validationCdg=false
-					group by idTitre,dm.id ,f.id,td.id,p.id,r.id
-
-
-					);
         -- active_dmd
 
-        -- BROUILLON
+        -- ACTIVE
         create or replace view active as
             (
 
@@ -332,3 +294,50 @@ VALUES (
 
 
                 );
+
+        create or replace view detailDemande as
+            (
+
+                    select
+                    dm.id as id,
+
+                        dm.idTitreDepense as idTitre,
+                        coalesce(td.designation, 'sans titre')  as titre,
+                        dm.motif as motif,
+                        dm.montantHt as montantHt,
+                        dm.typeReference as typeReference,
+                        dm.nomReference as reference,
+                        dm.estRegularisation as estRegularisation,
+
+                        dm.comsPrescripteur as comsPrescripteur,
+                    -- dm.id_etatFinal as id_etatFinal,
+
+                        dm.idRubrique as idRubrique,
+                        r.designation as nomRubrique,
+
+                        dm.sousRubrique as sousRubrique,
+
+
+                        dm.idPeriode as idPeriode,
+                        p.designation as periode,
+
+                        dm.idDirection as idDirection,
+
+                        dm.typeDevise as devise,
+                        dm.validationPrescripteur,
+                        dm.validationCdg,
+                        dm.validationAchat,
+                        f.id as idFournisseur,
+                        f.nom as fournisseur
+                from demande dm join fournisseur f on dm.idFournisseur = f.id
+                                join periode p on p.id= dm.idPeriode
+                                join rubrique r on r.id =  dm.idRubrique
+
+                                full join titreDepense td on dm.idTitreDepense = td.id
+
+                group by idTitre,dm.id ,f.id,td.id,p.id,r.id
+
+
+                );
+
+        --

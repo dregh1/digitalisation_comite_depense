@@ -12,6 +12,7 @@ public class TitreDepense   {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer idSession;
 
     private  String designation;
 
@@ -25,6 +26,14 @@ public class TitreDepense   {
 
     public String getDesignation() {
         return designation;
+    }
+
+    public Integer getIdSession() {
+        return idSession;
+    }
+
+    public void setIdSession(Integer idSession) {
+        this.idSession = idSession;
     }
 
     public void setDesignation(String designation) {

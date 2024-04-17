@@ -1,14 +1,18 @@
     projet
         consultation
         refresh token
-        iddirection
+        Logout
+OK        iddirection
 ok            insert iddirection à chaque session
-            insert iddirection à chaque demande
+OK            insert iddirection à chaque demande
 ok            getAllbrouillon by iddirection
 ok            getAllactive by iddirection
 
         idsession lié @ demande
+            mijery hoe misy session active ve
         titre par session
+ok            misy idsession ny titre
+
         notification
         envoie mail
 

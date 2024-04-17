@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.dre.model.TitreDepense;
 import org.dre.repository.TitreDemandeRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
@@ -35,6 +36,20 @@ public class TitreDemandeService {
 
     public List<TitreDepense> getAll() {
         return titreDemandeRepository.listAll();
+    }
+
+    public List<TitreDepense> getAllByIdSession(Integer idSession) {
+        List<TitreDepense> listTitre = this.getAll();
+        List<TitreDepense> listTitreBySession = new ArrayList<>();
+
+        for(TitreDepense titreDepense : listTitre){
+            if(titreDepense.getIdSession() == idSession)
+            {
+                listTitreBySession.add(titreDepense);
+            }
+        }
+
+        return listTitreBySession;
     }
 
 

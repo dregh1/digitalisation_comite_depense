@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Response;
 import org.dre.model.*;
 import org.dre.repository.ActiveRepository;
 import org.dre.repository.BrouillonRepository;
+import org.dre.repository.DetailDemandeRepository;
 import org.dre.service.*;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 
@@ -27,7 +28,8 @@ public class PrescripteurCnt {
 
     @Inject
     RubriqueService rubriqueService;
-
+    @Inject
+    DetailDemandeService detailDemandeService;
 
 
 
@@ -93,9 +95,6 @@ public class PrescripteurCnt {
     }
 
 
-
-
-
     @GET
     @Path("/titre/get")
     @Produces(MediaType.APPLICATION_JSON)
@@ -104,6 +103,18 @@ public class PrescripteurCnt {
         List<TitreDepense> titre_dmds = titredemadeService.getAll ();
         return Response.ok(titre_dmds).build();
     }
+
+    //TITRE par id session
+    @GET
+    @Path("/titre/getBySession/{idSession}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTitreBySession(@PathParam("idSession") Integer idSession) {
+        // Récupérer les données depuis PostgreSQL
+
+        List<TitreDepense> titre_dmds = titredemadeService.getAllByIdSession (idSession);
+        return Response.ok(titre_dmds).build();
+    }
+
     @POST
     @Path("/titre/create")
     public Response creatTitre(TitreDepense titre_Dmd) {
@@ -181,7 +192,6 @@ public class PrescripteurCnt {
     @GET
     @Path("/active/getByIdDir/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-//    @SecurityRequirement(name = "Keycloak")
     public Response getActiveByIdDirection(@PathParam("id") Integer id) {
         // Récupérer les données depuis PostgreSQL
 
@@ -196,5 +206,13 @@ public class PrescripteurCnt {
     @Path("/active_dmd/{id}")
     public Active getActiveDmdById(@PathParam("id") Long id) {
         return activeRepository.findById(id);
+    }
+
+    @GET
+    @Path("/detailDemande/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllDetailDemande() {
+        List<DetailDemande> detailDemande = detailDemandeService.getAll ();
+        return Response.ok(detailDemande).build();
     }
 }
