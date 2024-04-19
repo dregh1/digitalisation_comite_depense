@@ -63,7 +63,6 @@ export class CreationSession1Component implements OnInit {
                     {
                       
                       this.authServ.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response})
-                      this.session.idDirection = this.direction.id;                      
                     }
                 
                 }
