@@ -104,6 +104,17 @@ public class PrescripteurCnt {
         return Response.ok(titre_dmds).build();
     }
 
+    @GET
+        @Path("/titreInSession/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTitreInSession() {
+        // Récupérer les données depuis PostgreSQL
+        List<Titre> titreInSession = titredemadeService.getAllTitreInSession ();
+        return Response.ok(titreInSession).build();
+    }
+
+
+
     //TITRE par id session
     @GET
     @Path("/titre/getBySession/{idSession}")
@@ -208,11 +219,6 @@ public class PrescripteurCnt {
         return activeRepository.findById(id);
     }
 
-    @GET
-    @Path("/detailDemande/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllDetailDemande() {
-        List<DetailDemande> detailDemande = detailDemandeService.getAll ();
-        return Response.ok(detailDemande).build();
-    }
+//DETAIL DEMANDE BY ID DIRECTION
+
 }

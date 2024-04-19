@@ -4,12 +4,10 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.dre.model.AvisCdg;
-import org.dre.model.Brouillon;
-import org.dre.model.Demande;
-import org.dre.model.SessionCd;
+import org.dre.model.*;
 import org.dre.repository.AvisCdgRepository;
 import org.dre.service.AvisCdgService;
+import org.dre.service.DetailDemandeService;
 import org.dre.service.SessionCdService;
 
 import java.util.List;
@@ -27,7 +25,8 @@ public class CdgCnt {
 
     @Inject
     SessionCdService sessionCdService;
-
+    @Inject
+    DetailDemandeService detailDemandeService;
 
     //CREATION DE SESSION
     @POST
@@ -81,6 +80,13 @@ public class CdgCnt {
         avisCdgService.updateAvisCdg(avisCdg);
         return Response.ok(avisCdg).build();
     }
-
+//GET ALL DETAILDEMANDE
+    @GET
+    @Path("/detailDemande/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllDetailDemande() {
+        List<DetailDemande> detailDemande = detailDemandeService.getAll ();
+        return Response.ok(detailDemande).build();
+    }
 
 }

@@ -28,6 +28,16 @@ public class SessionCd  {
     @JsonProperty("tauxMga ")
     private float tauxMga;
 
+    private boolean estFerme;
+
+    public boolean isEstFerme() {
+        return estFerme;
+    }
+
+    public void setEstFerme(boolean estFerme) {
+        this.estFerme = estFerme;
+    }
+
     public Long getId() {
         return id;
     }

@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import org.dre.model.Titre;
 import org.dre.model.TitreDepense;
 import org.dre.repository.TitreDemandeRepository;
 
@@ -14,6 +15,8 @@ import java.util.List;
 public class TitreDemandeService {
     @Inject
     TitreDemandeRepository titreDemandeRepository;
+
+
     @Inject
     private EntityManager em;
 
@@ -38,11 +41,16 @@ public class TitreDemandeService {
         return titreDemandeRepository.listAll();
     }
 
+    public List<Titre> getAllTitreInSession() {
+        // Assuming a field named "estTitre" to differentiate between Titre and TitreDepense
+        return em.createQuery("SELECT t FROM Titre t ", Titre.class)
+                .getResultList();
+    }
     public List<TitreDepense> getAllByIdSession(Integer idSession) {
-        List<TitreDepense> listTitre = this.getAll();
+        List<TitreDepense> listTitreDepense = this.getAll();
         List<TitreDepense> listTitreBySession = new ArrayList<>();
 
-        for(TitreDepense titreDepense : listTitre){
+        for(TitreDepense titreDepense : listTitreDepense){
             if(titreDepense.getIdSession() == idSession)
             {
                 listTitreBySession.add(titreDepense);

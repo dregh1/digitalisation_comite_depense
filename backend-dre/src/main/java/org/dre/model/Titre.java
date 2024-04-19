@@ -1,33 +1,32 @@
 package org.dre.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
-@Table(name = "TitreDepense")
-public class TitreDepense   {
-
+public class Titre {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Integer idSession;
 
-    private Integer idDirection;
-
+    private Integer IdDirection;
     private  String designation;
 
     public Long getId() {
         return id;
     }
 
+
     public Integer getIdDirection() {
-        return idDirection;
+        return IdDirection;
     }
 
+
     public void setIdDirection(Integer idDirection) {
-        this.idDirection = idDirection;
+        IdDirection = idDirection;
     }
 
     public void setId(Long id) {

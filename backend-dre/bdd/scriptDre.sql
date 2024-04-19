@@ -147,7 +147,8 @@ create database oma;
 		create table titreDepense
 				(
 					id serial primary key  ,
-                    idSession integer,
+					idDirection integer,
+					idSession integer,
 					designation varchar(50)
 
 				);
@@ -198,6 +199,7 @@ create database oma;
 			alter table avisAchat add foreign key (idDemande) references demande(id);
 
 			alter table titreDepense add foreign key (idSession) references sessionCd(id);
+			alter table titreDepense add foreign key (idDirection) references direction(id);
 
 
 
@@ -247,7 +249,48 @@ VALUES (
 
 	-- VIEW 			------------------------------------------
 		-- BROUILLON
-			                      this.session.idDirection = this.direction.id;
+        create or replace view brouillon as
+            (
+
+					select
+                    dm.id as id,
+
+                        dm.idTitreDepense as idTitre,
+                        coalesce(td.designation, 'sans titre')  as titre,
+                        dm.motif as motif,
+                        dm.montantHt as montantHt,
+                        dm.typeReference as typeReference,
+                        dm.nomReference as reference,
+                        dm.estRegularisation as estRegularisation,
+
+                        dm.comsPrescripteur as comsPrescripteur,
+                    -- dm.id_etatFinal as id_etatFinal,
+
+                        dm.idRubrique as idRubrique,
+                        r.designation as nomRubrique,
+
+                        dm.sousRubrique as sousRubrique,
+
+
+                        dm.idPeriode as idPeriode,
+                        p.designation as periode,
+
+                        dm.idDirection as idDirection,
+
+                        dm.typeDevise as devise,
+
+                        f.id as idFournisseur,
+                        f.nom as fournisseur
+                from demande dm join fournisseur f on dm.idFournisseur = f.id
+                                join periode p on p.id= dm.idPeriode
+                                join rubrique r on r.id =  dm.idRubrique
+
+                                full join titreDepense td on dm.idTitreDepense = td.id
+                where validationPrescripteur = false
+                group by idTitre,dm.id ,f.id,td.id,p.id,r.id
+
+
+                );
 
         -- active_dmd
 
@@ -341,3 +384,34 @@ VALUES (
                 );
 
         --
+
+insert into titredepense (iddirection,designation) values(1,'Kick off');
+
+
+
+-----------------------
+CREATE OR REPLACE VIEW titre AS
+(
+    SELECT
+      id,
+      idSession,
+      idDirection,
+      designation
+--      etatSession
+    FROM (
+      SELECT
+        td.id,
+        td.idsession,
+        td.idDirection,
+        td.designation AS designation,
+        coalesce(s.estferme, false) AS etatSession
+      FROM titredepense td
+      FULL JOIN sessionCd s ON s.id = td.idsession
+    ) AS t
+    WHERE t.etatSession =false
+);
+update sessionCd set estferme =true where id = 23;
+-----------------------
+
+
+
