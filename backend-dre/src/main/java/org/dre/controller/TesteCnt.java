@@ -1,5 +1,6 @@
 package org.dre.controller;
 
+import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -23,6 +24,7 @@ import java.util.List;
 @Path("/teste")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Authenticated
 public class TesteCnt {
 
 
@@ -32,6 +34,8 @@ public class TesteCnt {
     DirectionService directionService;
     @Inject
     RubriqueService rubriqueService;
+    @Inject
+    DetailDemandeService detailDemandeService;
 
 
     @Inject
@@ -41,7 +45,7 @@ public class TesteCnt {
     DemandeService demandeService;
 
     @Inject
-    BrouillonService brouillonService;
+    SessionCdService sessionCdService;
 
 
 //    TEST CRUD
@@ -75,9 +79,6 @@ public class TesteCnt {
 
 
 
-
-
-
     @POST
     @Path("/post/create")
     public Response createSessionCd(Periode sessionDd) {
@@ -99,6 +100,7 @@ public class TesteCnt {
     //get id direction by name of direction
     @GET
     @Path("/getIdDir")
+    @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Response getIdDirByName(@QueryParam("nom") String nomDir) {
 
@@ -125,9 +127,43 @@ public class TesteCnt {
 
         return Response.ok(idDir).build();
     }
-
-    //validation achat
-//    @PUT
+//GET ALL SESSION
+    @GET
+    @Path("/session/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllSession() {
+        // Récupérer les données depuis PostgreSQL
+        List<SessionCd> session = sessionCdService.getAll ();
+        return Response.ok(session).build();
+    }
+//GET SESSION ACTIVE
+    @GET
+    @Path("/session/getByDir/{idDirection}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSessionActive(@PathParam("idDirection") Integer idDirection) {
+        // Récupérer les données depuis PostgreSQL
+        SessionCd session = sessionCdService.getSessionActive(idDirection);
+        return Response.ok(session).build();
+    }
+//GET ALL DETAILDEMANDE
+    @GET
+    @Path("/detailDemande/get")
+    @RolesAllowed({"PRS","CDG","CDG"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllDetailDemande() {
+        // Récupérer les données depuis PostgreSQL
+        List<DetailDemande> detailDemande = detailDemandeService.getAll();
+        return Response.ok(detailDemande).build();
+    }
+    @GET
+    @Path("/detailDemande/{id}")
+    @RolesAllowed({"PRS","CDG","CDG"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDetailDemande(@PathParam( "id") Long id) {
+        // Récupérer les données depuis PostgreSQL
+        DetailDemande detailDemande = detailDemandeService.getDetailDemandeById(id);
+        return Response.ok(detailDemande).build();
+    }
 
 }
 

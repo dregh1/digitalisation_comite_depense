@@ -1,18 +1,19 @@
     projet
         consultation
         refresh token
-        Logout
+        Logout rehefa expiré ny token
 OK        iddirection
 ok            insert iddirection à chaque session
 OK            insert iddirection à chaque demande
 ok            getAllbrouillon by iddirection
 ok            getAllactive by iddirection
 
-        idsession lié @ demande
-            mijery hoe misy session active ve
-        titre par session
-ok            misy idsession ny titre
+ok        idsession lié @ demande
+ok            mijery hoe misy session active ve
+ok        titre par session
 
+ok            misy idsession ny titre
+ok        detailDemande
         notification
         envoie mail
 

@@ -1,6 +1,8 @@
 package org.dre.controller;
 
 import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -17,7 +19,7 @@ import java.util.List;
 @Path("/prescripteur")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-//@Authenticated
+@Authenticated
 public class PrescripteurCnt {
     @Inject
     PeriodeService periodeService;
@@ -65,6 +67,7 @@ public class PrescripteurCnt {
     }
     @GET
     @Path("/periode/get")
+    @RolesAllowed("PRS")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllperiode() {
         // Récupérer les données depuis PostgreSQL
@@ -97,6 +100,7 @@ public class PrescripteurCnt {
 
     @GET
     @Path("/titre/get")
+    @RolesAllowed({"PRS","CDG","ACH"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTitre() {
         // Récupérer les données depuis PostgreSQL
@@ -104,9 +108,22 @@ public class PrescripteurCnt {
         return Response.ok(titre_dmds).build();
     }
 
+    @GET
+        @Path("/titreInSession/get")
+    @RolesAllowed({"PRS","CDG","ACH"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTitreInSession() {
+        // Récupérer les données depuis PostgreSQL
+        List<Titre> titreInSession = titredemadeService.getAllTitreInSession ();
+        return Response.ok(titreInSession).build();
+    }
+
+
+
     //TITRE par id session
     @GET
     @Path("/titre/getBySession/{idSession}")
+    @RolesAllowed({"PRS","CDG","ACH"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTitreBySession(@PathParam("idSession") Integer idSession) {
         // Récupérer les données depuis PostgreSQL
@@ -117,6 +134,7 @@ public class PrescripteurCnt {
 
     @POST
     @Path("/titre/create")
+    @RolesAllowed({"PRS","CDG","ACH"})
     public Response creatTitre(TitreDepense titre_Dmd) {
         // Récupérer les données depuis PostgreSQL
 
@@ -127,6 +145,7 @@ public class PrescripteurCnt {
     }
     @GET
     @Path("/idtitre/next")
+    @RolesAllowed({"PRS","CDG","ACH"})
     public void getNextVal() {
        Long id =  titredemadeService.getNextSequenceValue("titre_depense_seq");
         System.out.println(id);
@@ -135,6 +154,7 @@ public class PrescripteurCnt {
     //rubrique et sous rubrique
     @GET
     @Path("/rubrique/get")
+    @RolesAllowed({"PRS","CDG","ACH"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRubrique() {
         // Récupérer les données depuis PostgreSQL
@@ -146,8 +166,8 @@ public class PrescripteurCnt {
     //select BROUILLON
     @GET
     @Path("/brouillon/get")
+    @RolesAllowed("PRS")
     @Produces(MediaType.APPLICATION_JSON)
-//    @SecurityRequirement(name = "Keycloak")
     public Response getAllBrouillon() {
         // Récupérer les données depuis PostgreSQL
 
@@ -174,6 +194,7 @@ public class PrescripteurCnt {
     // select brouillon by id
     @GET
     @Path("brouillon/{id}")
+//    @RolesAllowed("PRS")
     public Brouillon getBrouillonById(@PathParam("id") Long id) {
         return brouillonRepository.findById(id);
     }
@@ -182,7 +203,8 @@ public class PrescripteurCnt {
 // LIST DEMANDE ACTIVE
     @GET
     @Path("/active_dmd/get")
-    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("PRS")
+//    @Produces(MediaType.APPLICATION_JSON)
     public Response getAllActive_dmd() {
         // Récupérer les données depuis PostgreSQL
         List<Active> active_dmds = activeService.getAll ();
@@ -208,11 +230,6 @@ public class PrescripteurCnt {
         return activeRepository.findById(id);
     }
 
-    @GET
-    @Path("/detailDemande/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllDetailDemande() {
-        List<DetailDemande> detailDemande = detailDemandeService.getAll ();
-        return Response.ok(detailDemande).build();
-    }
+//DETAIL DEMANDE BY ID DIRECTION
+
 }
