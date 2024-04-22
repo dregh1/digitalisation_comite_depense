@@ -67,7 +67,8 @@ public class PrescripteurCnt {
     }
     @GET
     @Path("/periode/get")
-    @RolesAllowed("PRS")
+    @PermitAll
+
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllperiode() {
         // Récupérer les données depuis PostgreSQL
@@ -77,6 +78,8 @@ public class PrescripteurCnt {
 
     @GET
     @Path("/fournisseur/get")
+    @PermitAll
+
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllFournisseur() {
         // Récupérer les données depuis PostgreSQL
@@ -100,7 +103,7 @@ public class PrescripteurCnt {
 
     @GET
     @Path("/titre/get")
-    @RolesAllowed({"PRS","CDG","ACH"})
+    @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTitre() {
         // Récupérer les données depuis PostgreSQL
@@ -154,7 +157,8 @@ public class PrescripteurCnt {
     //rubrique et sous rubrique
     @GET
     @Path("/rubrique/get")
-    @RolesAllowed({"PRS","CDG","ACH"})
+    @PermitAll
+
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRubrique() {
         // Récupérer les données depuis PostgreSQL

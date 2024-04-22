@@ -1,5 +1,7 @@
 package org.dre.controller;
 
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -16,6 +18,8 @@ import java.util.List;
 @Path("/achat")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Authenticated
+
 public class AchatCnt {
     @Inject
     AvisAchatRepository avisAchatRepository;
@@ -27,6 +31,7 @@ public class AchatCnt {
 
     //COMMENTAIRE ACHAT
     @POST
+    @RolesAllowed("ACH")
     @Path("/avisAchat/create")
     public Response createCommentaireAchat(AvisAchat avisAchat) {
 
@@ -37,6 +42,7 @@ public class AchatCnt {
 
     @PUT
     @Path("/validateDmd/{id}")
+    @RolesAllowed({"ACH"})
     public Response validateDemande(@PathParam("id") Long id) {
 
         //find by id demande
@@ -51,6 +57,7 @@ public class AchatCnt {
     //get all avis achat
     @GET
     @Path("/avisaAchat/get")
+    @RolesAllowed({"ACH","CDG","PRS"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAvisAchat() {
         // Récupérer les données depuis PostgreSQL
@@ -61,6 +68,8 @@ public class AchatCnt {
     //get avis achat by id
     @GET
     @Path("avisAchat/{id}")
+    @RolesAllowed({"ACH","CDG","PRS"})
+
     public AvisAchat getAvisAchatById(@PathParam("id") Long id) {
         return avisAchatRepository.findById(id);
     }
@@ -68,6 +77,8 @@ public class AchatCnt {
     //get avis achat by id demande
     @GET
     @Path("avisAchatByIdDemande/{id}")
+    @RolesAllowed({"ACH","CDG","PRS"})
+
     public AvisAchat getAvisAchatByIdDemande(@PathParam("id") Long id) {
         return avisAchatService.getAvisAchatByIdDemande(id);
     }
@@ -75,6 +86,7 @@ public class AchatCnt {
     //UPDATE AVISACHAT
     @PUT
     @Path("avisAchat/{id}")
+    @RolesAllowed({"ACH","CDG","PRS"})
     public Response updateAvisAchat(@PathParam("id") Long id, AvisAchat avisAchat) {
         avisAchat.setId(id); // Assure que l'ID de l'utilisateur est correctement défini
         avisAchatService.updateAvisAchat(avisAchat);
