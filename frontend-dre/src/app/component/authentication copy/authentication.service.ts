@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Direction } from 'src/app/models/Direction';
-import { Personnel } from 'src/app/models/Personnel';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +19,7 @@ export class AuthenticationService {
 
   //POSTMAN
   getUserInfo(token : string){
-    var data = "grant_type=password&client_id=angular-client&client_secret=eIRXkLaEnLubyFr1mqwv6bu862oHIIn9";
+    var data = "grant_type=password&client_id=quarkus-client&client_secret=Ulb4eedexOT9Kgw9TzBaqi458JJM3peh";
 
               var xhr = new XMLHttpRequest();
               xhr.withCredentials = true;

@@ -2,24 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { CreationPrescripteurService } from './creation-prescripteur.service';
 import { Fournisseur } from 'src/app/models/Fournisseur';
 import { Periode } from 'src/app/models/Periode';
-import { Brouillon } from 'src/app/models/Brouillon';
 import { Titre } from 'src/app/models/TitreDepense';
 import { Rubrique } from 'src/app/models/Rubrique';
 import { Route, Router } from '@angular/router';
+import { AuthenticationService } from '../authentication copy/authentication.service';
+import { Direction } from 'src/app/models/Direction';
+import { Demande } from 'src/app/models/Demande';
 @Component({
   selector: 'app-creation-prescripteur',
   templateUrl: './creation-prescripteur.component.html',
   styleUrls: ['./creation-prescripteur.component.scss']
 })
 export class CreationPrescripteurComponent implements OnInit {
+  token : string | null ;
+  nomDirection : string | null ='';
+  idDirection? : Number ;
+  //CREATION SESSION
+  direction = new Direction() ;// Valeur par défaut (ajuster selon vos besoins)
 // donnee PRESCRIPTEUR
 periodes: Periode[]=[];
 fournisseurs : Fournisseur[] = [];
-titres : Titre[] = [];
-brouillons : Brouillon [] = [];
+titres : Titre[]=[]; 
 rubriques: Rubrique [] = [];
 
-active_dmds : Brouillon [] = [];
 titresBr : any [] = [];
 titresAct : any [] = [];
 selectedTitleBr: string | undefined;
@@ -42,14 +47,13 @@ estregularisation    :'',
 
 typeReference : '',
 idRubrique:'',
-Sousrubrique : '',
+sousRubrique : '',
 motif               : '',
 typeDevise : '',
 comsPrescripteur :'',
-
+idDirection:'',
 idTitreDepense    : '',
 nomReference : '',
-
 idFournisseur      :'',
 montantHt          :'',
 
@@ -60,18 +64,47 @@ idPeriode          : '',
 TitreDepense =
 {
  designation :'',
+ idDirection:''
 }
 
 errorStatus = false;
 errorMessage : string='';
 //  données ACHAT
 commentairesAch : string = '';
-constructor(private CreationPrescripteurService : CreationPrescripteurService,private router:Router)
- {
+constructor(private CreationPrescripteurService : CreationPrescripteurService,private router:Router,private AuthenticationService:AuthenticationService)
+ {  
     this.estregularisation = false;
+    this.token = sessionStorage.getItem("token");
+    // this.idDirection = authServ.getIdDirectionByName();
+    this.direction.id=-1;
+  //RECUPERATION IdDirection                
+    if(this.token !== null )
+    {
+      /*  ajout nom direction dans la sessionStorage */
+        this.AuthenticationService.getUserInfo(this.token);
+
+      /* recuperation de l'id direction */
+        this.nomDirection = sessionStorage.getItem('direction');
+        
+        if(this.nomDirection !== null)
+        {
+          this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response});
+        }
+    
+    }
+    this.nomDirection = sessionStorage.getItem('direction');
+                    
+    if(this.nomDirection !== null)
+    {
+      
+      this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response})
+      this.direction.id = this.direction.id;    
+    }
+    
    }
  
- 
+   // submit bouton ouvrir session
+
 ngOnInit(): void {
  //maka titre
  this.CreationPrescripteurService.getTitre().subscribe(data => {
@@ -96,31 +129,19 @@ ngOnInit(): void {
  });
  
 
-  //maka ny reference
-  this.CreationPrescripteurService.getReference().subscribe(data => {
-    this.refences = data;
-
-    console.log("references"); // ["Team Building", "sans titre"]
-   
-    console.log(this.refences); // ["Team Building", "sans titre"]
-    
-  });
-
-   //maka ny devise
-   this.CreationPrescripteurService.getDevise().subscribe(data => {
-    this.devises = data;
-
-    console.log("devises"); // ["Team Building", "sans titre"]
-   
-    console.log(this.devises); // ["Team Building", "sans titre"]
-    
-  });
-
   //  CREATE DEMANDE
   this.CreationPrescripteurService.createDemande(this.demande);
 
 
 }
+getDirectionId(): number | undefined {
+  if (this.direction) { // Check if direction exists
+    return this.direction.id;
+  } else {
+    return undefined; // Or a default value (e.g., -1) for filtering
+  }
+}
+
 showDetailsBr(title: string) {
   this.selectedTitleBr = title;
 }
@@ -144,6 +165,8 @@ creerDemande()
   
     
     );
+    this.demande.idDirection = this.direction.id?.toString() ?? "";  
+    console.log(this.demande.idDirection,"ito n id direction ");
     // INSERTION DEMANDE
     this.CreationPrescripteurService.createDemande(this.demande)
     .subscribe(
@@ -194,7 +217,9 @@ setComsAchat(){
 Ajouttitre() {
 
  console.log(this.TitreDepense.designation);
-
+  this.TitreDepense.idDirection=this.direction.id?.toString() ?? "";
+  console.log(this.TitreDepense.idDirection);
+  console.log(this.TitreDepense.idDirection,"id direction ooooo");
  this.CreationPrescripteurService.posttitre(this.TitreDepense)
  .subscribe(response => {
                  console.log( response);

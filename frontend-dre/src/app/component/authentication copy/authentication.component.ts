@@ -1,12 +1,5 @@
 import { Component, OnInit, Renderer2, ElementRef, AfterViewInit ,ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Personnel } from 'src/app/models/Personnel';
-import { PersonnelService } from 'src/app/services/personnel.service';
-import { LogService } from 'src/app/services/log.service';
-//import { KeycloakService } from 'keycloak-angular';
-//import Keycloak from 'keycloak-js';
-import * as qs from 'qs';
-//import jwtDecode from 'jwt-decode';
 import { HttpParams, HttpHeaders, HttpClient } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
 @Component({
@@ -19,16 +12,10 @@ export class AuthenticationComponent implements OnInit {
   public errorStatus = false;
   errorMessage ='Identifiant ou mot de passe incorrect' ;
   
-  personnels: Personnel[] = []; 
   showPassword: boolean = false;
   showmesg = false; 
 
-  personnel = {
-    id: '' ,
-    nom: '',
-    prenom: '',
-    age: ''
-  };
+  
   logindata = {
    
     username: '',
@@ -40,7 +27,7 @@ export class AuthenticationComponent implements OnInit {
   password: any;
   
 
-  constructor(private http: HttpClient,private authenticationService: AuthenticationService,private logService: LogService, private router: Router ,private personnelService: PersonnelService, private renderer: Renderer2, private el: ElementRef) {}
+  constructor(private http: HttpClient,private authenticationService: AuthenticationService, private router: Router, private renderer: Renderer2, private el: ElementRef) {}
  
 
 // NG ON INIT
@@ -59,8 +46,8 @@ export class AuthenticationComponent implements OnInit {
             .set('username', this.logindata.username)
             .set('password', this.logindata.password)
             .set('grant_type', 'password')
-            .set('client_id', 'angular-client')
-            .set('client_secret', 'eIRXkLaEnLubyFr1mqwv6bu862oHIIn9');
+            .set('client_id', 'quarkus-client')
+            .set('client_secret', 'Ulb4eedexOT9Kgw9TzBaqi458JJM3peh');
         
             return this.http.post('http://localhost:8081/realms/oma/protocol/openid-connect/token', body.toString(), {
               headers: new HttpHeaders()
@@ -99,7 +86,7 @@ export class AuthenticationComponent implements OnInit {
                 // console.log(this.getUserInfo(token));
                 // redirection
                 // this.getUserInfo(token)
-                this.router.navigate(['/main/menu']);
+                this.router.navigate(['/main/MenuDemande']);
 
 
                 
@@ -137,17 +124,17 @@ export class AuthenticationComponent implements OnInit {
         // VERIFIER LOGIN  //
 
        
-          onSubmit(): void {
-            this.personnelService.post(this.personnel).subscribe(response => {
-              console.log(response);
-              this.showmesg = true;
+          // onSubmit(): void {
+          //   this.personnelService.post(this.personnel).subscribe(response => {
+          //     console.log(response);
+          //     this.showmesg = true;
 
-              setTimeout(() => {
-                this.showmesg = false;
-              }, 2000);
-              window.location.reload();
-            });
-          }
+          //     setTimeout(() => {
+          //       this.showmesg = false;
+          //     }, 2000);
+          //     window.location.reload();
+          //   });
+          // }
 
           
 

@@ -4,9 +4,6 @@ import { Observable, timestamp } from 'rxjs';
 import { Periode } from 'src/app/models/Periode';
 import { Rubrique } from 'src/app/models/Rubrique';
 import { Fournisseur } from 'src/app/models/Fournisseur';
-import { Sousrubrique } from 'src/app/models/Sousrubrique';
-import { Brouillon } from 'src/app/models/Brouillon';
-import { Active} from 'src/app/models/Active';
 import { Titre } from 'src/app/models/TitreDepense';
 import { Demande } from 'src/app/models/Demande';
 @Injectable({
@@ -60,14 +57,9 @@ getRubrique(): Observable<Rubrique[]> {
 
 
 // maka ny brouillon
-getBrouillon():  Observable<Brouillon[]> {
-  return this.http.get<Brouillon[]>(this.baseUrl2+'/brouillon/get');
-}
 
 // maka ny brouillon
-getActive():  Observable<Active[]> {
-  return this.http.get<Active[]>(this.baseUrl2+'/active_dmd/get');
-}
+
 
   //  CREATE DEMANDE
 createDemande(formData: any): Observable<any> {
@@ -83,16 +75,12 @@ createDemande(formData: any): Observable<any> {
   setComsAchat(formData: any): Observable<any> {
     return this.http.post<any>(this.baseUrl2+'/achat/commentaire/create', formData);
   }
-  // get devise
-  // maka ny brouillon
-  getDevise():  Observable<FormData[]> {
-   return this.http.get<FormData[]>(this.baseUrl2+'/devise/get'); 
-  }
+ 
 
-  // maka ny reference
-  getReference():  Observable<FormData[]> {
-    return this.http.get<FormData[]>(this.baseUrl2+'/reference/get'); 
-   }
+  // // maka ny reference
+  // getReference():  Observable<FormData[]> {
+  //   return this.http.get<FormData[]>(this.baseUrl2+'/reference/get'); 
+  //  }
    //maj demande
    updateDemande(demande:Demande):Observable<Demande[]>{
     return this.http.put<Demande[]>(this.baseUrl2+'/achat/commentaire/create', demande.id);
