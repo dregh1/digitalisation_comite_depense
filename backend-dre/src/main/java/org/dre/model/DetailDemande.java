@@ -28,6 +28,16 @@ public class DetailDemande {
     private Integer idfournisseur ;
     private String fournisseur;
 
+    private Long idSession;
+
+    public Long getIdSession() {
+        return idSession;
+    }
+
+    public void setIdSession(Long idSession) {
+        this.idSession = idSession;
+    }
+
     public Integer getId() {
         return id;
     }

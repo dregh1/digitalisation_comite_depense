@@ -35,6 +35,8 @@ public class TesteCnt {
     @Inject
     RubriqueService rubriqueService;
     @Inject
+    ValidationService validationService;
+    @Inject
     DetailDemandeService detailDemandeService;
 
 
@@ -163,6 +165,24 @@ public class TesteCnt {
         // Récupérer les données depuis PostgreSQL
         DetailDemande detailDemande = detailDemandeService.getDetailDemandeById(id);
         return Response.ok(detailDemande).build();
+    }
+    @GET
+    @Path("/validation/get")
+    @RolesAllowed({"PRS","CDG","CDG"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllValidation() {
+        // Récupérer les données depuis PostgreSQL
+        List<Validation> validation = validationService.getAll();
+        return Response.ok(validation).build();
+    }
+    @GET
+    @Path("/validation/{id}")
+    @RolesAllowed({"PRS","CDG","CDG"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getValidationById(@PathParam( "id") Long id) {
+        // Récupérer les données depuis PostgreSQL
+        Validation validation = validationService.getById(id);
+        return Response.ok(validation).build();
     }
 
 }

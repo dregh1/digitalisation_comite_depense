@@ -8,9 +8,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.dre.model.AvisAchat;
 import org.dre.model.AvisCdg;
+import org.dre.model.Decision;
 import org.dre.model.Demande;
 import org.dre.repository.AvisAchatRepository;
 import org.dre.service.AvisAchatService;
+import org.dre.service.DecisionService;
 import org.dre.service.DemandeService;
 
 import java.util.List;
@@ -28,6 +30,8 @@ public class AchatCnt {
     AvisAchatService avisAchatService;
     @Inject
     DemandeService demandeService;
+    @Inject
+    DecisionService decisionService;
 
     //COMMENTAIRE ACHAT
     @POST
@@ -93,6 +97,31 @@ public class AchatCnt {
         return Response.ok(avisAchat).build();
     }
 
+    @POST
+    @Path("decision/create")
+    @RolesAllowed({"ACH","CDG","PRS"})
 
+    public Response decider(Decision decision) {
+        decisionService.create(decision);
+        return Response.status(Response.Status.CREATED).entity(decision).build();
+    }
+
+    @GET
+    @Path("decision/{id}")
+    @RolesAllowed({"ACH","CDG","PRS"})
+
+    public Decision getDecisionByIdDemande(@PathParam("id") Long id) {
+        return decisionService.getByIdDemande(id);
+    }
+
+    @GET
+    @Path("/decision/get")
+    @RolesAllowed({"ACH","CDG","PRS"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllDecision() {
+        // Récupérer les données depuis PostgreSQL
+        List<Decision> decision = decisionService.getAll();
+        return Response.ok(decision).build();
+    }
 
 }

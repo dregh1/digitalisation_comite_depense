@@ -32,6 +32,7 @@ public class Demande   {
 
     private String nomReference;
     private Integer idRubrique;
+    private Long idSession;
     private String sousRubrique;
     private String typeDevise;
     @JsonProperty("montantHt") // Annotation pour personnaliser le nom de la propriété dans JSON
@@ -194,5 +195,13 @@ public class Demande   {
 
     public void setEstSupprime(boolean estSupprime) {
         this.estSupprime = estSupprime;
+    }
+
+    public Long getIdSession() {
+        return idSession;
+    }
+
+    public void setIdSession(Long idSession) {
+        this.idSession = idSession;
     }
 }
