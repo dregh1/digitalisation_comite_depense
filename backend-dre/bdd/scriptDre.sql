@@ -377,17 +377,37 @@ VALUES (
                         dm.validationCdg,
                         dm.validationAchat,
                         f.id as idFournisseur,
-                        f.nom as fournisseur
+                        f.nom as fournisseur,
+
+                        avisAchat.id as idAvisAchat,
+                        avisAchat.commentaire as comsAchat,
+                        avisCdg.id as idAvisCdg,
+                        avisCdg.commentaire as comsCdg,
+                        decision.id as idDecision,
+                        decision.commentaire as comsCd,
+
+                        (
+                            case
+                                when dm.typedevise  = 'EUR' then (s.tauxEur * dm.montantHt)
+                                when dm.typedevise  = 'USD' then (s.tauxUsd * dm.montantHt)
+                                when dm.typedevise  = 'MGA' then ( dm.montantHt)
+                            end) as montantMga
+
 
                 from demande dm join fournisseur f on dm.idFournisseur = f.id
                                 join periode p on p.id= dm.idPeriode
                                 join rubrique r on r.id =  dm.idRubrique
 
                                 join titreDepense td on dm.idTitreDepense = td.id
-
-                group by idTitre,dm.id ,f.id,td.id,p.id,r.id
-
-
+                                left join avisAchat on avisAchat.idDemande =  dm.id
+                                left join avisCdg on aviscdg.idDemande  = dm.id
+                                left join sessionCd s on s.id = dm.idSession
+                                left join decision on decision.idDemande = dm.id
+--                                where
+--                                        dm.validationAchat =  true
+--                                    and dm.validationCdg =  true
+--                                    and dm.validationPrescripteur =  true
+                            group by idTitre,dm.id ,f.id,td.id,p.id,r.id,avisAchat.id,aviscdg.id,decision.id,s.id
                 );
 
         --

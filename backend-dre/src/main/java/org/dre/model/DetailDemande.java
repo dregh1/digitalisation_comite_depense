@@ -28,7 +28,73 @@ public class DetailDemande {
     private Integer idfournisseur ;
     private String fournisseur;
 
+    private Integer idAvisCdg;
+    private String comsCdg;
+    private Integer idAvisAchat;
+    private String comsAchat;
+
+    private Integer idDecision;
+    private String comsCd;
+
+    private double  montantMga;
+
     private Long idSession;
+
+    public Integer getIdAvisCdg() {
+        return idAvisCdg;
+    }
+
+    public void setIdAvisCdg(Integer idAvisCdg) {
+        this.idAvisCdg = idAvisCdg;
+    }
+
+    public String getComsCdg() {
+        return comsCdg;
+    }
+
+    public void setComsCdg(String comsCdg) {
+        this.comsCdg = comsCdg;
+    }
+
+    public Integer getIdAvisAchat() {
+        return idAvisAchat;
+    }
+
+    public void setIdAvisAchat(Integer idAvisAchat) {
+        this.idAvisAchat = idAvisAchat;
+    }
+
+    public String getComsAchat() {
+        return comsAchat;
+    }
+
+    public void setComsAchat(String comsAchat) {
+        this.comsAchat = comsAchat;
+    }
+
+    public Integer getIdDecision() {
+        return idDecision;
+    }
+
+    public void setIdDecision(Integer idDecision) {
+        this.idDecision = idDecision;
+    }
+
+    public String getComsCd() {
+        return comsCd;
+    }
+
+    public void setComsCd(String comsCd) {
+        this.comsCd = comsCd;
+    }
+
+    public double getMontantMga() {
+        return montantMga;
+    }
+
+    public void setMontantMga(double montantMga) {
+        this.montantMga = montantMga;
+    }
 
     public Long getIdSession() {
         return idSession;
