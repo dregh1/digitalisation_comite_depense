@@ -30,6 +30,7 @@ public class AchatCnt {
     AvisAchatService avisAchatService;
     @Inject
     DemandeService demandeService;
+
     @Inject
     DecisionService decisionService;
 
@@ -123,5 +124,13 @@ public class AchatCnt {
         List<Decision> decision = decisionService.getAll();
         return Response.ok(decision).build();
     }
-
+    //UPDATE AVISACHAT
+    @PUT
+    @Path("decision/{id}")
+    @RolesAllowed({"ACH","CDG","PRS"})
+    public Response updateAvisAchat(@PathParam("id") Long id, Decision Decision) {
+        Decision.setId(id); // Assure que l'ID de l'utilisateur est correctement défini
+      //  DecisionService.updateDecision(Decision);
+        return Response.ok(Decision).build();
+    }
 }
