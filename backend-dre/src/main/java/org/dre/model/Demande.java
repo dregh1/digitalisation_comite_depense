@@ -43,7 +43,16 @@ public class Demande   {
     private boolean validationPrescripteur;
     private boolean validationCdg;
 
+    private String comsCd;
     private boolean estSupprime;
+
+    public String getComsCd() {
+        return comsCd;
+    }
+
+    public void setComsCd(String comsCd) {
+        this.comsCd = comsCd;
+    }
 
     public Long getId() {
         return id;

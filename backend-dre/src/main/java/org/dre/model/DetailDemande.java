@@ -3,6 +3,8 @@ package org.dre.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+import java.sql.Timestamp;
+
 @Entity
 public class DetailDemande {
     @Id
@@ -39,6 +41,9 @@ public class DetailDemande {
     private double  montantMga;
 
     private Long idSession;
+    private String refSession;
+    private Timestamp debutSession;
+    private Timestamp finSession;
 
     public Integer getIdAvisCdg() {
         return idAvisCdg;

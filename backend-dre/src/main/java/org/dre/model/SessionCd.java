@@ -18,6 +18,9 @@ public class SessionCd  {
 
     @JsonProperty("dateCloture")
     private Timestamp dateCloture;
+
+    private Timestamp dateDebut;
+
     @JsonProperty("tauxEur")
     private float tauxEur;
 
@@ -32,6 +35,14 @@ public class SessionCd  {
 
     public boolean isEstFerme() {
         return estFerme;
+    }
+
+    public Timestamp getDateDebut() {
+        return dateDebut;
+    }
+
+    public void setDateDebut(Timestamp dateDebut) {
+        this.dateDebut = dateDebut;
     }
 
     public void setEstFerme(boolean estFerme) {

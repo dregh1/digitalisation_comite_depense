@@ -49,6 +49,7 @@ create database oma;
 				(
 					id serial primary key,
 					ref varchar(11) not null ,
+					dateDebut timestamp default now(),
 					dateCloture timestamp not null,
 					estSupprime boolean default false,
 					idDirection bigint,
@@ -70,7 +71,7 @@ create database oma;
 						id serial primary key ,
 						idTitreDepense bigint,
 						motif text not null,
-						idFournisseur bigint not null,
+						idFournisseur bigint ,
 						estRegularisation boolean default false not null,
 						
 						comsPrescripteur text,
@@ -93,6 +94,7 @@ create database oma;
 						validationPrescripteur boolean default false,
 						validationCdg boolean default false,
 
+                        comsCd text,
 						estSupprime boolean default false
 
 					);
@@ -359,7 +361,7 @@ VALUES (
                         dm.estRegularisation as estRegularisation,
 
                         dm.comsPrescripteur as comsPrescripteur,
-                    -- dm.id_etatFinal as id_etatFinal,
+                        decision.idEtatFinal as idEtatFinal,
 
                         dm.idRubrique as idRubrique,
                         r.designation as nomRubrique,
@@ -371,6 +373,7 @@ VALUES (
                         p.designation as periode,
 
                         dm.idDirection as idDirection,
+
                         dm.idSession as idSession,
                         dm.typeDevise as devise,
                         dm.validationPrescripteur,
@@ -386,12 +389,21 @@ VALUES (
                         decision.id as idDecision,
                         decision.commentaire as comsCd,
 
+                        s.ref as refSession,
+                        s.dateDebut as debutSession,
+                        s.dateCloture as finSession,
+                        coalesce
                         (
-                            case
-                                when dm.typedevise  = 'EUR' then (s.tauxEur * dm.montantHt)
-                                when dm.typedevise  = 'USD' then (s.tauxUsd * dm.montantHt)
-                                when dm.typedevise  = 'MGA' then ( dm.montantHt)
-                            end) as montantMga
+                            0,
+
+                            (
+                                case
+                                    when dm.typedevise  = 'EUR' then (s.tauxEur * dm.montantHt)
+                                    when dm.typedevise  = 'USD' then (s.tauxUsd * dm.montantHt)
+                                    when dm.typedevise  = 'MGA' then ( dm.montantHt)
+                                end)
+                            )
+                            as montantMga
 
 
                 from demande dm join fournisseur f on dm.idFournisseur = f.id
@@ -459,6 +471,7 @@ create or replace view validation as
         d.fournisseur,
         d.idPeriode,
         d.periode,
+
         avisAchat.id as idAvisAchat,
         avisAchat.commentaire as comsAchat,
         avisCdg.id as idAvisCdg,
