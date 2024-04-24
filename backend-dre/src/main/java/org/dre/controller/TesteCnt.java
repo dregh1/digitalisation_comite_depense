@@ -150,7 +150,7 @@ public class TesteCnt {
 //GET ALL DETAILDEMANDE
     @GET
     @Path("/detailDemande/get")
-    @RolesAllowed({"PRS","CDG","CDG"})
+    @RolesAllowed({"PRS","CDG","ACH"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllDetailDemande() {
         // Récupérer les données depuis PostgreSQL
@@ -159,7 +159,7 @@ public class TesteCnt {
     }
     @GET
     @Path("/detailDemande/{id}")
-    @RolesAllowed({"PRS","CDG","CDG"})
+    @RolesAllowed({"PRS","CDG","ACH"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDetailDemande(@PathParam( "id") Long id) {
         // Récupérer les données depuis PostgreSQL
@@ -168,7 +168,7 @@ public class TesteCnt {
     }
     @GET
     @Path("/validation/get")
-    @RolesAllowed({"PRS","CDG","CDG"})
+    @RolesAllowed({"PRS","CDG","ACH"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllValidation() {
         // Récupérer les données depuis PostgreSQL
@@ -177,7 +177,7 @@ public class TesteCnt {
     }
     @GET
     @Path("/validation/{id}")
-    @RolesAllowed({"PRS","CDG","CDG"})
+    @RolesAllowed({"PRS","CDG","ACH"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getValidationById(@PathParam( "id") Long id) {
         // Récupérer les données depuis PostgreSQL
