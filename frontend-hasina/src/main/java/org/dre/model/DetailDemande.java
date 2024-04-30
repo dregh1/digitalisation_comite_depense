@@ -45,6 +45,40 @@ public class DetailDemande {
     private Timestamp debutSession;
     private Timestamp finSession;
 
+    private String etatFinal;
+
+    public String getRefSession() {
+        return refSession;
+    }
+
+    public void setRefSession(String refSession) {
+        this.refSession = refSession;
+    }
+
+    public Timestamp getDebutSession() {
+        return debutSession;
+    }
+
+    public void setDebutSession(Timestamp debutSession) {
+        this.debutSession = debutSession;
+    }
+
+    public Timestamp getFinSession() {
+        return finSession;
+    }
+
+    public void setFinSession(Timestamp finSession) {
+        this.finSession = finSession;
+    }
+
+    public String getEtatFinal() {
+        return etatFinal;
+    }
+
+    public void setEtatFinal(String etatFinal) {
+        this.etatFinal = etatFinal;
+    }
+
     public Integer getIdAvisCdg() {
         return idAvisCdg;
     }

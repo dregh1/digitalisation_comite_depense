@@ -19,6 +19,8 @@ import org.dre.service.*;
 //import org.keycloak.KeycloakSecurityContext;
 //import org.keycloak.representations.AccessToken;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.List;
 
 @Path("/teste")
@@ -183,6 +185,55 @@ public class TesteCnt {
         // Récupérer les données depuis PostgreSQL
         Validation validation = validationService.getById(id);
         return Response.ok(validation).build();
+    }
+
+    //GET ALL CONSULTATION
+    @GET
+    @Path("/detailDemande/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"PRS","CDG","ACH"})
+    public Response getDetails(
+            @QueryParam("idDirection") @DefaultValue("")String idDirection,
+            @QueryParam("statut")@DefaultValue("") String  statut,
+            @QueryParam("motif")@DefaultValue("") String  motif,
+            @QueryParam("dateDebut")@DefaultValue("") String  dateDebut,
+            @QueryParam("dateFin")@DefaultValue("") String  dateFin,
+            @QueryParam("session")@DefaultValue("") String  session,
+            @QueryParam("idFournisseur")@DefaultValue("") String  idFournisseur
+            )  {
+
+        // Récupérer les données depuis PostgreSQL
+        List<DetailDemande> detailDemandes  = detailDemandeService.chercher (idDirection,motif,session,idFournisseur,dateDebut,dateFin,statut);
+        return Response.ok(detailDemandes).build();
+
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response exportExcel() {
+        // Generate Excel file using POI
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("My Data");
+
+        // Populate Excel file with data
+        // ...
+
+        // Create response object
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            workbook.write(baos);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Response.serverError().build();
+        }
+
+        byte[] bytes = baos.toByteArray();
+
+        // Set response headers
+        return Response.ok(bytes)
+                .header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                .header("Content-Disposition", "attachment; filename=export.xlsx")
+                .build();
     }
 
 }
