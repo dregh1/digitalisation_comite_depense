@@ -208,33 +208,33 @@ public class TesteCnt {
 
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response exportExcel() {
-        // Generate Excel file using POI
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("My Data");
+    // @GET
+    // @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    // public Response exportExcel() {
+    //     // Generate Excel file using POI
+    //     Workbook workbook = new XSSFWorkbook();
+    //     Sheet sheet = workbook.createSheet("My Data");
 
-        // Populate Excel file with data
-        // ...
+    //     // Populate Excel file with data
+    //     // ...
 
-        // Create response object
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            workbook.write(baos);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Response.serverError().build();
-        }
+    //     // Create response object
+    //     ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    //     try {
+    //         workbook.write(baos);
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //         return Response.serverError().build();
+    //     }
 
-        byte[] bytes = baos.toByteArray();
+    //     byte[] bytes = baos.toByteArray();
 
-        // Set response headers
-        return Response.ok(bytes)
-                .header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                .header("Content-Disposition", "attachment; filename=export.xlsx")
-                .build();
-    }
+    //     // Set response headers
+    //     return Response.ok(bytes)
+    //             .header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    //             .header("Content-Disposition", "attachment; filename=export.xlsx")
+    //             .build();
+    // }
 
 }
 
