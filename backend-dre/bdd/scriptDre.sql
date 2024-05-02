@@ -421,7 +421,7 @@ VALUES (
                             group by idTitre,dm.id ,f.id,td.id,p.id,r.id,avisAchat.id,aviscdg.id,s.id
                 );
 
-        --
+        -- fkuk hrjp bnzf ehbe
 
         create table decision
         (
