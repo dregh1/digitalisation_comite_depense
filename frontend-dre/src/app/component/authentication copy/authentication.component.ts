@@ -2,6 +2,8 @@ import { Component, OnInit, Renderer2, ElementRef, AfterViewInit ,ViewChild } fr
 import { Router } from '@angular/router';
 import { HttpParams, HttpHeaders, HttpClient } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
+import { ConsultationService } from '../consultation/consultation.service';
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-authentication',
   templateUrl: './authentication.component.html',
@@ -14,7 +16,6 @@ export class AuthenticationComponent implements OnInit {
   
   showPassword: boolean = false;
   showmesg = false; 
-
   
   logindata = {
    
@@ -27,14 +28,17 @@ export class AuthenticationComponent implements OnInit {
   password: any;
   
 
-  constructor(private http: HttpClient,private authenticationService: AuthenticationService, private router: Router, private renderer: Renderer2, private el: ElementRef) {}
+  constructor(private consultationService : ConsultationService,private http: HttpClient,private authenticationService: AuthenticationService, private router: Router, private renderer: Renderer2, private el: ElementRef) {}
  
 
 // NG ON INIT
           ngOnInit(): void {
-
           }
 
+          exportToExcel()
+          {
+              
+          }
           
 
 
@@ -53,20 +57,6 @@ export class AuthenticationComponent implements OnInit {
               headers: new HttpHeaders()
                 .set('Content-Type', 'application/x-www-form-urlencoded')
             })
-            // // TY RAHA ERREUR TOKEN TSOTRA ///////////////////////
-            // // .subscribe(
-            // //   response  => {
-            // //     // Gérer la réponse du jeton avec succès
-            // //     console.log('Jeton reçu:', response);
-            // //     console.log('\n\n\n\n\n\n');
-                
-            // //   },
-            // //   error => {
-            // //     // Gérer les erreurs pendant la requête
-            // //     console.error('Erreur lors de l\'obtention du jeton:', error);
-            // //     this.logError();
-            // //   }
-            // );
             .subscribe((response: any) => {
               // Si la requête est réussie, le token est accessible ici
               if (response.hasOwnProperty('access_token')) {
@@ -77,6 +67,9 @@ export class AuthenticationComponent implements OnInit {
 
                 // Stocker le jeton dans la session storage du navigateur
                 sessionStorage.removeItem("token");
+                sessionStorage.removeItem("direction");
+                sessionStorage.removeItem("role");
+                
                 sessionStorage.setItem('token', token);
 
                 // recherche ny role

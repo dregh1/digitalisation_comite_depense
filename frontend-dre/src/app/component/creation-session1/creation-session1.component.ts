@@ -52,7 +52,7 @@ export class CreationSession1Component implements OnInit {
                 
                 
                   /*  ajout nom direction dans la sessionStorage */
-                    this.authServ.getUserInfo(this.token);
+                    this.authServ.getUserInformation();
 
                   /* recuperation de l'id direction */
                     this.nomDirection = sessionStorage.getItem('direction');

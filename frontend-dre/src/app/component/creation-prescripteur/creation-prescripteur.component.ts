@@ -70,7 +70,7 @@ TitreDepense =
 errorStatus = false;
 errorMessage : string='';
 //  données ACHAT
-commentairesAch : string = '';
+commentairesAch : string = '';afficherErreurNom: boolean = false;
 constructor(private CreationPrescripteurService : CreationPrescripteurService,private router:Router,private AuthenticationService:AuthenticationService)
  {  
     this.estregularisation = false;
@@ -81,25 +81,29 @@ constructor(private CreationPrescripteurService : CreationPrescripteurService,pr
     if(this.token !== null )
     {
       /*  ajout nom direction dans la sessionStorage */
-        this.AuthenticationService.getUserInfo(this.token);
+        this.AuthenticationService.getUserInformation().subscribe(response =>
+          {
+              /* recuperation de l'id direction */
+              
+              this.nomDirection = AuthenticationService.getDirection(response['groups'])  ;
+              if(this.nomDirection !== null)
+              {
+                this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{ 
+                  this.direction = response;
+                });
+              }
+          });
 
-      /* recuperation de l'id direction */
-        this.nomDirection = sessionStorage.getItem('direction');
-        
-        if(this.nomDirection !== null)
-        {
-          this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response});
-        }
+
     
     }
-    this.nomDirection = sessionStorage.getItem('direction');
                     
-    if(this.nomDirection !== null)
-    {
+    // if(this.nomDirection !== null)
+    // {
       
-      this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response})
-      this.direction.id = this.direction.id;    
-    }
+    //   this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response})
+    //   this.direction.id = this.direction.id;    
+    // }
     
    }
  
@@ -131,8 +135,6 @@ ngOnInit(): void {
 
   //  CREATE DEMANDE
   this.CreationPrescripteurService.createDemande(this.demande);
-
-
 }
 getDirectionId(): number | undefined {
   if (this.direction) { // Check if direction exists
@@ -165,29 +167,55 @@ creerDemande()
   
     
     );
-    this.demande.idDirection = this.direction.id?.toString() ?? "";  
-    console.log(this.demande.idDirection,"ito n id direction ");
-    // INSERTION DEMANDE
-    this.CreationPrescripteurService.createDemande(this.demande)
-    .subscribe(
-       response  => {
-         // Gérer la réponse du jeton avec succès
-         console.log(' reçu:', response);
-         console.log('\n\n\n\n\n\n');
-         window.location.reload();
-         this.errorMessage='Demande validé!';
-         setTimeout(() => {
-           this.errorStatus = false; // Hide the message by setting errorStatus to false
-           this.errorMessage = '';    // Optionally, clear the error message
-         }, 3000);
-          
-        },
-       error => {
-         // Gérer les erreurs pendant la requête
-         console.error('Erreur lors de l\'obtention du jeton:', error);
-        
-       }
-    );   
+    let missingField: keyof Demande | null = null;; // Type for the missing field name
+
+  if (!this.demande.typeDevise){
+    missingField = 'typeDevise' as keyof Demande; // Type assertion
+  }
+  if (!this.demande.motif){
+    missingField = 'motif' as keyof Demande;
+  }
+    if (!this.demande.idRubrique){
+      missingField = 'rubrique' as keyof Demande; // Type assertion
+  }
+    if (!this.demande.montantHt){
+      missingField = 'montantHt' as keyof Demande;
+  }
+      if (!this.demande.idPeriode){
+      missingField = 'periode' as keyof Demande;
+  }
+ 
+if (missingField) {
+  this.errorMessage = `Veuillez remplir le champ ${missingField}`; // More specific error message
+  setTimeout(() => {
+    this.errorMessage = ''; // Clear the error message after 3 seconds
+  }, 3000);
+}else{
+
+
+  this.demande.idDirection = this.direction.id?.toString() ?? "";  
+  console.log(this.demande.idDirection,"ito n id direction ");
+  // INSERTION DEMANDE
+  this.CreationPrescripteurService.createDemande(this.demande)
+  .subscribe(
+     response  => {
+       // Gérer la réponse du jeton avec succès
+       console.log(' reçu:', response);
+       console.log('\n\n\n\n\n\n');
+       //window.location.reload();
+       this.errorMessage='Demande Enregistré!';
+       setTimeout(() => { // Hide the message by setting errorStatus to false
+        this.errorMessage = '';// Optionally, clear the error message
+      }, 3000);
+      },
+     error => {
+       // Gérer les erreurs pendant la requête
+       console.error('Erreur lors de l\'obtention du jeton:', error);
+      
+     }
+  );
+}
+       
 
 }
 
@@ -215,8 +243,8 @@ setComsAchat(){
 
 //Ajout titre
 Ajouttitre() {
-
  console.log(this.TitreDepense.designation);
+ 
   this.TitreDepense.idDirection=this.direction.id?.toString() ?? "";
   console.log(this.TitreDepense.idDirection);
   console.log(this.TitreDepense.idDirection,"id direction ooooo");
@@ -227,4 +255,5 @@ Ajouttitre() {
                }
            ); 
 }
+
 }

@@ -9,14 +9,26 @@ export class HeaderComponent implements OnInit {
   role : string | null='';
   token : string | null = '' ;
   nom : string | null = '' ;
+  nomDirection : string | null = '' ;
   constructor(private autheticationServ:AuthenticationService) { 
+
+
     this.token = sessionStorage.getItem("token");
     if(this.token !== null )
     {
-      this.autheticationServ.getUserInfo(this.token);
+      sessionStorage.removeItem("role");
+      sessionStorage.removeItem("nom");
+      sessionStorage.removeItem("direction");
+
+      this.autheticationServ.getUserInformation();
       this.role = sessionStorage.getItem("role");
-      this.nom = sessionStorage.getItem("username");
+      this.nom = sessionStorage.getItem('nom');
+      this.nomDirection = sessionStorage.getItem('direction');
     }
+    
+
+                    
+     
   }
 
   ngOnInit(): void {

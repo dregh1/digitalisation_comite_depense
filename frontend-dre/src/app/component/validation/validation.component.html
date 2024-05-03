@@ -25,9 +25,12 @@
       </div>
 </div>
 <div class="d-flex">
-    <button class="btn btn-primary " type="button">Cloture session</button>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
+    Cloture session
+  </button>
+                                      
     <button class="btn btn-primary mx-2" type="button">Enregistrer</button>
-    <button class="btn btn-primary mx-2" routerLink="/main/menu">
+    <button class="btn btn-primary mx-2" routerLink="/main/MenuDemande">
      <i class="icon fas fa-close"></i>
     </button>
 </div>
@@ -79,64 +82,78 @@
       <div class="" >
           <div class="">
             <div style="height: 300px;" data-offset="50">    
-              <div class=" d-flex">
-                      <div>
-                            <div class="input-group p-2">
-                              <select class="form-select" id="inputGroupSelect02">
-                                <option selected>OK</option>
-                                <option value="1">NOK</option>
-                                <option value="2">Stand By</option>
-                              </select>
-                            </div>
+              <ul class="list-group list-inline">
+                <li *ngFor="let detail of this.DetailDemande">
+                  <ng-container *ngIf="detail.validationcdg && detail.validationachat">
+                   <!-- <ng-container *ngFor="let comspres of this.aviscdg">
+                    <ng-container *ngFor="let comsachat of this.avisAchat">
+                        -->
+                  <div class="d-flex">
+                    <div class="">
+                      <div class="input-group p-2">
+                        <select class="form-select"  [(ngModel)]="this.demande.idetatfinal">
+                          <option value="OK">OK</option>
+                          <option value="NOK">NOK</option>
+                          <option value="En attente">En attente</option>
+                          <!-- <option *ngIf="this.demande.etatFinal  === 'OK'"  [ngValue]="'OK'" selected>OK</option>
+                          <option *ngIf="this.demande.etatFinal  === 'NOK'"  [ngValue]="'NOK'" selected>NOK</option>
+                          <option *ngIf="this.demande.etatFinal  === 'NOK'"  [ngValue]="'NOK'" selected>En attente</option> -->
+
+                        </select>
                       </div>
-                      <div>
-                        <span class="input-group-text " id="basic-addon1">Demande1 </span>
-                      </div>
-                      <div>
-                        <span class="input-group-text " id="basic-addon1">4800.00</span>
-                      </div>
-                      <div>
-                        <span class="input-group-text " id="basic-addon1">10 000,00 </span>
                     </div>
-                      <div>
-                            <div class="input-group p-2">
-                              <select class="form-select" id="inputGroupSelect02">
-                                <option selected>OK</option>
-                                <option value="1">NOK</option>
-                                <option value="2">Stand By</option>
-                              </select>
-                            </div>
+                    
+                    <div class="">
+                      <span class="input-group-text" id="basic-addon1">{{this.detail.titre}}</span>
+                    </div>
+                    <div class="">
+                      <span class="input-group-text " id="basic-addon1">{{this.detail.devise}}</span>
+                    </div>
+                    <div>
+                      <span class="input-group-text " id="basic-addon1">{{this.detail.montantht}}</span>
+                    </div>
+                    <div>
+                      <span class="input-group-text " id="basic-addon1">{{this.detail.fournisseur}}</span>
+
+                    </div>
+                    <div class="p-2">
+                      <!-- <a [ngModel]="this.demande.id">{{this.detail.id}}</a> -->
+                      <button (click)="enregistrer(this.detail.id)">ok</button>
+                      <input type="text"type="text"  [(ngModel)]="this.demande.comsCd" [placeholder]="this.detail.comsCd" class="form-control mb-2" (ngModelChange)="enregistrer(this.detail.id)"placeholder="" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+                    <div>
+                        <div class="input-group p-2">
+                          <select class="form-select"  [(ngModel)]="this.demande.idPeriode"  id="idPeriode" (ngModelChange)="getid(this.detail.idperiode)" aria-label="Example select with button addon">
+                            <option *ngFor="let item of this.periodes" [value]="item.id"> {{item.designation}}  </option>
+                          </select>
+                      </div> 
                       </div>
                       <div class="p-2">
-                         <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-                      </div>
-                      <div>
-                          <div class="input-group p-2">
-                            <select class="form-select" id="inputGroupSelect02">
-                              <option selected>Mois</option>
-                              <option value="1">Année</option>
-                              <option value="2">Trimestre</option>
-                              <option value="2">Q1</option>
-                            </select>
-                          </div>
+                        <span class="input-group-text " id="basic-addon1">{{this.detail.comsprescripteur}}</span>
                       </div>
                       <div class="p-2">
-                        <input type="text" class="form-control " placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                        <span class="input-group-text " id="basic-addon1">{{this.detail.comsAchat}}</span>
                       </div>
-                      <div class="p-2">
-                        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-                      </div>
-              </div>
+                  </div>
+                  </ng-container>
+                </li>
+              </ul>
           </div> 
           </div>
         </div>
     </div>
 </fieldset>
 <br><br> 
-    <div class="d-flex">
+    <ul class="list-group list-inline">
+      <li *ngFor="let detail of this.DetailDemande">
+        <ng-container *ngIf="detail.validationprescripteur && detail.validationachat && !detail.titre">
+         <!-- <ng-container *ngFor="let comspres of this.aviscdg">
+          <ng-container *ngFor="let comsachat of this.avisAchat">
+              -->
+        <div class="d-flex">
           <div class="">
             <div class="input-group p-2">
-              <select class="form-select" id="inputGroupSelect02">
+              <select class="form-select" >
                 <option selected>OK</option>
                 <option value="1">NOK</option>
                 <option value="2">Stand By</option>
@@ -144,48 +161,66 @@
             </div>
           </div>
           <div class="">
-            <span class="input-group-text " id="basic-addon1">Demande1</span>
+            <span class="input-group-text" id="basic-addon1">{{this.detail.titre}}</span>
           </div>
           <div class="">
-            <span class="input-group-text " id="basic-addon1">4800.00</span>
+            <span class="input-group-text " id="basic-addon1">{{this.detail.devise}}</span>
           </div>
           <div>
-            <span class="input-group-text " id="basic-addon1">10 000,00</span>
+            <span class="input-group-text " id="basic-addon1">{{this.detail.montantht}}</span>
           </div>
           <div>
-              <div class="input-group p-2">
-                <select class="form-select" id="inputGroupSelect02">
-                  <option selected>OK</option>
-                  <option value="1">NOK</option>
-                  <option value="2">Stand By</option>
-                </select>
-              </div>
-          </div>
-          <div class="p-2">
-            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+            <span class="input-group-text " id="basic-addon1">{{this.detail.fournisseur}}</span>
+            
           </div>
           <div>
               <div class="input-group p-2">
-                <select class="form-select" id="inputGroupSelect02">
-                  <option selected>Mois</option>
-                  <option value="1">Année</option>
-                  <option value="2">Trimestre</option>
-                  <option value="2">Q1</option>
-                </select>
-              </div>
-            </div>
-          <div class="p-2">
-            <input type="text" class="form-control " placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                <select class="form-select"  [(ngModel)]="this.detail.idperiode" id="{{this.detail.idperiode}}" aria-label="Example select with button addon">
+                  <option *ngFor="let item of this.periodes" [value]="item.id"> {{item.designation}}  </option>
+                  </select>
+            </div> 
           </div>
           <div class="p-2">
-            <input type="text" class="form-control " placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+              <span class="input-group-text " id="basic-addon1">{{this.detail.comsprescripteur}}</span>
           </div>
-    </div>
-
+          <div class="p-2">
+            <span class="input-group-text " id="basic-addon1">{{this.detail.comsAchat}}</span>
+          </div>
+        </div>
+        </ng-container>
+      </li>
+    </ul>
       </div>
 </div>
  
-
+ <!--POP UP TITRTE-->
+ <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title h5" id="exampleModalLabel">Cloture session</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Close"><span class="visually-hidden">Close</span></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="label d-flex">
+            <div class="p-2">
+              <span class="input-group-text mb-2 " id="basic-addon1">Reference</span>
+            <span class="input-group-text  mb-2" id="basic-addon1">Date</span>
+            </div>
+              <div class="input-group p-2">
+                 <input type="text" class="form-control mb-2" placeholder="Reference" aria-label="Username" aria-describedby="basic-addon1">
+                 <input type="datetime-local" class="form-control mb-2" placeholder="Date" aria-label="Username" aria-describedby="basic-addon1">
+              </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+       <button type="button" class="btn btn-primary"  data-bs-dismiss="modal">Cloture</button>
+        </div>
+    </div>
+  </div>
+</div>
 
 
 </section>

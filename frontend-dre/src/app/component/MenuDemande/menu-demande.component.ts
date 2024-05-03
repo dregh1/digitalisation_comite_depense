@@ -16,67 +16,67 @@ export class MenuDemandeComponent implements OnInit {
   nomDirection : string | null ='';
   //CREATION SESSION
   direction = new Direction();
-// brouillon={
-//   titre : '',
-//  montant_ht : '',
-//  is_regularisation : '',
-//   coms_prescripteur : '',
-//    periode : '',
-//   direction : '',
-//  devise : '',
-//   fournisseur :'',
-// }
+
 text:string='';
   constructor(private MenuDemandeService:MenuDemandeService,private autheticationServ : AuthenticationService){
     this.token = sessionStorage.getItem("token");
     if(this.token !== null )
     {
-      this.autheticationServ.getUserInfo(this.token);
-      this.role = sessionStorage.getItem("role");
 
-
-      this.nomDirection = sessionStorage.getItem('direction');
-                    
-      if(this.nomDirection !== null)
-      {
-        this.autheticationServ.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response})
-        this.direction.id = this.direction.id;    
-      }
-  
-      
-
-
-
-    }
+      this.autheticationServ.getUserInformation()
+      .subscribe(response => {
+        console.log("TRAITEMENT USER INFO");
+        // console.log(response);
+        console.log(response['groups']);      //tableau
+        const tableRole = response['groups'];
     
-    //getbytitre
+    //chercher ROLE 
+        this.role = this.autheticationServ.getRole(tableRole);
+  
+    //chercher DIRECTION (groups) a partir du token
+        const tableGROUPE = response['direction'];
+
+        this.nomDirection = this.autheticationServ.getDirection( response['direction']) ;
+          if(this.nomDirection !== null)
+          {
+            this.autheticationServ.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response});
+            this.direction.id = this.direction.id;    
+          }
+
+    //chercher NOM
+        if(response['given_name']!==null)
+        {
+          const tableNOM = response['given_name'];
+          console.log('NOM!: '+tableNOM);
+  
+      //Metraka nom anaty session
+          sessionStorage.removeItem('nom');
+          sessionStorage.setItem("nom",tableNOM); 
+        }
+  
+    });
+
+
+    } 
     
   }
 
 
   ngOnInit(): void {
-   ///maka brouillon
+    
+
+   
+   
+    ///maka brouillon
     this.MenuDemandeService.getBrouillon().subscribe(DetailDemande => {
       this.DetailDemande = DetailDemande;
-      console.log(DetailDemande);
-      this.text
+      // console.log(DetailDemande);
+      
     });
-    // //maka active
-    // this.MenuDemandeService.getdmdactive().subscribe(Response => {
-    //   this.actives = Response;
-    // });
+
+
+   
 }
 
-// getIdOfDirection (nomDirection  : string ) 
-//     {
-//       const nomDirectionn  : string = "DTI";
-      
-//       this.autheticationServ.getDirectionByName(nomDirection)
-//               .subscribe(response => {
-//                               console.log( response);
-//                             }
-//                         ); 
-//       console.log(nomDirection);
-//     }
     
 }
