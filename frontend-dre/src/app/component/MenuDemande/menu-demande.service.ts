@@ -24,6 +24,9 @@ export class MenuDemandeService {
   // maka ny brouillon
 getBrouillon():  Observable<DetailDemande[]> {
   const headers = this.getHeaders();
-  return this.http.get<DetailDemande[]>(this.baseUrl+'/detailDemande/get',{headers});
+
+
+  return this.http.get<DetailDemande[]>(this.baseUrl+'/detailDemande/get',{headers });
+
 }
 }
