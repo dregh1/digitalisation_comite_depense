@@ -33,6 +33,8 @@ public class PrescripteurCnt {
     @Inject
     DetailDemandeService detailDemandeService;
 
+    @Inject
+    SessionCdService sessionCdService;
 
 
     @Inject
@@ -257,4 +259,12 @@ public class PrescripteurCnt {
 
 //DETAIL DEMANDE BY ID DIRECTION
 
+
+    //CHECK SESSION
+    @GET
+    @Path("/checkSession/{idDirection}")
+    @RolesAllowed("PRS")
+    public boolean checkSession(@PathParam("idDirection") Integer id) {
+        return sessionCdService.checkSessionActive(id);
+    }
 }

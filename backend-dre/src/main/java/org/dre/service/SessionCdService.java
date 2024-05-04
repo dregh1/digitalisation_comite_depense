@@ -28,18 +28,20 @@ public class SessionCdService {
         return sessionCdRepository.listAll();
     }
 
-    public SessionCd getActiveSession(Integer id) {
+    public boolean checkSessionActive(Integer id) {
         List<SessionCd> allList = this.getAll();
 
         for(SessionCd sessionCd : allList )
         {
             if(sessionCd.getIdDirection().equals(id) && !sessionCd.isEstFerme())
             {
-                return sessionCd;
+                return true;
             }
         }
-        return null;
+        return false;
     }
+
+
 
 
 
