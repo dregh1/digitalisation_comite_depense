@@ -141,16 +141,75 @@ export class AuthenticationService {
   // }  
 
   getUserInformation(){
-    //definition des PARAMS dans BODY
-    const body = new HttpParams()
-            .set('grant_type', 'password')
-            .set('client_id', 'quarkus-client')
-            .set('client_secret', 'Ulb4eedexOT9Kgw9TzBaqi458JJM3peh');
+
+    //definition des PARAMS 
+
+    const params = new HttpParams()
+    .set('grant_type', 'password')
+    .set('client_id', 'quarkus-client')
+    .set('client_secret', 'Ulb4eedexOT9Kgw9TzBaqi458JJM3peh');
+
 
     const headers = this.getHeaders();
     // return this.http.get<any>("http://localhost:8081/realms/oma/protocol/openid-connect/userinfo",body.toString())
-    return this.http.get<any>("http://localhost:8081/realms/oma/protocol/openid-connect/userinfo")
-    ;
+    return this.http.get<any>("http://localhost:8081/realms/oma/protocol/openid-connect/userinfo",{headers,params})
+  
+  }
+
+  getRole (tableRole : []){
+    if(tableRole !== null )
+      for(let i =0 ; i <tableRole.length ; i++)
+      {
+        if(tableRole[i]==='CDG')
+        {
+          console.log('C EST UN CDG!!!');
+          // sessionStorage.removeItem("role");
+          // sessionStorage.setItem("role",tableRole[i]);
+          return tableRole[i] ;
+
+        }else
+        if(tableRole[i]==='PRS')
+        {
+          console.log('C EST UN PRESCRIPTEUR!!!');
+          // sessionStorage.removeItem("role");
+          // sessionStorage.setItem("role",tableRole[i]);
+          return tableRole[i] ;
+
+        }else
+        if(tableRole[i]==='ACH')
+        {
+          console.log('C EST UN ACHAT!!!');
+          // sessionStorage.removeItem("role");
+          // sessionStorage.setItem("role",tableRole[i]);
+          return tableRole[i] ;
+
+        }else
+        {
+          console.error("AUCUNE ROLE !");
+          return null;
+        }
+
+      }
+      return null;
+  }
+
+  getDirection(tableGROUPE : string[])
+  {
+          if(tableGROUPE !== null)
+          {
+            return tableGROUPE[0];
+            // for(let i =0 ; i <tableGROUPE.length ; i++)
+            // {
+            //   const direction = tableGROUPE[i] ;
+            //   return direction;
+
+            // }
+              // TABLEAU DE GROUPE
+          }else 
+          {
+            console.error("tsy misy DIRECTION");
+            return null;
+          }
   }
 
   async getUserInfo(token : string) {

@@ -22,25 +22,39 @@ text:string='';
     this.token = sessionStorage.getItem("token");
     if(this.token !== null )
     {
-      this.autheticationServ.getUserInfo(this.token);
-      
-      
-      // Mampiditra ROLE anaty ss
-      this.role = sessionStorage.getItem("role");
-      console.log("ROLE AMPIASAIKO");
-      console.log(this.role);
-       
-      // Mampiditra DIRECTION anaty ss
-      this.nomDirection = sessionStorage.getItem('direction');
-                    
-      if(this.nomDirection !== null)
-      {
-        this.autheticationServ.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response})
-        this.direction.id = this.direction.id;    
-      }
+
+      this.autheticationServ.getUserInformation()
+      .subscribe(response => {
+        console.log("TRAITEMENT USER INFO");
+        // console.log(response);
+        console.log(response['groups']);      //tableau
+        const tableRole = response['groups'];
+    
+    //chercher ROLE 
+        this.role = this.autheticationServ.getRole(tableRole);
   
-      
-    // window.location.reload();
+    //chercher DIRECTION (groups) a partir du token
+        const tableGROUPE = response['direction'];
+
+        this.nomDirection = this.autheticationServ.getDirection( response['direction']) ;
+          if(this.nomDirection !== null)
+          {
+            this.autheticationServ.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response});
+            this.direction.id = this.direction.id;    
+          }
+
+    //chercher NOM
+        if(response['given_name']!==null)
+        {
+          const tableNOM = response['given_name'];
+          console.log('NOM!: '+tableNOM);
+  
+      //Metraka nom anaty session
+          sessionStorage.removeItem('nom');
+          sessionStorage.setItem("nom",tableNOM); 
+        }
+  
+    });
 
 
     } 
@@ -61,22 +75,8 @@ text:string='';
     });
 
 
-    // //maka active
-    // this.MenuDemandeService.getdmdactive().subscribe(Response => {
-    //   this.actives = Response;
-    // });
+   
 }
 
-// getIdOfDirection (nomDirection  : string ) 
-//     {
-//       const nomDirectionn  : string = "DTI";
-      
-//       this.autheticationServ.getDirectionByName(nomDirection)
-//               .subscribe(response => {
-//                               console.log( response);
-//                             }
-//                         ); 
-//       console.log(nomDirection);
-//     }
     
 }

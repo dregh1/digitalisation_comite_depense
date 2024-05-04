@@ -80,17 +80,30 @@ type:string='';devise:string='';
     this.token = sessionStorage.getItem("token");
     if(this.token !== null )
     {
-      this.autheticationServ.getUserInfo(this.token);
-      this.role = sessionStorage.getItem("role");
+      this.autheticationServ.getUserInformation()
+      .subscribe(
+        response =>{
+              this.role = this.autheticationServ.getRole(response['groups']);
+              this.nomDirection = this.autheticationServ.getDirection(response['direction']) ;
+              if(this.nomDirection !== null)
+              {
+                
+                this.autheticationServ.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response})
+                this.direction.id = this.direction.id;    
+              }
+            }
+
+        );
+      //this.role = sessionStorage.getItem("role");
      }
-     this.nomDirection = sessionStorage.getItem('direction');
+    //  this.nomDirection = sessionStorage.getItem('direction');
                     
-     if(this.nomDirection !== null)
-     {
+    //  if(this.nomDirection !== null)
+    //  {
        
-       this.autheticationServ.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response})
-       this.direction.id = this.direction.id;    
-     }
+    //    this.autheticationServ.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response})
+    //    this.direction.id = this.direction.id;    
+    //  }
   }
   //calcul sur le reliquat
   calculerResultat() {

@@ -63,7 +63,7 @@ export class ValidationComponent implements OnInit {
     this.token = sessionStorage.getItem("token");
     if(this.token !== null )
     {
-      this.autheticationServ.getUserInfo(this.token);
+      this.autheticationServ.getUserInformation();
       this.role = sessionStorage.getItem("role");
 
 

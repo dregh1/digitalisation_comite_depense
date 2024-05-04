@@ -81,25 +81,29 @@ constructor(private CreationPrescripteurService : CreationPrescripteurService,pr
     if(this.token !== null )
     {
       /*  ajout nom direction dans la sessionStorage */
-        this.AuthenticationService.getUserInfo(this.token);
+        this.AuthenticationService.getUserInformation().subscribe(response =>
+          {
+              /* recuperation de l'id direction */
+              
+              this.nomDirection = AuthenticationService.getDirection(response['groups'])  ;
+              if(this.nomDirection !== null)
+              {
+                this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{ 
+                  this.direction = response;
+                });
+              }
+          });
 
-      /* recuperation de l'id direction */
-        this.nomDirection = sessionStorage.getItem('direction');
-        
-        if(this.nomDirection !== null)
-        {
-          this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response});
-        }
+
     
     }
-    this.nomDirection = sessionStorage.getItem('direction');
                     
-    if(this.nomDirection !== null)
-    {
+    // if(this.nomDirection !== null)
+    // {
       
-      this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response})
-      this.direction.id = this.direction.id;    
-    }
+    //   this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{ this.direction = response})
+    //   this.direction.id = this.direction.id;    
+    // }
     
    }
  
