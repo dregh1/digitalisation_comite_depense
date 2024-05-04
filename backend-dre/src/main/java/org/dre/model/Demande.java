@@ -41,6 +41,7 @@ public class Demande   {
     private boolean validationAchat;
     private boolean validationPrescripteur;
     private boolean validationCdg;
+
     private String comsCd;
     private boolean estSupprime;
 

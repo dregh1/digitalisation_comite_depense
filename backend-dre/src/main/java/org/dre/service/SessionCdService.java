@@ -28,33 +28,31 @@ public class SessionCdService {
         return sessionCdRepository.listAll();
     }
 
-    public boolean checkSessionActive(Integer id) {
+    public SessionCd getActiveSession(Integer id) {
         List<SessionCd> allList = this.getAll();
 
         for(SessionCd sessionCd : allList )
         {
             if(sessionCd.getIdDirection().equals(id) && !sessionCd.isEstFerme())
             {
-                return true;
+                return sessionCd;
             }
         }
-        return false;
+        return null;
     }
 
 
 
-
-
-    public SessionCd getSessionActive(Integer idDirection) {
+    public boolean checkSession(Integer idDirection) {
         List <SessionCd> sessionCds = this.getAll();
         for(SessionCd session : sessionCds)
         {
             if(session.getIdDirection().equals(idDirection) && !session.isEstFerme())
             {
-                return session;
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
 

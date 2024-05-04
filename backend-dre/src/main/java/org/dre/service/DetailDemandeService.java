@@ -73,7 +73,7 @@ public class DetailDemandeService {
 
         if(!idDirection.isEmpty() || !motif.isEmpty() || !session.isEmpty() || !idFournisseur.isEmpty() || !dateDebut.isEmpty() || !dateFin.isEmpty() || !etat.isEmpty() )
         {
-            sql+="where 1=1  ";
+            sql+="where validationPrescripteur = true  ";
             if(!idDirection.isEmpty())
                 sql+= " and idDirection ="+idDirection;
             if(!motif.isEmpty())

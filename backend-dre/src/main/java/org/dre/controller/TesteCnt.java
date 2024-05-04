@@ -1,6 +1,7 @@
 package org.dre.controller;
 
 import io.quarkus.mailer.Mail;
+
 import io.quarkus.mailer.Mailer;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.Blocking;
@@ -8,16 +9,22 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
-
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
+import jakarta.ws.rs.core.SecurityContext;
 import org.dre.model.*;
 import org.dre.model.Periode;
 import org.dre.service.*;
+//import org.eclipse.microprofile.jwt.JsonWebToken;
+    //mila esorina reto
+//import org.keycloak.AuthorizationContext;
+//import org.keycloak.KeycloakPrincipal;
+//import org.keycloak.KeycloakSecurityContext;
+//import org.keycloak.representations.AccessToken;
 
-import java.io.File;
-
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.List;
 
 @Path("/teste")
@@ -26,7 +33,7 @@ import java.util.List;
 @Authenticated
 public class TesteCnt {
 
-    @Inject Mailer mailer;
+ @Inject Mailer mailer;
 
     @Inject
     PeriodeService periodeService;
@@ -39,8 +46,7 @@ public class TesteCnt {
     @Inject
     DetailDemandeService detailDemandeService;
 
-    @Inject
-    ExportExcelService excelGeneratorService;
+
     @Inject
     FournisseurService fournisseurService;
 
@@ -118,6 +124,16 @@ public class TesteCnt {
 
         return Response.ok(d).build();
     }
+    //get direction tout
+    @GET
+    @Path("/getDirection")
+    @RolesAllowed({"PRS","ACH","CDG"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDirrection() {
+        List<Direction> session = directionService.getAll ();
+        return Response.ok(session).build();
+    }
+
     @POST
     @Path("/getIdDir")
     public Response createUser(String nomDir) {
@@ -139,15 +155,7 @@ public class TesteCnt {
         List<SessionCd> session = sessionCdService.getAll ();
         return Response.ok(session).build();
     }
-//GET SESSION ACTIVE
-    @GET
-    @Path("/session/getByDir/{idDirection}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getSessionActive(@PathParam("idDirection") Integer idDirection) {
-        // Récupérer les données depuis PostgreSQL
-        SessionCd session = sessionCdService.getSessionActive(idDirection);
-        return Response.ok(session).build();
-    }
+
 //GET ALL DETAILDEMANDE
     @GET
     @Path("/detailDemande/get")
@@ -209,28 +217,38 @@ public class TesteCnt {
 
 
 
-    @POST
-    @Path("/send")
-    public Response sendNotification() {
-        Mail mail = Mail.withText("charle_andre_as@outlook.com", "Notification Subject", "This is the body of the notification.");
-        mailer.send(mail);
-        return Response.ok().build();
-    }
-//    @POST
-//    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-//    @Path("/export")
-//    @RolesAllowed({"PRS","CDG","ACH"})
-//    public Response generateExcelData(String data) throws Exception {
-//        excelGeneratorService.generateExcel("Excel");
-//
-//        // Assuming the file is saved in the project directory
-//        File file = new File("data_" + System.currentTimeMillis() + ".xlsx");
-//
-//        return Response.ok(file)
-//                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
-//                .build();
-//    }
 
+
+    @POST
+
+    @Path("/send")
+
+    public Response sendNotification() {
+
+        Mail mail = Mail.withText("charle_andre_as@outlook.com", "Notification Subject", "This is the body of the notification.");
+
+        mailer.send(mail);
+
+        return Response.ok().build();
+
+    }
+//GET SESSION ACTIVE
+
+    // @GET
+
+    // @Path("/session/getByDir/{idDirection}")
+
+    // @Produces(MediaType.APPLICATION_JSON)
+
+    // public Response getSessionActive(@PathParam("idDirection") Integer idDirection) {
+
+    //     // Récupérer les données depuis PostgreSQL
+
+    //     SessionCd session = sessionCdService.getSessionActive(idDirection);
+
+    //     return Response.ok(session).build();
+
+    // }
 
 
 }

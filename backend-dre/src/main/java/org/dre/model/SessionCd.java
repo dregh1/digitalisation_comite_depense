@@ -18,7 +18,7 @@ public class SessionCd  {
 
     @JsonProperty("dateCloture")
     private Timestamp dateCloture;
-
+    @JsonProperty("dateDebut")
     private Timestamp dateDebut;
 
     @JsonProperty("tauxEur")

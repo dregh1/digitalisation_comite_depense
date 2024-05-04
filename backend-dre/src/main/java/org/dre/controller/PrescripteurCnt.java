@@ -24,6 +24,8 @@ public class PrescripteurCnt {
     @Inject
     PeriodeService periodeService;
     @Inject
+    SessionCdService sessionCdService;
+    @Inject
     ActiveService activeService ;
     @Inject
     AvisAchatService avis_achatService;
@@ -33,8 +35,6 @@ public class PrescripteurCnt {
     @Inject
     DetailDemandeService detailDemandeService;
 
-    @Inject
-    SessionCdService sessionCdService;
 
 
     @Inject
@@ -260,11 +260,14 @@ public class PrescripteurCnt {
 //DETAIL DEMANDE BY ID DIRECTION
 
 
-    //CHECK SESSION
+    //GET SESSION ACTIVE
     @GET
     @Path("/checkSession/{idDirection}")
-    @RolesAllowed("PRS")
-    public boolean checkSession(@PathParam("idDirection") Integer id) {
-        return sessionCdService.checkSessionActive(id);
+    @RolesAllowed({"PRS"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public boolean checkSession(@PathParam("idDirection") Integer idDirection) {
+        // Récupérer les données depuis PostgreSQL
+        return  sessionCdService.checkSession(idDirection);
     }
+
 }

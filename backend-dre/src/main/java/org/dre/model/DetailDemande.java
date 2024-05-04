@@ -44,7 +44,6 @@ public class DetailDemande {
     private String refSession;
     private Timestamp debutSession;
     private Timestamp finSession;
-
     private String etatFinal;
 
     public String getRefSession() {
