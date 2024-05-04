@@ -4,83 +4,38 @@ import { Direction } from 'src/app/models/Direction';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  role : string | null='';
-  token : string | null = '' ;
-  nom : string | null = '' ;
-  nomDirection : string | null = '' ;
-  direct= new Direction();
-  constructor(private autheticationServ:AuthenticationService) { 
-
-
-  
+  role: string | null = '';
+  token: string | null = '';
+  nom: string | null = '';
+  nomDirection: string | null = '';direction = new Direction();
+  constructor(private AuthenticationService: AuthenticationService) {
     this.token = sessionStorage.getItem("token");
-    this.token = sessionStorage.getItem("token");
+    // this.idDirection = authServ.getIdDirectionByName();
+   // this.direction.id=-1;
+  //RECUPERATION IdDirection                
     if(this.token !== null )
     {
-
-      this.autheticationServ.getUserInformation()
-      .subscribe(response => {
-        console.log("TRAITEMENT USER INFO");
-        // console.log(response);
-        console.log(response['groups']);      //tableau
-        const tableRole = response['groups'];
-    
-    //chercher ROLE 
-        this.role = this.autheticationServ.getRole(tableRole);
-  
-    //chercher DIRECTION (groups) a partir du token
-        const tableGROUPE = response['direction'];
-
-        this.nomDirection = this.autheticationServ.getDirection( response['direction']) ;
-          if(this.nomDirection !== null)
+      /*  ajout nom direction dans la sessionStorage */
+        this.AuthenticationService.getUserInformation().subscribe(response =>
           {
-            this.autheticationServ.getDirectionByName(this.nomDirection).subscribe(response =>{
-              this.direct = response;
-              console.log("TTTTTTTTTT");
-              console.log(response);
+              /* recuperation de l'id ROLE */
               
-            
-            });
-            // this.direction.id = this.direction.id;    
-          }
-
-    //chercher NOM
-        if(response['given_name']!==null)
-        {
-          const tableNOM = response['given_name'];
-          this.nom =tableNOM;
-          console.log('NOM!: '+tableNOM);
-  
-      //Metraka nom anaty session
-          sessionStorage.removeItem('nom');
-          sessionStorage.setItem("nom",tableNOM); 
-        }
-  
-    });
+              this.role = AuthenticationService.getRole(response['groups'])  ;
+              this.nom =  response['given_name'];
+              console.log("-----------------");
+              // console.log(response);
+              
+              
+          });
 
 
-    } 
-    // if(this.token !== null )
-    // {
-    //   sessionStorage.removeItem("role");
-    //   sessionStorage.removeItem("nom");
-    //   sessionStorage.removeItem("direction");
-
-    //   this.autheticationServ.getUserInformation();
-    //   this.role = sessionStorage.getItem("role");
-    //   this.nom = sessionStorage.getItem('nom');
-    //   this.nomDirection = sessionStorage.getItem('direction');
-    // }
     
-
-                    
-     
+    }
   }
 
-  ngOnInit(): void {
-  }
 
+  ngOnInit(): void {}
 }
