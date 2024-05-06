@@ -8,108 +8,149 @@ import { DetailDemande } from 'src/app/models/DetailDemande';
 import { Fournisseur } from 'src/app/models/Fournisseur';
 import { DonneeExcel } from 'src/app/models/DonneExcel';
 import * as XLSX from 'xlsx';
+import { SessionCd } from 'src/app/models/SessionCd';
+import { UtilitaireService } from 'src/app/services/utilitaire.service';
 @Component({
   selector: 'app-validation',
   templateUrl: './validation.component.html',
   styleUrls: ['./validation.component.scss'],
 })
 export class ValidationComponent implements OnInit {
-  isUp1 = false; // Initial state for first button
-  errorStatus = false;
-  role: string | null = '';
-  token: string | null = '';
-  DetailDemande: DetailDemande[] = [];
-  direction = new Direction();
-  nomDirection: string | null = '';
-  fournisseurs: Fournisseur[] = [];
-  periodes: Periode[] = [];
-  demandes = new Demande();
-  donnee = new Demande();
-  texte: String = '';
-  d = new Demande();
-  DonneExcels: DonneeExcel[] = [];
-  demande = {
-    id: '',
-    estRegularisation: false,
-    periode: '',
-    idRubrique: '',
-    sousRubrique: '',
-    motif: '',
-    devise: '',
-    typeDevise: '',
-    comsPrescripteur: '',
-    idDirection: '',
-    idTitreDepense: '',
-    nomReference: '',
-    titre: '',
-    idFournisseur: '',
-    montantHt: '',
-    fournisseur: '',
-    idPeriode: '',
-    validationPrescripteur: false,
-    validationAchat: false,
-    validationCdg: false,
-    typeReference: '',
-    idDemande: '',
-    idperiode: '',
-    comsCd: '',
-    etatFinal: '',
-  };
-  detail = {
-    comsCd: '',
-    idperiode: '',
-  };
-  errorMessage: string = '';
-  toggleUp() {
-    this.isUp1 = !this.isUp1;
-  }
-  comsCd: string | null = '';
-  idPeriode: string | null = '';
-  etatfinal: string | null = '';
-  detaildemande = new DetailDemande();
+[x: string]: any;
+    
+  // VALEURS PAR DEFAUT
+
+          isUp1 = false; // Initial state for first button
+          errorStatus = false;
+          role: string | null = '';
+          token: string | null = '';
+          detailDemande: DetailDemande[] = [];
+          direction = new Direction();
+          nomDirection: string | null = '';
+          fournisseurs: Fournisseur[] = [];
+          periodes: Periode[] = [];
+          demandes = new Demande();
+          donnee = new Demande();
+          texte: String = '';
+          d = new Demande();
+          DonneExcels: DonneeExcel[] = [];
+
+          demande = {
+            id: '',
+            estRegularisation: false,
+            periode: '',
+            idRubrique: '',
+            sousRubrique: '',
+            motif: '',
+            devise: '',
+            typeDevise: '',
+            comsPrescripteur: '',
+            idDirection: '',
+            idTitreDepense: '',
+            nomReference: '',
+            titre: '',
+            idFournisseur: '',
+            montantHt: '',
+            fournisseur: '',
+            idPeriode: '',
+            validationPrescripteur: false,
+            validationAchat: false,
+            validationCdg: false,
+            typeReference: '',
+            idDemande: '',
+            idperiode: '',
+            comsCd: '',
+            etatFinal: '',
+          };
+          detail = {
+            comsCd: '',
+            idperiode: '',
+          };
+          errorMessage: string = '';
+          toggleUp() {
+            this.isUp1 = !this.isUp1;
+          }
+          comsCd: string | null = '';
+          idPeriode: string | null = '';
+          etatfinal: string | null = '';
+          detaildemande = new DetailDemande();
+
+          listeDirections :  Direction [] =[];             /* liste direction  */
+          listeSessions :  SessionCd [] =[];               /* liste sesssion  */
+          
+    //parametrage du filtre
+          filtre_Session : string ='23';
+          filtre_idDirection : string ='1';
+    
+    //session active
+          sessionActive  =  new SessionCd ()  ;
+          dateClotureSession!: Date;
+
   constructor(
-    private AuthenticationService: AuthenticationService,
-    private ValidationService: ValidationService
-  ) {
-    this.token = sessionStorage.getItem('token');
-    if(this.token !== null )
-      {
-        /*  ajout nom direction dans la sessionStorage */
-          this.AuthenticationService.getUserInformation().subscribe(response =>
-            {
-                /* recuperation de l'id direction */
-                
-                this.nomDirection = AuthenticationService.getDirection(response['groups'])  ;
-                if(this.nomDirection !== null)
-                  {
-                    this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{
-                       this.direction = response
-                        this.direction.id = response.id;  
-                        console.log('blaoohi',response);
-                      });
-                  }
-            });
-  
-  
-      
-      }
-  }
+      private authenticationService: AuthenticationService,
+      private ValidationService: ValidationService,
+      private utilitaires: UtilitaireService
+  ) {  }
 
   ngOnInit(): void {
-    ///maka detaildemande
-    this.ValidationService.getBrouillon().subscribe((DetailDemande) => {
-      this.DetailDemande = DetailDemande;
-      //maka par detail
-      console.log(DetailDemande);
-    });
-    // maka ny periode
-    this.ValidationService.getPeriode().subscribe((data) => {
-      this.periodes = data;
-    });
+
+  // initialisation des données par defaut
+
+        this.token = sessionStorage.getItem('token');
+        if(this.token !== null )
+          {
+            /*  ajout nom direction dans la sessionStorage */
+              this.authenticationService.getUserInformation().subscribe(response =>
+                {
+
+                    /* recuperation de l'id direction */
+                    this.nomDirection = this.authenticationService.getDirection(response['direction'])  ;
+                    if(this.nomDirection !== null)
+                      {
+                        
+                              this.authenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{
+                                this.direction = response;
+                                  this.direction.id = response.id;  
+                                  console.log('blaoohi',response);
+                  
+
+                                              /* OBTENIR detaildemande getFiltreDetailDemande */
+                                              // this.ValidationService.getBrouillon().subscribe((DetailDemande) => {
+                                                this.ValidationService.getFiltreDetailDemande(this.direction.id?.toString()?? '',this.detaildemande.idsession?? '').subscribe((filtreDetailDemande) => {
+                                                  this.detailDemande = filtreDetailDemande;
+                                                  //recuperation par detail
+                                                  // console.log("grr");
+                                                  
+                                                  // console.log(DetailDemande);
+                                                });
+
+
+                                
+                                });
+                      }
+                });
+      
+      
+          
+          }
+      
+
+        /* recuperation de tous les direction */
+        this.utilitaires.getDirection().subscribe(  ( result ) => {this.listeDirections =  result;} );
+        
+        /* recuperation de tous les session */
+        this.utilitaires.getSession().subscribe(  ( result ) => {this.listeSessions =  result;} );
+   
+        // recuperation ny periode
+        this.ValidationService.getPeriode().subscribe((data) => {
+          this.periodes = data;
+        });
+
+
     // this.detailvalues.forEach((detail) => {
     //   this.detailvalues[detail.id]=detail.coms;
     // });
-    ///maka decision
+    ///recuperation decision
     // this.ValidationService.getcomsCdByid(this.id).subscribe(response=> {
     //   this.Decision = response;
     //   console.log(response,"////////////////");
@@ -119,7 +160,7 @@ export class ValidationComponent implements OnInit {
     //   this.ValidationService.getCdgById(this.DetailDemande.).subscribe(response=> {
     //     this.aviscdgs = response;
 
-    //   // maka avisAchat
+    //   // recuperation avisAchat
     //   this.ValidationService.getAchatById(this.id).subscribe(response=> {
     //     this.avisAchat = response;
     //     });
@@ -127,9 +168,10 @@ export class ValidationComponent implements OnInit {
 
     //setdemande
     //set selected option
-    setTimeout(() => {
-      this.setSelected('13', 'idPeriode');
-    }, 1000);
+        setTimeout(() => {
+          this.setSelected('13', 'idPeriode');
+        }, 1000);
+
   }
   getid(idperiode: any) {}
 
@@ -162,7 +204,7 @@ export class ValidationComponent implements OnInit {
     setTimeout(() => {
       // Optionally, clear the error message
 
-      this.DetailDemande[index].comsCd = nouvelleValeur;
+      this.detailDemande[index].comsCd = nouvelleValeur;
       this.comsCd = nouvelleValeur ?? '';
       this.idPeriode = idPeriode;
       this.etatfinal = etatFinal;
@@ -173,7 +215,7 @@ export class ValidationComponent implements OnInit {
   }
   ///modication demande
   enregistrer(de: any) {
-    //maka par detail
+    //recuperation par detail
     this.ValidationService.getdemande(de).subscribe((response) => {
       this.demandes = response;
       //console.log(response,"////////////////");
@@ -247,4 +289,49 @@ export class ValidationComponent implements OnInit {
   //   }
   //   this.ValidationService.exportToExcel(this.DonneExcels, 'MyData.xlsx');
   // }
+
+
+  //FILTRATION ligne de validation
+  filtreValidation(){
+    
+    this.ValidationService.getFiltreDetailDemande(this.filtre_idDirection,this.filtre_Session).subscribe((resultatFiltre) => {
+      this.detailDemande = resultatFiltre;
+
+    });
+  }
+
+  actualiser() {
+    this.filtre_Session = '';
+    this.filtre_idDirection = '';
+    this.filtreValidation();
+  }
+
+
+
+  //get de la session active
+  getActiveSession()  {
+
+    this.utilitaires.getSessionByDirection(this.direction.id?.toString() ?? '')
+    .subscribe(
+      (result) =>{
+        
+        console.log(result);
+
+        this.sessionActive = result;
+      });
+  }
+  updateSession(){
+    if(this.sessionActive.id !== undefined)
+    {
+      this.sessionActive.dateCloture = this.dateClotureSession;  
+      console.log("-----------------------");
+      console.log(this.sessionActive.dateCloture);
+      
+      this.utilitaires.updateSession(this.sessionActive.id ,this.sessionActive );  
+    }
+    
+
+
+  }
+
 }

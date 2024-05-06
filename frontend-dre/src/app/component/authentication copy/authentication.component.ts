@@ -49,12 +49,12 @@ export class AuthenticationComponent implements OnInit {
       .set('password', this.logindata.password)
       .set('grant_type', 'password')
       .set('client_id', 'quarkus-client')
-      .set('client_secret', 'diNdyU2iGksempOMKqs5gZlA2UkwngCJ');
+      .set('client_secret', 'Ulb4eedexOT9Kgw9TzBaqi458JJM3peh');
 
     return (
       this.http
         .post(
-          'http://localhost:8082/realms/oma/protocol/openid-connect/token',
+          'http://localhost:8081/realms/oma/protocol/openid-connect/token',
           body.toString(),
           {
             headers: new HttpHeaders().set(

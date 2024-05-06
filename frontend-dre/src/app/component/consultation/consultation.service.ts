@@ -11,34 +11,41 @@ import * as XLSX from 'xlsx';
   providedIn: 'root'
 })
 export class ConsultationService {
+  
   private url = 'http://localhost:8080';
-
   private baseUrl = 'http://localhost:8080/teste';
   private baseUrl2 = 'http://localhost:8080/prescripteur';
- 
-  constructor(private http: HttpClient) { }
-  //maka authorization
-private getHeaders(): HttpHeaders {
-  const token = sessionStorage.getItem('token');  // Replace with your token retrieval logic
 
-  if (token) {
-    return new HttpHeaders({ Authorization: `Bearer ${token}` });
-  } else {
-    // Handle the case where no token is found (e.g., throw an error or redirect to login)
-    throw new Error('No authorization token found');
+
+
+  constructor(private http: HttpClient) { }
+
+
+
+  //recuperation authorization
+  private getHeaders(): HttpHeaders {
+      const token = sessionStorage.getItem('token');  // Replace with your token retrieval logic
+
+      if (token) {
+        return new HttpHeaders({ Authorization: `Bearer ${token}` });
+      } else {
+        // Handle the case where no token is found (e.g., throw an error or redirect to login)
+        throw new Error('No authorization token found');
+      }
   }
-}
- // maka periode
+  // recuperation Fournisseur
   getFournisseur(): Observable<Fournisseur[]> {
     const headers = this.getHeaders();
     return this.http.get<Fournisseur[]>(this.baseUrl+'/fournisseur/get',{headers});
   }
-  // maka periode
+
+  // recuperation Direction
   getdirection(): Observable<Direction[]> {
     const headers = this.getHeaders();
     return this.http.get<Direction[]>(this.baseUrl+'/getDirection',{headers});
   }
-  // maka session
+  
+  // recuperation session
   getsession(): Observable<SessionCd[]> {
     const headers = this.getHeaders();
     return this.http.get<SessionCd[]>(this.baseUrl+'/session/get',{headers});
