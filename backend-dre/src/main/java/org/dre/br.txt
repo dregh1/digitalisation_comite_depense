@@ -81,9 +81,7 @@ autres:  - Atokana ny fonction utilitaire
                 get session active
                 set to true : est fermé
     
-    
-    
-    
+        
             deconnexion 
             debug validation update ny ligne rehetra    
             refuser demande CDG 
