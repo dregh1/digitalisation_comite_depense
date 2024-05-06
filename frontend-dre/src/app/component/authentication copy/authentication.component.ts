@@ -17,7 +17,7 @@ import { AuthenticationService } from './authentication.service';
 export class AuthenticationComponent implements OnInit {
   public errorStatus = false;
   //errorMessage ='Identifiant ou mot de passe incorrect' ;
-  errorMessage: string = '';
+  errorMessage= '';
   spinnershow:boolean = false;
   showPassword: boolean = false;
   showmesg = false;
@@ -49,12 +49,12 @@ export class AuthenticationComponent implements OnInit {
       .set('password', this.logindata.password)
       .set('grant_type', 'password')
       .set('client_id', 'quarkus-client')
-      .set('client_secret', 'Ulb4eedexOT9Kgw9TzBaqi458JJM3peh');
+      .set('client_secret', 'diNdyU2iGksempOMKqs5gZlA2UkwngCJ');
 
     return (
       this.http
         .post(
-          'http://localhost:8081/realms/oma/protocol/openid-connect/token',
+          'http://localhost:8082/realms/oma/protocol/openid-connect/token',
           body.toString(),
           {
             headers: new HttpHeaders().set(
@@ -66,7 +66,7 @@ export class AuthenticationComponent implements OnInit {
         
         .subscribe((response: any) => {
           // Si la requête est réussie, le token est accessible ici
-          if (response.hasOwnProperty('access_token')) {
+          if (response.hasOwnProperty('access_token') ) {
             const token = response.access_token;
 
             // Stockez le token dans le stockage du navigateur ou utilisez-le directement
@@ -84,9 +84,13 @@ export class AuthenticationComponent implements OnInit {
             // Une erreur s'est produite
             console.error("Erreur lors de l'obtention du jeton:", response);
             this.logError();
-            this.errorMessage = 'mot de passe incorrect';
+            
           }
-        })
+        },
+      (error) => {
+          this.errorMessage='Identifiant incorrect';
+      }
+      )
     );
   }
 
