@@ -81,12 +81,34 @@ autres:  - Atokana ny fonction utilitaire
                 get session active
                 set to true : est fermé
     
-        
+    
+    
+    
             deconnexion 
             debug validation update ny ligne rehetra    
             refuser demande CDG 
             refuser demande ACH 
             refuser demande CD  
+
+
+list group (ok)         http://localhost:8081/admin/realms/oma/groups
+    => mahazo id group
+
+list user in group  {idGroupe}  http://localhost:8081/admin/realms/oma/groups/5bf0f311-b99e-4ed5-a2c3-48e81d25601e/members
+
+    => mahazo idUser
+
+Mitady role par user
+
+    => alefa amin' le role rehetra
+
+    => alefa amin izy rehetra
+
+
+
+
+
+
 
 
 
