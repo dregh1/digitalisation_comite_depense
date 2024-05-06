@@ -41,8 +41,7 @@
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"
         data-bs-whatever="@mdo"
-        (click)="getActiveSession()"
-        >
+        (click)="getActiveSession()">
         Cloture session
 
       </button>
@@ -453,7 +452,7 @@
 
                 <input
                   type="datetime-local"
-                  [(ngModel)]="this.dateClotureSession"
+                  [(ngModel)]="this.sessionActive.dateCloture"
                   class="form-control mb-2"
                   placeholder="Date"
                   aria-label="Username"

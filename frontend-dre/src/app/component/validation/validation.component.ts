@@ -84,6 +84,19 @@ export class ValidationComponent implements OnInit {
     
     //session active
           sessionActive  =  new SessionCd ()  ;
+          
+          sessionActiveModified ={
+            id: '',
+            idDirection: '',
+            estFerme: false,
+            ref: '',
+            dateCloture: '',
+            dateDebut: '',
+            tauxEur: '' ,
+            tauxUsd: '',
+            tauxMga : ''
+        }
+
           dateClotureSession!: Date;
 
   constructor(
@@ -322,16 +335,20 @@ export class ValidationComponent implements OnInit {
   }
   updateSession(){
     if(this.sessionActive.id !== undefined)
-    {
-      this.sessionActive.dateCloture = this.dateClotureSession;  
-      console.log("-----------------------");
-      console.log(this.sessionActive.dateCloture);
-      
-      this.utilitaires.updateSession(this.sessionActive.id ,this.sessionActive );  
-    }
-    
+    { 
+
+      this.utilitaires.updateSession(this.sessionActive.id ,this.sessionActive )  
+      .subscribe(
+        response => {
+          console.log('Mise à jour réussie:', response);
+        },
+        error => {
+          console.error('Erreur lors de la mise à jour:', error);
+        }
+      );   
 
 
   }
 
+}
 }

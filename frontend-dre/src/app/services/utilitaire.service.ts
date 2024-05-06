@@ -49,9 +49,13 @@ export class UtilitaireService {
 
           }
 
-          updateSession(id: number, data: any): Observable<any> {
+          updateSession(id: number, formData: any): Observable<any> {
             const headers = this.getHeaders();
-            return this.http.put<any>(`${this.baseUrl}/session/${id}`, data, {
+            
+            console.log("DATA TO SET--------------------");
+            console.log(formData);
+            
+            return this.http.put<any>(`${this.baseUrl}/session/${id}`, formData, {
               headers,
             });
           }
