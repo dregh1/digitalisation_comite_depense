@@ -263,7 +263,7 @@ public class PrescripteurCnt {
     //GET SESSION ACTIVE
     @GET
     @Path("/checkSession/{idDirection}")
-    @RolesAllowed({"PRS"})
+    @RolesAllowed({"PRS","CDG","ACH"})
     @Produces(MediaType.APPLICATION_JSON)
     public boolean checkSession(@PathParam("idDirection") Integer idDirection) {
         // Récupérer les données depuis PostgreSQL

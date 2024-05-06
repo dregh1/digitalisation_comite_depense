@@ -3,7 +3,7 @@ package org.dre.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.dre.model.Demande;
+import org.dre.model.SessionCd;
 import org.dre.model.SessionCd;
 import org.dre.repository.SessionCdRepository;
 import org.hibernate.Session;
@@ -28,12 +28,12 @@ public class SessionCdService {
         return sessionCdRepository.listAll();
     }
 
-    public SessionCd getActiveSession(Integer id) {
+    public SessionCd getActiveSession(Integer idDirection) {
         List<SessionCd> allList = this.getAll();
 
         for(SessionCd sessionCd : allList )
         {
-            if(sessionCd.getIdDirection().equals(id) && !sessionCd.isEstFerme())
+            if(sessionCd.getIdDirection().equals(idDirection) && !sessionCd.isEstFerme())
             {
                 return sessionCd;
             }
@@ -41,7 +41,10 @@ public class SessionCdService {
         return null;
     }
 
-
+    @Transactional
+    public void updateSessionCd(SessionCd sessionCd) {
+        sessionCdRepository.getEntityManager().merge(sessionCd);
+    }
 
     public boolean checkSession(Integer idDirection) {
         List <SessionCd> sessionCds = this.getAll();

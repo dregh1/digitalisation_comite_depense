@@ -26,6 +26,7 @@ import org.dre.service.*;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Objects;
 
 @Path("/teste")
 @Produces(MediaType.APPLICATION_JSON)
@@ -46,15 +47,15 @@ public class TesteCnt {
     @Inject
     DetailDemandeService detailDemandeService;
 
-
+    @Inject
+    SessionCdService sessionCdService;
     @Inject
     FournisseurService fournisseurService;
 
     @Inject
     DemandeService demandeService;
 
-    @Inject
-    SessionCdService sessionCdService;
+
 
 
 //    TEST CRUD
@@ -215,7 +216,20 @@ public class TesteCnt {
 
     }
 
-
+//    @GET
+//    @Path("/detailDemande/get")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @RolesAllowed({"PRS","CDG","ACH"})
+//    public Response getDetailFiltrer(
+//            @QueryParam("idDirection") @DefaultValue("")String idDirection,
+//            @QueryParam("sessionCd")@DefaultValue("") String  sessionCd
+//    )  {
+//
+//        // Récupérer les données depuis PostgreSQL
+//        List<DetailDemande> detailDemandes  = detailDemandeService.chercher (idDirection,motif,session,idFournisseur,dateDebut,dateFin,statut);
+//        return Response.ok(detailDemandes).build();
+//
+//    }
 
 
 
@@ -225,7 +239,7 @@ public class TesteCnt {
 
     public Response sendNotification() {
 
-        Mail mail = Mail.withText("charle_andre_as@outlook.com", "Notification Subject", "This is the body of the notification.");
+        Mail mail = Mail.withText("charle_andre_as@outlook.com", "Notification Subject", "Hey, This is the body of the notification.");
 
         mailer.send(mail);
 
@@ -249,7 +263,33 @@ public class TesteCnt {
     //     return Response.ok(session).build();
 
     // }
+    @GET
+    @Path("/session/active")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"PRS","CDG","ACH"})
+    public Response getSessionActive(
+            @QueryParam("dir") @DefaultValue("")String idDirection
+    )
+    {
+        SessionCd session ;
 
+        if(!Objects.equals(idDirection, ""))
+        {
+            // Récupérer les données depuis PostgreSQL
+            session = sessionCdService.getActiveSession(Integer.valueOf(idDirection));
+            return Response.ok(session).build();
+        }else
+            return null;
+    }
+
+    @PUT
+    @Path("session/{id}")
+    @RolesAllowed({"PRS","CDG","ACH"})
+    public Response updateSession(@PathParam("id") Long id, SessionCd session) {
+        session.setId(id); // Assure que l'ID de l'utilisateur est correctement défini
+        sessionCdService.updateSessionCd(session);
+        return Response.ok(session).build();
+    }
 
 }
 

@@ -73,3 +73,6 @@ to do list apres midi
 
 
 ROLE PRS
+
+
+autres:  - Atokana ny fonction utilitaire
