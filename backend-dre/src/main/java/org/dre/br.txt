@@ -76,3 +76,19 @@ ROLE PRS
 
 
 autres:  - Atokana ny fonction utilitaire
+
+            cloture session 
+                get session active
+                set to true : est fermé
+    
+    
+    
+    
+            deconnexion 
+            debug validation update ny ligne rehetra    
+            refuser demande CDG 
+            refuser demande ACH 
+            refuser demande CD  
+
+
+
