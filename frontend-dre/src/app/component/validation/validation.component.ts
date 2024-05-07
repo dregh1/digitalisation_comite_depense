@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../authentication copy/authentication.service';
+import { AuthenticationService } from '../Authentication/authentication.service';
 import { Direction } from 'src/app/models/Direction';
 import { ValidationService } from './validation.service';
 import { Periode } from 'src/app/models/Periode';
@@ -8,23 +8,24 @@ import { DetailDemande } from 'src/app/models/DetailDemande';
 import { Fournisseur } from 'src/app/models/Fournisseur';
 import { DonneeExcel } from 'src/app/models/DonneExcel';
 import * as XLSX from 'xlsx';
+import { UtilitaireService } from 'src/app/service/utilitaire.service';
 import { SessionCd } from 'src/app/models/SessionCd';
-import { UtilitaireService } from 'src/app/services/utilitaire.service';
 @Component({
   selector: 'app-validation',
   templateUrl: './validation.component.html',
   styleUrls: ['./validation.component.scss'],
 })
 export class ValidationComponent implements OnInit {
-[x: string]: any;
+  [x: string]: any;
     
   // VALEURS PAR DEFAUT
 
           isUp1 = false; // Initial state for first button
+          isUp2 = false; 
           errorStatus = false;
           role: string | null = '';
           token: string | null = '';
-          detailDemande: DetailDemande[] = [];
+          DetailDemande: DetailDemande[] = [];
           direction = new Direction();
           nomDirection: string | null = '';
           fournisseurs: Fournisseur[] = [];
@@ -70,6 +71,9 @@ export class ValidationComponent implements OnInit {
           toggleUp() {
             this.isUp1 = !this.isUp1;
           }
+          toggleUp2() {
+            this.isUp2 = !this.isUp2;
+          }
           comsCd: string | null = '';
           idPeriode: string | null = '';
           etatfinal: string | null = '';
@@ -84,31 +88,17 @@ export class ValidationComponent implements OnInit {
     
     //session active
           sessionActive  =  new SessionCd ()  ;
-          
-          sessionActiveModified ={
-            id: '',
-            idDirection: '',
-            estFerme: false,
-            ref: '',
-            dateCloture: '',
-            dateDebut: '',
-            tauxEur: '' ,
-            tauxUsd: '',
-            tauxMga : ''
-        }
-
           dateClotureSession!: Date;
-
+          groupedDemandes: { [key: string]: DetailDemande[] } = {};
   constructor(
       private authenticationService: AuthenticationService,
       private ValidationService: ValidationService,
       private utilitaires: UtilitaireService
-  ) {  }
+  ) { 
+   }
 
   ngOnInit(): void {
-
   // initialisation des données par defaut
-
         this.token = sessionStorage.getItem('token');
         if(this.token !== null )
           {
@@ -130,21 +120,15 @@ export class ValidationComponent implements OnInit {
                                               /* OBTENIR detaildemande getFiltreDetailDemande */
                                               // this.ValidationService.getBrouillon().subscribe((DetailDemande) => {
                                                 this.ValidationService.getFiltreDetailDemande(this.direction.id?.toString()?? '',this.detaildemande.idsession?? '').subscribe((filtreDetailDemande) => {
-                                                  this.detailDemande = filtreDetailDemande;
+                                                  this.DetailDemande = filtreDetailDemande;
                                                   //recuperation par detail
                                                   // console.log("grr");
                                                   
                                                   // console.log(DetailDemande);
-                                                });
-
-
-                                
+                                                });             
                                 });
                       }
                 });
-      
-      
-          
           }
       
 
@@ -160,32 +144,29 @@ export class ValidationComponent implements OnInit {
         });
 
 
-    // this.detailvalues.forEach((detail) => {
-    //   this.detailvalues[detail.id]=detail.coms;
-    // });
-    ///recuperation decision
-    // this.ValidationService.getcomsCdByid(this.id).subscribe(response=> {
-    //   this.Decision = response;
-    //   console.log(response,"////////////////");
-    //   this.decision.commentaireCd = this.Decision ;
-
-    //////////Affichage du commentaire Cdg
-    //   this.ValidationService.getCdgById(this.DetailDemande.).subscribe(response=> {
-    //     this.aviscdgs = response;
-
-    //   // recuperation avisAchat
-    //   this.ValidationService.getAchatById(this.id).subscribe(response=> {
-    //     this.avisAchat = response;
-    //     });
-    // }
-
-    //setdemande
-    //set selected option
         setTimeout(() => {
           this.setSelected('13', 'idPeriode');
         }, 1000);
 
-  }
+    this.groupedDemandes = this.groupByTitle(this.DetailDemande);
+        
+      }
+      // regroupement par titre des demandes 
+      groupByTitle(demandes: DetailDemande[]): { [key: string]: DetailDemande[] } {
+        const grouped: { [key: string]: DetailDemande[] } = {};
+        demandes.forEach(demande => {
+          const titre = demande.titre;
+          if (typeof titre === 'string') { // Vérification de type
+            if (!grouped[titre]) {
+              grouped[titre] = [];
+            }
+            grouped[titre].push(demande);
+          } else {
+            // Gérer le cas où titre n'est pas une chaîne de caractères
+          }
+        });
+        return grouped;
+      }
   getid(idperiode: any) {}
 
   //set SELECTED OPTION
@@ -217,7 +198,7 @@ export class ValidationComponent implements OnInit {
     setTimeout(() => {
       // Optionally, clear the error message
 
-      this.detailDemande[index].comsCd = nouvelleValeur;
+      this.DetailDemande[index].comsCd = nouvelleValeur;
       this.comsCd = nouvelleValeur ?? '';
       this.idPeriode = idPeriode;
       this.etatfinal = etatFinal;
@@ -308,7 +289,7 @@ export class ValidationComponent implements OnInit {
   filtreValidation(){
     
     this.ValidationService.getFiltreDetailDemande(this.filtre_idDirection,this.filtre_Session).subscribe((resultatFiltre) => {
-      this.detailDemande = resultatFiltre;
+      this.DetailDemande = resultatFiltre;
 
     });
   }
@@ -335,20 +316,16 @@ export class ValidationComponent implements OnInit {
   }
   updateSession(){
     if(this.sessionActive.id !== undefined)
-    { 
-
-      this.utilitaires.updateSession(this.sessionActive.id ,this.sessionActive )  
-      .subscribe(
-        response => {
-          console.log('Mise à jour réussie:', response);
-        },
-        error => {
-          console.error('Erreur lors de la mise à jour:', error);
-        }
-      );   
+    {
+      this.sessionActive.dateCloture = this.dateClotureSession;  
+      console.log("-----------------------");
+      console.log(this.sessionActive.dateCloture);
+      
+      this.utilitaires.updateSession(this.sessionActive.id ,this.sessionActive );  
+    }
+    
 
 
   }
 
-}
 }
