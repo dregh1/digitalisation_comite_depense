@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { CreationPrescripteurService } from './creation-prescripteur.service';
+import { CreationPrescripteurService } from './CreationPrescripteur.service';
 import { Fournisseur } from 'src/app/models/Fournisseur';
 import { Periode } from 'src/app/models/Periode';
 import { Titre } from 'src/app/models/TitreDepense';
 import { Rubrique } from 'src/app/models/Rubrique';
 import { Route, Router } from '@angular/router';
-import { AuthenticationService } from '../authentication copy/authentication.service';
+import { AuthenticationService } from '../Authentication/authentication.service';
 import { Direction } from 'src/app/models/Direction';
 import { Demande } from 'src/app/models/Demande';
 @Component({
   selector: 'app-creation-prescripteur',
-  templateUrl: './creation-prescripteur.component.html',
-  styleUrls: ['./creation-prescripteur.component.scss'],
+  templateUrl: './CreationPrescripteur.component.html',
+  styleUrls: ['./CreationPrescripteur.component.scss'],
 })
 export class CreationPrescripteurComponent implements OnInit {
   token: string | null;
