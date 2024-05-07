@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuDemandeService } from './menu-demande.service';
-import { AuthenticationService } from '../authentication copy/authentication.service';
+import { MenuDemandeService } from './MenuDemande.service';
+import { AuthenticationService } from '../Authentication/authentication.service';
 import { DetailDemande } from 'src/app/models/DetailDemande';
 import { Direction } from 'src/app/models/Direction';
 import * as XLSX from 'xlsx';
 import { DonneeExcel } from 'src/app/models/DonneExcel';
 @Component({
   selector: 'app-menu-demande',
-  templateUrl: './menu-demande.component.html',
-  styleUrls: ['./menu-demande.component.scss'],
+  templateUrl: './MenuDemande.component.html',
+  styleUrls: ['./MenuDemande.component.scss'],
 })
 export class MenuDemandeComponent implements OnInit {
   role: string | null = '';

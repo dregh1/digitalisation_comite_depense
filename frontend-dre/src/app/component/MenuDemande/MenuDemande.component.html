@@ -11,8 +11,11 @@
             <button
               type="button"
               class="btn"
-              [routerLink]="'/main/creationprescripteur'">
-              +
+              [routerLink]="'/main/creationprescripteur'"
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="solaris-icon si-add" viewBox="0 0 1000 1000">
+              <path d="M850 400H600V150a50 50 0 0 0-50-50H450a50 50 0 0 0-50 50v250H150a50 50 0 0 0-50 50v100a50 50 0 0 0 50 50h250v250a50 50 0 0 0 50 50h100a50 50 0 0 0 50-50V600h250a50 50 0 0 0 50-50V450a50 50 0 0 0-50-50" style="fill-rule:evenodd"/>
+            </svg>
             </button>
           </div>
           <div
@@ -59,6 +62,11 @@
         >
           <div><p class="text-primary">Listes des Demandes CD Active</p></div>
           <div>
+            <div *ngIf="role === 'PRS'">
+              <button type="button" class="btn btn-primary p-2" (click)="exportToExcel()">
+                Extraction
+              </button>
+            </div>
             <div *ngIf="role === 'CDG' || role === 'ACH'">
               <div class="d-flex justify-content-end">
                 <button
@@ -69,7 +77,7 @@
                   Validation
                 </button>
                 <button type="button" class="btn btn-primary p-2" (click)="exportToExcel()">
-                  <i class="fa-solid fa-file-xls"></i>
+                  Extraction
                 </button>
               </div>
             </div>
@@ -116,8 +124,10 @@
       </div>
 
 
+      
 
 
+<!-- table active demande
       <div
       class="card-body scrollspy-example"
       data-spy="scroll"
@@ -125,7 +135,7 @@
       data-offset="50"
     >
    
-    <table class="table" id="montable">
+     <table class="table" id="montable">
       <thead>
         <tr>
           <th>Titre</th>
@@ -135,25 +145,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let detail of this.DetailDemande">
+        <tr *ngFor="let detail of this.DetailDemande" [routerLink]="['/main/teste/', detail.id]"
+          [ngClass]="{
+            'active': detail.validationcdg,
+            'classePrecedente': true
+          }">
           <ng-container *ngIf="
           detail.validationprescripteur &&
           detail.iddirection === this.direction.id
         ">
-          <td  [routerLink]="['/main/teste/', detail.id]"
-          [ngClass]="{
-            'active': detail.validationcdg,
-            'classePrecedente': true
-          }"
+          <td  
           aria-current="true"
           
           class="list-group-item list-group-item-action"
           aria-current="true">
-            
-             
-            
               {{ detail.titre }}
-          
           </td>
           <td>{{ detail.motif }}</td>
           <td>{{ detail.periode }}</td>
@@ -163,36 +169,12 @@
       </tbody>
     </table>
 
-    </div>
-      
-     
-      <!-- <div class="card">
-            <div class="card-header bg-transparent border-primary text-body p-3 navbar navbar-static d-flex justify-content-between" id="navbarExample">
-              <div><p> Listes des demandes CD Active </p></div>
-              <div>
-                  <div *ngIf="role === 'CDG' || role === 'ACH'">
-                    <div class="d-flex justify-content-end" >
-                        <button type="button" class="btn btn-primary p-1 mx-2" routerLink="/validation">Validation</button> 
-                         <button type="button" class="btn btn-primary p-1">Extraction</button>  
-                    </div> 
-                  </div> 
-              </div>
-             
-              </div>
-              <div class="card-body scrollspy-example" data-spy="scroll" data-target="#navbarExample" data-offset="50">    
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item justify-content-between d-flex " *ngFor="let active of actives">
-                    <div>
-                      <h6 >{{active.titre}} <p>{{active.motif}}</p></h6>
-                    </div>
-                      <div>
-                          <button type="button" class="btn"><i class="icon fas fa-chevron-circle-right" [routerLink]="['/main/teste/', active.id]" ></i></button>
-                          
-                        </div>
-                  </li>
-                </ul>
-          </div>
-          </div> -->
+    </div> -->
+
+
+
+
+
     </div>
     
   </section>
