@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Titre } from 'src/app/models/TitreDepense';
 import { Periode } from 'src/app/models/Periode';
 import { Fournisseur } from 'src/app/models/Fournisseur';
-import { AuthenticationService } from '../authentication copy/authentication.service';
+import { AuthenticationService } from '../Authentication/authentication.service';
 import { Rubrique } from 'src/app/models/Rubrique';
 import { AvisCdg } from 'src/app/models/AvisCdg';
 import { AvisAchat } from 'src/app/models/AvisAchat';
@@ -12,6 +12,8 @@ import { DetailDemande } from 'src/app/models/DetailDemande';
 import { TesteService } from './DetailParDemande.service';
 import { Direction } from 'src/app/models/Direction';
 import { Demande } from 'src/app/models/Demande';
+import { UtilitaireService } from 'src/app/service/utilitaire.service';
+import { SessionCd } from 'src/app/models/SessionCd';
 @Component({
   selector: 'app-test',
   templateUrl: './DetailParDemande.component.html',
@@ -45,6 +47,7 @@ export class TestComponent implements OnInit {
     titre: '',
     idFournisseur: '',
     montantHt: '',
+    idSession:'',
     fournisseur: '',
     idPeriode: '',
     validationPrescripteur: false,
@@ -60,6 +63,7 @@ export class TestComponent implements OnInit {
     montantEngage: '',
   };
   AvisAchat = {
+    id:'',
     idDemande: '',
     commentaire: '',
   };
@@ -83,8 +87,8 @@ export class TestComponent implements OnInit {
   aviscdgs = new AvisCdg();
   avisAchat = new AvisAchat();
   message: string = '';
-
-
+  idsession:string='';
+session=new SessionCd();
   ///variable maka session
   existanceSession : boolean= false;
 
@@ -93,7 +97,8 @@ export class TestComponent implements OnInit {
     private TesteService: TesteService,
     private autheticationServ: AuthenticationService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private utilitaire:UtilitaireService
   ) {
     this.id = this.activatedRoute.snapshot.params['id'];
     
@@ -115,12 +120,23 @@ export class TestComponent implements OnInit {
                 console.log('blaoohi!!!!!!!!!!!!!!!!!',response);
     
                ///maka session
-     this.TesteService.checkSession(this.direction.id).subscribe((data) => {
-      this.existanceSession= data;
-      console.log('existendjjgjg',this.existanceSession);
-      
-    });
+          this.TesteService.checkSession(this.direction.id).subscribe((data) => {
+            this.existanceSession= data;
+            console.log('existendjjgjg',this.existanceSession);
+            
+            this.idsession = this.direction.id?.toString() ?? '';
+             //maka id session
+            this.utilitaire.getSessionByDirection(this.idsession).subscribe((data) => {
+              this.session = data;
+              this.idsession=data.id?.toString() ?? '';
+              console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
+              
+            });
+
+          });
+
               });
+             
             
           }
 
@@ -138,8 +154,8 @@ export class TestComponent implements OnInit {
       parseFloat(this.AvisCdg.montantEngage);
   }
   ngOnInit(): void {
-
     
+
     //maka titre
     this.TesteService.getTitre().subscribe((data) => {
       this.titres = data;
@@ -157,12 +173,8 @@ export class TestComponent implements OnInit {
       this.rubriques = data;
     });
    
-    // maka avisAchat
-    this.TesteService.getAchatById(this.id).subscribe((response) => {
-      this.avisAchat = response;
-      this.AvisAchat.commentaire = this.avisAchat.commentaire ?? '';
-    });
     //  //maka titre
+
     //maka par detail
     this.TesteService.getDetailDemandebyId(this.id).subscribe((response) => {
       this.DetailDemande = response;
@@ -182,14 +194,11 @@ export class TestComponent implements OnInit {
       this.demande.montantHt = this.DetailDemande.montantht?.toString() ?? '';
       this.demande.periode = this.DetailDemande.periode ?? '';
       this.demande.idPeriode = this.DetailDemande.idperiode?.toString() ?? '';
-      this.demande.idDirection =
-        this.DetailDemande.iddirection?.toString() ?? '';
-      this.demande.idFournisseur =
-        this.DetailDemande.idfournisseur?.toString() ?? '';
+      this.demande.idDirection =this.DetailDemande.iddirection?.toString() ?? '';
+      this.demande.idSession=this.DetailDemande.idsession?.toString() ?? '';
+      this.demande.idFournisseur =this.DetailDemande.idfournisseur?.toString() ?? '';
       this.demande.idTitreDepense = this.DetailDemande.idtitre?.toString() ?? '';
-
-      this.demande.sousRubrique =
-        this.DetailDemande.sousrubrique?.toString() ?? '';
+      this.demande.sousRubrique =this.DetailDemande.sousrubrique?.toString() ?? '';
       this.demande.idRubrique = this.DetailDemande.idrubrique?.toString() ?? '';
       this.demande.validationPrescripteur = Boolean(
         this.DetailDemande.validationprescripteur ?? ''
@@ -222,7 +231,19 @@ export class TestComponent implements OnInit {
       this.reliquat =
         parseFloat(this.AvisCdg.montantBudgetMensuel) -
         parseFloat(this.AvisCdg.montantEngage);
-    });
+    },
+  error=>{
+      
+  });
+      // maka avisAchat
+      this.TesteService.getAchatById(this.id).subscribe((response) => {
+        this.avisAchat = response;
+        this.AvisAchat.id= this.avisAchat.id?.toString() ?? '';
+        this.AvisAchat.commentaire = this.avisAchat.commentaire ?? '';
+      },
+      error=>{
+          
+      });
   }
   //toggle ieldsetprescripteur
   toggleUp() {
@@ -267,14 +288,18 @@ export class TestComponent implements OnInit {
   }
   //validation prescripteur
   valider(): void {
-    
+    console.log(this.idsession,'+///////////sessionnnn///////////////');
+    this.demande.idSession=this.idsession;
     this.demande.validationPrescripteur = true;
+
     console.log(this.demande.validationPrescripteur);
     this.update();
   }
   //modication prescripteur
   update(): void {
     console.log('moulle');
+    console.log(this.demande.idSession,'idsesssinkk');
+    
     console.log(this.demande);
     this.TesteService.update(this.id, this.demande).subscribe((Response) => {
       console.log(Response);
@@ -287,6 +312,13 @@ export class TestComponent implements OnInit {
     }, 3000);
     console.log(this.message);
     // window.location.reload();
+  }
+  //annuation prescripteur
+  annulationprescripteur(){
+    //this.enregistrerCdg();
+    this.demande.validationPrescripteur = false;
+    console.log(this.demande.validationPrescripteur);
+    this.update();
   }
   
 
@@ -351,7 +383,10 @@ export class TestComponent implements OnInit {
   ///modificationcdg
   modificationCdg() {
     this.AvisCdg.idDemande = this.id?.toString() ?? '';
-
+   console.log(this.AvisCdg.idDemande);
+   
+    console.log(this.AvisCdg.id,"io id");
+    
     this.TesteService.updateCdg(
       parseFloat(this.AvisCdg.id),
       this.AvisCdg
@@ -373,6 +408,12 @@ export class TestComponent implements OnInit {
   //validationcdg
   validationCdg() {
     this.demande.validationCdg = true;
+    this.update();
+  }
+   //annuation prescripteur
+   annulationCdg(){
+    //this.enregistrerCdg();
+    this.demande.validationCdg = false;
     this.update();
   }
   //enregistrement achat
@@ -416,6 +457,23 @@ export class TestComponent implements OnInit {
       console.log(this.message);
     }
   }
+   ///modificationachat
+   modificationAchat() {
+    this.AvisAchat.idDemande = this.id?.toString() ?? '';
+
+    this.TesteService.updateAchat(
+      parseFloat(this.AvisAchat.id),
+      this.AvisAchat
+    ).subscribe((Response) => {
+      console.log(Response);
+      this.errorMessage = 'Demande modifié!';
+    });
+    setTimeout(() => {
+      this.errorStatus1 = false; // Hide the message by setting errorStatus to false
+      this.errorMessage = ''; // Optionally, clear the error message
+    }, 3000);
+    console.log(this.message);
+  }
   ///validation Achat
   validationAchat() {
     this.demande.validationAchat = true;
@@ -426,4 +484,11 @@ export class TestComponent implements OnInit {
     this.demande.validationAchat = false;
     this.update();
   }
-}
+    //annuation prescripteur
+    annulationAchat(){
+      //this.enregistrerCdg();
+      this.demande.validationAchat = false;
+      this.update();
+    }
+    //maka idsession 
+    }
