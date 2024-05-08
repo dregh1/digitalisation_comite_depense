@@ -1,19 +1,28 @@
-
-
 export class Demande {
-    constructor(
-         public id :Number,
-         public id_session :Number,
-         public id_titre_depense :Number,
-         public motif :String,
-         public id_fournisseur :Number,
-         public montant_ht :Number,
-         public id_rubrique :Number,
-         public id_sousrubrique :Number,
-         public is_regularisation :boolean,
-         public id_periode :Number,
-         public is_deleted:boolean,
-      // Autres propriétés de votre modèle de données personnel
-    ) {}
-  }
-  
+  constructor(
+    public id?: number,
+    public idSession?: number,
+    public idTitreDepense?: number,
+    public idDirection?: number,
+    public motif?: string,
+    public idFournisseur?: number,
+    public montantHt?: number,
+    public idRubrique?: number,
+    public idSousrubrique?: number,
+    public estRegularisation?: boolean,
+    public estSupprimer?: boolean,
+    public idPeriode?: number,
+    public comsPrescripteur?: string,
+    public sousRubrique?: string,
+    public etatfinal?: string,
+    public typeReference?: string,
+    public nomReference?: string,
+    public typeDevise?: string,
+    public validationAchat?: boolean,
+    public validationPrescripteur?: boolean,
+    public validationCdg?: boolean,
+    public etatFinal?: boolean,
+    public comsCd?: string
+  ) // Autres propriétés de votre modèle de données personnel
+  {}
+}

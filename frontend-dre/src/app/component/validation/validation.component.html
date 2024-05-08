@@ -1,0 +1,564 @@
+<section>
+  <!-- menu validation -->
+  <div class="justify-content-between d-flex p-3">
+    <div class="d-flex">
+      <div class="label d-flex">
+        <span class="input-group-text mx-2" id="basic-addon1">Direction</span>
+        <div class="input-group p-2">
+          <select [(ngModel)]="this.filtre_idDirection" class="form-select" id="inputGroupSelect02" (ngModelChange)="filtreValidation()">
+            
+            <option *ngFor="let direction of this.listeDirections" [value]="direction.id">
+                {{ direction.designation }}
+            </option>
+
+          </select>
+        </div>
+      </div>
+      
+      <div class="label d-flex">
+        <span class="input-group-text mx-2" id="basic-addon1">session CD</span>
+        <div class="input-group p-2">
+          <select [(ngModel)]="this.filtre_Session" class="form-select" id="inputGroupSelect02" (ngModelChange)="filtreValidation()">
+            <option *ngFor="let session of this.listeSessions" [value]="session.ref">
+                {{ session.ref }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex">
+      <div class="error-message mx-3">
+        <p class="text-success fs-4 text">{{ errorMessage }}</p>
+      </div>
+      <button (click)="actualiser()" class="btn btn-primary mx-2">
+        <i class="fa fa-refresh icon" aria-hidden="true"></i></button>
+      <button
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+        
+        data-bs-whatever="@mdo"
+        (click)="getActiveSession()">
+
+
+        Cloture session
+      </button>
+      <button class="btn btn-primary mx-2" routerLink="/main/MenuDemande">
+        <i class="icon fas fa-close"></i>
+      </button>
+    </div>
+  </div>
+  <div class="scrollmenu">
+    <div
+      id="navbarExample"
+      class="scrollspy-example p-3 entete"
+      data-spy="scroll"
+      data-target="#navbarExample"
+    >
+      <!-- <div class="d-flex">
+        <div>
+          <span class="input-group-text " id="basic-addon1">Validation </span>
+        </div>
+        <div>
+          <span class="input-group-text " id="basic-addon1">Motif </span>
+        </div>
+        <div>
+          <span class="input-group-text " id="basic-addon1">Devise </span>
+        </div>
+        <div>
+          <span class="input-group-text " id="basic-addon1">Montant </span>
+      </div>
+        <div>
+          <span class="input-group-text " id="basic-addon1">fournisseurs</span>
+        </div>
+        <div>
+          <span class="input-group-text " id="basic-addon1">Commentaires CD</span>
+        </div>
+        <div>
+          <span class="input-group-text" id="basic-addon1">Periode</span>
+        </div>
+        <div>
+          <span class="input-group-text " id="basic-addon1">Commentaire Prescripteur</span>
+        </div>
+        <div>
+          <span class="input-group-text " id="basic-addon1">Commentaire Achat</span>
+        </div>
+</div> -->
+      <!-- menu eldset -->
+      <!-- <table class="table" class="collapse show" id="collapseExample">
+        <tr>
+          <th class="p-5">Validation</th>
+          <th class="p-5">Titre</th>
+          <th class="p-5">Motif</th>
+          <th class="p-5">Devise</th>
+          <th class="p-5">Montant (HT)</th>
+          <th class="p-5">Fournisseur</th>
+          <th class="p-5">C/aire CD</th>
+          <th class="p-5">Periode</th>
+          <th class="p-5">C/aires Prescripteur</th>
+          <th class="p-5">C/aires D'Achat</th>
+        </tr>
+      </table> -->
+      <fieldset class="form-group border border-end-0">
+        <legend class="px-2">
+          <button
+            (click)="toggleUp()"
+            class="btn"
+            data-bs-toggle="collapse"
+            href="#collapseExample"
+            aria-expanded="false"
+            aria-controls="collapseExample"
+          >
+            <i
+              class="fa"
+              [ngClass]="{ 'fa-chevron-up': isUp1, 'fa-chevron-down': !isUp1 }"
+            ></i>
+          </button>
+        </legend>
+        <!--  -->
+        <div class="collapse show" id="collapseExample">
+          <div class="">
+            <div class="">
+              <div style="height: 300px" data-offset="50">
+                <table class="table">
+                  <tr>
+                    <th class="p-3">Validation</th>
+                    <th class="p-3">Titre</th>
+                    <th class="p-3">Motif</th>
+                    <th class="p-3">Devise</th>
+                    <th class="p-3">Montant (HT)</th>
+                    <th class="p-3">Fournisseur</th>
+                    <th class="p-3">C/aire CD</th>
+                    <th class="p-3">Periode</th>
+                    <th class="p-3">C/aires Prescripteur</th>
+                    <th class="p-3">C/aires D'Achat</th>
+                  </tr>
+                  <tr *ngFor="let detail of this.DetailDemande; let i = index">
+                    <ng-container
+                      *ngIf="detail.validationcdg && detail.validationachat  &&
+                      detail.titre !='sans titre' "
+                    >
+                      <td class="p-3">
+                        <select
+                          class="form-select"
+                          [(ngModel)]="this.DetailDemande[i].etatFinal"
+                          (ngModelChange)="
+                            onChampModifie(
+                              i,
+                              DetailDemande[i].comsCd,
+                              this.DetailDemande[i].idperiode,
+                              this.detail.id,
+                              this.DetailDemande[i].etatFinal
+                            )
+                          "
+                          aria-label="Example select with button addon"
+                        >
+                          <option
+                            *ngIf="
+                              this.DetailDemande[i].etatFinal === 'En Attente'
+                            "
+                            [ngValue]="'En Attente'"
+                            selected
+                          >
+                            En Attente
+                          </option>
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'NOK'"
+                            [ngValue]="'NOK'"
+                            selected
+                          >
+                            NOK
+                          </option>
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'OK'"
+                            [ngValue]="'OK'"
+                            selected
+                          >
+                            OK
+                          </option>
+                          <option
+                            *ngIf="
+                              this.DetailDemande[i].etatFinal == 'OK' ||
+                              this.DetailDemande[i].etatFinal == 'NOK'
+                            "
+                          >
+                            En Attente
+                          </option>
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'OK'"
+                          >
+                           NOK
+                          </option>
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'NOK'"
+                          >
+                            OK
+                          </option>
+
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'En Attente'"
+                          >
+                           OK
+                          </option>
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'En Attente'"
+                          >
+                           NOK
+                          </option>
+                          
+                         
+                          
+                          <!-- ivide -->
+                          <option *ngIf="!this.DetailDemande[i].etatFinal">
+                            NOK
+                          </option>
+                          <option *ngIf="!this.DetailDemande[i].etatFinal">
+                            OK
+                          </option>
+                          <option *ngIf="!this.DetailDemande[i].etatFinal">
+                            En Attente
+                          </option>
+                        </select>
+                      </td>
+                      <td class="p-3 ">{{ this.detail.titre }}</td>
+                      <td class="p-3 ">{{ this.detail.motif }}</td>
+                      <td class="p-3 ">{{ this.detail.devise }}</td>
+                      <td class="p-3 ">{{ this.detail.montantht }}</td>
+                      <td class="p-3 ">{{ this.detail.fournisseur }}</td>
+                      <td class="p-1">
+                        <input
+                          type="text"
+                          [(ngModel)]="this.DetailDemande[i].comsCd"
+                          class=""
+                          (ngModelChange)="
+                            onChampModifie(
+                              i,
+                              DetailDemande[i].comsCd,
+                              this.DetailDemande[i].idperiode,
+                              this.detail.id,
+                              this.DetailDemande[i].etatFinal
+                            )
+                          "
+                          aria-label="Example select with button addon"
+                          aria-describedby="basic-addon1"
+                        />
+                      </td>
+                      <td class="p-3">
+                        <select
+                          class="form-select"
+                          [(ngModel)]="this.DetailDemande[i].idperiode"
+                          id="idPeriode"
+                          (ngModelChange)="
+                            onChampModifie(
+                              i,
+                              DetailDemande[i].comsCd,
+                              this.DetailDemande[i].idperiode,
+                              this.detail.id,
+                              this.DetailDemande[i].etatFinal
+                            )
+                          "
+                          aria-label="Example select with button addon"
+                        >
+                          <option
+                            *ngFor="let item of this.periodes"
+                            [value]="item.id"
+                          >
+                            {{ item.designation }}
+                          </option>
+                        </select>
+                      </td>
+                      <td class="p-3">{{ this.detail.comsprescripteur }}</td>
+                      <td class="p-3">{{ this.detail.comsAchat }}</td>
+                    </ng-container>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <br />
+      <!-- validation sans titre  -->
+      <fieldset class="form-group border border-end-0">
+        <legend class="px-2">
+          <button
+            (click)="toggleUp()"
+            class="btn"
+            data-bs-toggle="collapse"
+            href="#collapseExample2"
+            aria-expanded="false"
+            aria-controls="collapseExample2"
+          >
+            <i
+              class="fa"
+              [ngClass]="{ 'fa-chevron-up': isUp2, 'fa-chevron-down': !isUp2 }"
+            ></i>
+          </button>
+        </legend>
+        <!--  -->
+        <div class="collapse show" id="collapseExample2">
+          <div class="">
+            <div class="">
+              <div style="height: 300px" data-offset="50">
+                <table class="table">
+                  <tr>
+                    <th class="p-3">Validation</th>
+                    <th class="p-3">Titre</th>
+                    <th class="p-3">Motif</th>
+                    <th class="p-3">Devise</th>
+                    <th class="p-3">Montant (HT)</th>
+                    <th class="p-3">Fournisseur</th>
+                    <th class="p-3">C/aire CD</th>
+                    <th class="p-3">Periode</th>
+                    <th class="p-3">C/aires Prescripteur</th>
+                    <th class="p-3">C/aires D'Achat</th>
+                  </tr>
+                  <tr *ngFor="let detail of this.DetailDemande; let i = index">
+                    <ng-container
+                      *ngIf="detail.validationcdg && detail.validationachat  &&
+                      detail.titre ==='sans titre' "
+                    >
+                      <td class="p-3">
+                        <select
+                          class="form-select"
+                          [(ngModel)]="this.DetailDemande[i].etatFinal"
+                          (ngModelChange)="
+                            onChampModifie(
+                              i,
+                              DetailDemande[i].comsCd,
+                              this.DetailDemande[i].idperiode,
+                              this.detail.id,
+                              this.DetailDemande[i].etatFinal
+                            )
+                          "
+                          aria-label="Example select with button addon"
+                        >
+                          <option
+                            *ngIf="
+                              this.DetailDemande[i].etatFinal === 'En Attente'
+                            "
+                            [ngValue]="'En Attente'"
+                            selected
+                          >
+                            En Attente
+                          </option>
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'NOK'"
+                            [ngValue]="'NOK'"
+                            selected
+                          >
+                            NOK
+                          </option>
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'OK'"
+                            [ngValue]="'OK'"
+                            selected
+                          >
+                            OK
+                          </option>
+                          <option
+                            *ngIf="
+                              this.DetailDemande[i].etatFinal == 'OK' ||
+                              this.DetailDemande[i].etatFinal == 'NOK'
+                            "
+                          >
+                            En Attente
+                          </option>
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'OK'"
+                          >
+                           NOK
+                          </option>
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'NOK'"
+                          >
+                            OK
+                          </option>
+
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'En Attente'"
+                          >
+                           OK
+                          </option>
+                          <option
+                            *ngIf="this.DetailDemande[i].etatFinal === 'En Attente'"
+                          >
+                           NOK
+                          </option>
+                          
+                         
+                          
+                          <!-- ivide -->
+                          <option *ngIf="!this.DetailDemande[i].etatFinal">
+                            NOK
+                          </option>
+                          <option *ngIf="!this.DetailDemande[i].etatFinal">
+                            OK
+                          </option>
+                          <option *ngIf="!this.DetailDemande[i].etatFinal">
+                            En Attente
+                          </option>
+                        </select>
+                      </td>
+                      <td class="p-3 ">{{ this.detail.titre }}</td>
+                      <td class="p-3 ">{{ this.detail.motif }}</td>
+                      <td class="p-3 ">{{ this.detail.devise }}</td>
+                      <td class="p-3 ">{{ this.detail.montantht }}</td>
+                      <td class="p-3 ">{{ this.detail.fournisseur }}</td>
+                      <td class="p-1">
+                        <input
+                          type="text"
+                          [(ngModel)]="this.DetailDemande[i].comsCd"
+                          class=""
+                          (ngModelChange)="
+                            onChampModifie(
+                              i,
+                              DetailDemande[i].comsCd,
+                              this.DetailDemande[i].idperiode,
+                              this.detail.id,
+                              this.DetailDemande[i].etatFinal
+                            )
+                          "
+                          aria-label="Example select with button addon"
+                          aria-describedby="basic-addon1"
+                        />
+                      </td>
+                      <td class="p-3">
+                        <select
+                          class="form-select"
+                          [(ngModel)]="this.DetailDemande[i].idperiode"
+                          id="idPeriode"
+                          (ngModelChange)="
+                            onChampModifie(
+                              i,
+                              DetailDemande[i].comsCd,
+                              this.DetailDemande[i].idperiode,
+                              this.detail.id,
+                              this.DetailDemande[i].etatFinal
+                            )
+                          "
+                          aria-label="Example select with button addon"
+                        >
+                          <option
+                            *ngFor="let item of this.periodes"
+                            [value]="item.id"
+                          >
+                            {{ item.designation }}
+                          </option>
+                        </select>
+                      </td>
+                      <td class="p-3">{{ this.detail.comsprescripteur }}</td>
+                      <td class="p-3">{{ this.detail.comsAchat }}</td>
+                    </ng-container>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      
+    </div>
+  </div>
+
+  <!--POP UP TITRTE-->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title h5" id="exampleModalLabel">Cloture session</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            data-bs-title="Close"
+          >
+            <span class="visually-hidden">Close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="label d-flex">
+              <div class="p-2">
+                <span class="input-group-text mb-2" id="basic-addon1"
+                  >Reference</span
+                >
+                <span class="input-group-text mb-2" id="basic-addon1"
+                  >Date</span
+                >
+              </div>
+              <div class="input-group p-2">
+                <input
+                type="text"
+                class="form-control mb-2"
+                placeholder="Reference"
+                aria-label="Username"
+                [(ngModel)]="this.sessionActive.ref"
+                [ngModelOptions]="{standalone: true}"
+                aria-describedby="basic-addon1"
+              /> 
+
+              <input
+                type="datetime-local"
+                [(ngModel)]="this.sessionActive.dateCloture"
+                [ngModelOptions]="{standalone: true}"
+                class="form-control mb-2"
+                placeholder="Date"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+              />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="updateSession()">
+            Cloture
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- /////////////////////////////////////////////////////////// -->
+<p>atooooo</p>
+<ul>
+  <li *ngFor="let title of groupedDemandes | keyvalue">
+    <fieldset class="form-group border border-end-0">
+      <legend class="px-2">
+        {{ title.key }}
+      </legend>
+    </fieldset>
+
+    <div >
+      <div class="">
+        <div class="">
+          <div style="height: 300px" data-offset="50">
+            <table class="table">
+              <tr>
+                <th class="p-3">Validation</th>
+                <th class="p-3">Titre</th>
+                <th class="p-3">Motif</th>
+              </tr>
+              <tr *ngFor="let detail of title.value">
+                <td class="p-3">
+                  </td>
+                <td class="p-3">{{ detail.titre }}</td>
+                <td class="p-3">{{ detail.motif }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </li>
+</ul>
