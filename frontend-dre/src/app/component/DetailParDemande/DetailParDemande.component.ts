@@ -123,21 +123,24 @@ session=new SessionCd();
                 this.direction.id = response.id;  
                 console.log('blaoohi!!!!!!!!!!!!!!!!!',response);
     
-               ///maka session
-          this.TesteService.checkSession(this.direction.id).subscribe((data) => {
-            this.existanceSession= data;
-            console.log('existendjjgjg',this.existanceSession);
-            
-            this.idsession = this.direction.id?.toString() ?? '';
-             //maka id session
-            this.utilitaire.getSessionByDirection(this.idsession).subscribe((data) => {
-              this.session = data;
-              this.idsession=data.id?.toString() ?? '';
-              console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
-              
-            });
+                          ///recuperation session
+                          this.TesteService.checkSession(this.direction.id).subscribe((data) => {
+                            console.log("------------ session ------------");
+                            console.log(data);
+                            
+                            this.existanceSession= data;
+                            console.log('existendjjgjg',this.existanceSession);
+                            
+                                      //this.idsession = this.direction.id?.toString() ?? '';
+                                      //maka id session
+                                      this.utilitaire.getSessionByDirection(this.direction.id?.toString() ?? '').subscribe((data) => {
+                                        this.session = data;
+                                        this.idsession=data.id?.toString() ?? '';
+                                        console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
+                                        
+                                      });
 
-          });
+                          });
 
               });
              
