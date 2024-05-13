@@ -5,6 +5,10 @@ create database oma;
 --truncate table sessioncd cascade;
 --truncate table demande cascade;
 --truncate table titredepense cascade;
+--truncate table avisachat cascade;
+--truncate table aviscdg cascade;
+
+
 --truncate table fournisseur cascade;
 --truncate table periode cascade;
 --truncate table avisAchat cascade;
@@ -212,12 +216,24 @@ create database oma;
 	-- INSERTION 		------------------------------------------
 			insert into etatFinal(designation) values ('OK'),('NOK'),('En attente');
 			insert into direction (designation) values ('DTI'),('ODC'),('DF'),('DRH');
-			
+
 
 			insert into fournisseur(nom) values ('Socobis'),('Chocolat Robert');
-			insert into rubrique(designation) values('achat nourrire');
-	        insert into titreDepense (designation) values ('Team Building');
-			insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
+            INSERT INTO rubrique (designation) VALUES ('Fournitures generales'),('achat nourrire'), ('Locaux'), ('Materiel informatique');
+    -- Insert data into fournisseur table
+            INSERT INTO fournisseur (nom)  VALUES ('Fournisseur X'), ('Hôtel Y'), ('Prestataire Z'), ('Fournisseur Logiciel');
+            insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
+
+truncate table sessioncd cascade;
+truncate table demande cascade;
+truncate table titredepense cascade;
+
+-- Insert data into titreDepense table
+--INSERT INTO titreDepense (idDirection, idSession, designation)
+--VALUES (1, 1, 'Fournitures de bureau'),
+--       (2, 1, 'Frais de mission'),
+--       (3, 2, 'Loyer du bureau principal'),
+--       (1, 2, 'Logiciels');
 
 
 INSERT INTO demande (
@@ -334,7 +350,8 @@ VALUES (
                         dm.typeDevise as devise,
 
                         f.id as idFournisseur,
-                        f.nom as fournisseur
+                        f.nom as fournisseur,
+
                 from demande dm join fournisseur f on dm.idFournisseur = f.id
                                 join periode p on p.id= dm.idPeriode
                                 join rubrique r on r.id =  dm.idRubrique
@@ -345,6 +362,23 @@ VALUES (
 
 
                 );
+        create or replace view activeview as
+
+        (select * from detailDemande d where d.id =  45 )
+
+
+        create or replace view active as
+        (
+            select * from  detailDemande t
+            where t.validationPrescripteur = true
+        );
+
+        create or replace view brouillon as
+        (
+            select * from  detailDemande t
+            where t.validationPrescripteur = false
+        );
+
 
         create or replace view detailDemande as
             (
@@ -379,6 +413,8 @@ VALUES (
                         dm.validationCdg,
                         dm.validationAchat,
                         dm.etatFinal,
+                        dm.estRefuseAchat,
+                        dm.estRefuseCdg,
 
                         f.id as idFournisseur,
                         f.nom as fournisseur,
@@ -410,7 +446,7 @@ VALUES (
                                 join periode p on p.id= dm.idPeriode
                                 join rubrique r on r.id =  dm.idRubrique
 
-                                join titreDepense td on dm.idTitreDepense = td.id
+                                left join titreDepense td on dm.idTitreDepense = td.id
                                 left join avisAchat on avisAchat.idDemande =  dm.id
                                 left join avisCdg on aviscdg.idDemande  = dm.id
                                 left join sessionCd s on s.id = dm.idSession
@@ -421,7 +457,7 @@ VALUES (
                             group by idTitre,dm.id ,f.id,td.id,p.id,r.id,avisAchat.id,aviscdg.id,s.id
                 );
 
-        --
+        -- fkuk hrjp bnzf ehbe
 
         create table decision
         (
@@ -457,7 +493,7 @@ CREATE OR REPLACE VIEW titre AS
     ) AS t
     WHERE t.etatSession =false
 );
-update sessionCd set estferme =true where id = 23;
+--update sessionCd set estferme =true where id = 23;
 -----------------------
 
 create or replace view validation as
@@ -494,4 +530,8 @@ create or replace view validation as
         and d.validationCdg =  true
         and d.validationPrescripteur =  true
 );
+
+
+alter table demande add column estRefuseAchat boolean default false;
+alter table demande add column estRefuseCdg boolean default false;
 
