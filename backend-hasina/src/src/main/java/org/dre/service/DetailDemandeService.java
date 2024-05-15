@@ -21,7 +21,6 @@ import java.util.Objects;
 @ApplicationScoped
 public class DetailDemandeService {
     @Inject
-
     EntityManager entityManager;
     @Inject
     DetailDemandeRepository detailDemandeRepository;
@@ -63,7 +62,9 @@ public class DetailDemandeService {
                                 String idFournisseur,
                                 String dateDebut,
                                 String dateFin,
-                                String etat
+                                String etat,
+                                String validAchat,
+                                String validCdg
                                 ) {
 
 
@@ -86,6 +87,10 @@ public class DetailDemandeService {
                 sql+= " and debutsession<='"+ dateFin +"'";
             if(!etat.isEmpty())
                 sql+= " and etatfinal='"+etat+"'";
+            if(!validAchat.isEmpty())
+                sql+= " and validationAchat='"+validAchat+"'";
+            if(!validCdg.isEmpty())
+                sql+= " and validationCdg='"+validCdg+"'";
         }
 
         System.out.println(sql);
@@ -100,7 +105,7 @@ public class DetailDemandeService {
     public List<Active> getActive(String idDirection , String idSession) {
 
 
-        String sql =    "SELECT * FROM DetailDemande " ;
+        String sql =    "SELECT * FROM active " ;
 
         if(!idDirection.isEmpty() || !idSession.isEmpty() )
         {
@@ -125,7 +130,7 @@ public class DetailDemandeService {
     public List<Brouillon> getBrouillon(String idDirection , String idSession) {
 
 
-        String sql =    "SELECT * FROM DetailDemande " ;
+        String sql =    "SELECT * FROM brouillon " ;
 
         if(!idDirection.isEmpty() || !idSession.isEmpty() )
         {

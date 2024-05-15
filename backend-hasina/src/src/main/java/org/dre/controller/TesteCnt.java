@@ -3,6 +3,8 @@ package org.dre.controller;
 //import io.quarkus.mailer.Mail;
 
 //import io.quarkus.mailer.Mailer;
+import io.quarkus.mailer.Mail;
+import io.quarkus.mailer.Mailer;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.Blocking;
 import jakarta.annotation.security.PermitAll;
@@ -34,8 +36,10 @@ import java.util.Objects;
 @Authenticated
 public class TesteCnt {
 
- //@Inject Mailer mailer;
+    @Inject
+    Mailer mailer;
 
+    @Inject  TitreDemandeService titredemandeService;
     @Inject
     PeriodeService periodeService;
     @Inject
@@ -208,11 +212,14 @@ public class TesteCnt {
             @QueryParam("dateDebut")@DefaultValue("") String  dateDebut,
             @QueryParam("dateFin")@DefaultValue("") String  dateFin,
             @QueryParam("session")@DefaultValue("") String  session,
-            @QueryParam("idFournisseur")@DefaultValue("") String  idFournisseur
-            )  {
+            @QueryParam("idFournisseur")@DefaultValue("") String  idFournisseur,
+            @QueryParam("validAchat")@DefaultValue("") String  validAchat,
+            @QueryParam("validCdg")@DefaultValue("") String  validCdg
+
+    )  {
 
         // Récupérer les données depuis PostgreSQL
-        List<DetailDemande> detailDemandes  = detailDemandeService.chercher (idDirection,motif,session,idFournisseur,dateDebut,dateFin,statut);
+        List<DetailDemande> detailDemandes  = detailDemandeService.chercher (idDirection,motif,session,idFournisseur,dateDebut,dateFin,statut,validAchat,validCdg);
         return Response.ok(detailDemandes).build();
 
     }
@@ -234,19 +241,33 @@ public class TesteCnt {
 
 
 
-  //  @POST
+    @POST
+    @Path("/send")
+    public Response sendNotification() {
 
-   // @Path("/send")
+        Mail mail = Mail.withText("charle_andre_as@outlook.com", "Notification Subject", "Hey, This is the body of the notification.");
 
-   // public Response sendNotification() {
+        mailer.send(mail);
 
-        //Mail mail = Mail.withText("charle_andre_as@outlook.com", "Notification Subject", "Hey, This is the body of the notification.");
+        return Response.ok().build();
 
-       // mailer.send(mail);
+    }
 
-      //  return Response.ok().build();
+    @POST
+    @Path("/sessionOuverte")
+    @RolesAllowed({"PRS","CDG","ACH"})
+    public Response emailSessionOuverte( List<MyMail> listEmail  ) {
+        System.out.println("ETO");
+        for (MyMail  m : listEmail){
+            Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne session CD a été ouverte!");
 
-   // }
+            mailer.send(mail);
+
+        }
+
+        return Response.ok().build();
+
+    }
 //GET SESSION ACTIVE
 
     // @GET
@@ -276,6 +297,7 @@ public class TesteCnt {
 
         if(!Objects.equals(idDirection, ""))
         {
+            System.out.println("iciiiiiiiiiiii "+ idDirection);
             // Récupérer les données depuis PostgreSQL
             session = sessionCdService.getActiveSession(Integer.valueOf(idDirection));
             return Response.ok(session).build();
@@ -311,11 +333,28 @@ public class TesteCnt {
             @QueryParam("idDirection")@DefaultValue("") String  idDirection,
             @QueryParam("idSession")@DefaultValue("") String  idSession
          ) {
+
+        if(idSession.isEmpty())
+            System.out.println("MEMEMEMEMEMEMEMEME");
         // Récupérer les données depuis PostgreSQL
         List<Active> active_dmds = detailDemandeService.getActive( idDirection ,  idSession) ;
         return Response.ok(active_dmds).build();
     }
 
+    // get titre by idDirection, idSession
+    @GET
+    @Path("/titre/get")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTitreBySession(
+            @QueryParam("idSession")@DefaultValue("") String idSession,
+            @QueryParam("idDirection")@DefaultValue("") String idDirection
+    ) {
+        // Récupérer les données depuis PostgreSQL
+
+        List<TitreDepense> titre_dmds = titredemandeService.getTitres (idDirection,idSession);
+        return Response.ok(titre_dmds).build();
+    }
 
 }
 
