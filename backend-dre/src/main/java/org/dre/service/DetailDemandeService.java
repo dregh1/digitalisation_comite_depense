@@ -63,7 +63,9 @@ public class DetailDemandeService {
                                 String idFournisseur,
                                 String dateDebut,
                                 String dateFin,
-                                String etat
+                                String etat,
+                                String validAchat,
+                                String validCdg
                                 ) {
 
 
@@ -86,6 +88,10 @@ public class DetailDemandeService {
                 sql+= " and debutsession<='"+ dateFin +"'";
             if(!etat.isEmpty())
                 sql+= " and etatfinal='"+etat+"'";
+            if(!validAchat.isEmpty())
+                sql+= " and validationAchat='"+validAchat+"'";
+            if(!validCdg.isEmpty())
+                sql+= " and validationCdg='"+validCdg+"'";
         }
 
         System.out.println(sql);

@@ -211,11 +211,14 @@ public class TesteCnt {
             @QueryParam("dateDebut")@DefaultValue("") String  dateDebut,
             @QueryParam("dateFin")@DefaultValue("") String  dateFin,
             @QueryParam("session")@DefaultValue("") String  session,
-            @QueryParam("idFournisseur")@DefaultValue("") String  idFournisseur
-            )  {
+            @QueryParam("idFournisseur")@DefaultValue("") String  idFournisseur,
+            @QueryParam("validAchat")@DefaultValue("") String  validAchat,
+            @QueryParam("validAchat")@DefaultValue("") String  validCdg
+
+    )  {
 
         // Récupérer les données depuis PostgreSQL
-        List<DetailDemande> detailDemandes  = detailDemandeService.chercher (idDirection,motif,session,idFournisseur,dateDebut,dateFin,statut);
+        List<DetailDemande> detailDemandes  = detailDemandeService.chercher (idDirection,motif,session,idFournisseur,dateDebut,dateFin,statut,validAchat,validCdg);
         return Response.ok(detailDemandes).build();
 
     }
