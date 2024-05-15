@@ -213,7 +213,7 @@ public class TesteCnt {
             @QueryParam("session")@DefaultValue("") String  session,
             @QueryParam("idFournisseur")@DefaultValue("") String  idFournisseur,
             @QueryParam("validAchat")@DefaultValue("") String  validAchat,
-            @QueryParam("validAchat")@DefaultValue("") String  validCdg
+            @QueryParam("validCdg")@DefaultValue("") String  validCdg
 
     )  {
 
