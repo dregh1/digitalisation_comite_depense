@@ -61,4 +61,19 @@ public class AvisCdgService {
         }
         return null;
     }
+    public boolean checkAvisCdgByIdDemande(Long idDemande)
+    {
+        List<AvisCdg> avisCdg = this.getAll();
+
+
+        for (AvisCdg d : avisCdg )
+        {
+            if(Objects.equals(d.getIdDemande(), idDemande))
+            {
+
+                return true;
+            }
+        }
+        return false;
+    }
 }
