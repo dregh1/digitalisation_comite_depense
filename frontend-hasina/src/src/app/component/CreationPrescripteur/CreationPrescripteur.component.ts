@@ -104,9 +104,16 @@ session=new SessionCd();
                       this.direction.id = response.id;  
                       console.log('blaoohi',response);
                       console.log(this.direction.id,"direction id");
-                      this.idsession=this.direction.id?.toString()??'';
+                      console.log("MYRESPONSE----------------");
+                      console.log(response);
+                      
+                      //this.idsession=this.direction.id?.toString()??'';
+
                       //maka id session
-                      this.utilitaire.getSessionByDirection(this.idsession).subscribe((data) => {
+                      console.log("data---------------------");
+                      this.utilitaire.getSessionByDirection(this.direction.id?.toString() ?? '').subscribe((data) => {
+                        console.log(data);
+                        
                         this.session = data;
                         this.idsession=data.id?.toString() ?? '';
                         console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn////');

@@ -142,13 +142,13 @@ export class AuthenticationService {
 
     const params = new HttpParams()
     .set('grant_type', 'password')
-    .set('client_id', 'quarkus-client')
-    .set('client_secret', 'diNdyU2iGksempOMKqs5gZlA2UkwngCJ');
+    .set('client_id', 'angular-client')
+    .set('client_secret', 'F6ONL3ox63NBv1h1J5wmmibHlDhLA1MI');
 
 
     const headers = this.getHeaders();
     // return this.http.get<any>("http://localhost:8081/realms/oma/protocol/openid-connect/userinfo",body.toString())
-    return this.http.get<any>("http://localhost:8082/realms/oma/protocol/openid-connect/userinfo",{headers,params})
+    return this.http.get<any>("http://localhost:8081/realms/oma/protocol/openid-connect/userinfo",{headers,params})
   
   }
 
