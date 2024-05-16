@@ -66,13 +66,7 @@ public class CdgCnt {
         return avisCdgService.getAvisCdgByIdDemande(id);
     }
 
-    //verifier existance coms cdg
-    @GET
-    @RolesAllowed("CDG")
-    @Path("checkAvisCdgByIdDemande/{id}")
-    public boolean checkAvisCdgByIdDemande(@PathParam("id") Long id) {
-        return avisCdgService.checkAvisCdgByIdDemande(id);
-    }
+
 
 
 

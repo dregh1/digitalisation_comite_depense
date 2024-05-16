@@ -18,15 +18,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import org.dre.model.*;
 import org.dre.model.Periode;
 import org.dre.service.*;
-//import org.eclipse.microprofile.jwt.JsonWebToken;
-    //mila esorina reto
-//import org.keycloak.AuthorizationContext;
-//import org.keycloak.KeycloakPrincipal;
-//import org.keycloak.KeycloakSecurityContext;
-//import org.keycloak.representations.AccessToken;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,7 +37,10 @@ public class TesteCnt {
     @Inject
     DirectionService directionService;
     @Inject
-    RubriqueService rubriqueService;
+    AvisCdgService avisCdgService;
+
+    @Inject
+    AvisAchatService avisAchatService;
     @Inject
     ValidationService validationService;
     @Inject
@@ -257,13 +252,17 @@ public class TesteCnt {
     @Path("/sessionOuverte")
     @RolesAllowed({"PRS","CDG","ACH"})
     public Response emailSessionOuverte( List<MyMail> listEmail  ) {
-        System.out.println("ETO");
+
+        System.out.println("I send mail");
+
         for (MyMail  m : listEmail){
             Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne session CD a été ouverte!");
 
             mailer.send(mail);
 
         }
+
+        System.out.println("I sent mail")   ;
 
         return Response.ok().build();
 
@@ -334,9 +333,6 @@ public class TesteCnt {
             @QueryParam("idSession")@DefaultValue("") String  idSession
          ) {
 
-        if(idSession.isEmpty())
-            System.out.println("MEMEMEMEMEMEMEMEME");
-        // Récupérer les données depuis PostgreSQL
         List<Active> active_dmds = detailDemandeService.getActive( idDirection ,  idSession) ;
         return Response.ok(active_dmds).build();
     }
@@ -354,6 +350,33 @@ public class TesteCnt {
 
         List<TitreDepense> titre_dmds = titredemandeService.getTitres (idDirection,idSession);
         return Response.ok(titre_dmds).build();
+    }
+    //verifier existance coms cdg
+    @GET
+    @PermitAll
+    @Path("checkAvisCdgByIdDemande/{idDemande}")
+    public boolean checkAvisCdgByIdDemande(@PathParam("idDemande") Long idDemande) {
+        return avisCdgService.checkAvisCdgByIdDemande(idDemande);
+    }
+
+    @GET
+    @PermitAll               /*check avis achat*/
+    @Path("/checkAvisAchatByIdDemande/{idDemande}")
+    public boolean checkAvisAchatByIdDemande(@PathParam("idDemande") Long idDemande) {
+        return avisAchatService.checkAvisAchatByIdDemande(idDemande);
+    }
+
+    @GET
+    @PermitAll               /*get validation*/
+    @Path("/getValidation")
+    public Response getValidation(
+            @QueryParam("idSession")@DefaultValue("") String idSession,
+            @QueryParam("idDirection")@DefaultValue("") String idDirection
+
+
+    ) {
+        List <Active> listeValidation = detailDemandeService.getValidation(idDirection,idSession);
+        return Response.ok(listeValidation).build();
     }
 
 }

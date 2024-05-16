@@ -134,11 +134,5 @@ public class AchatCnt {
         return Response.ok(Decision).build();
     }
 
-    //check avis achat
-    @GET
-    @RolesAllowed("ACH")
-    @Path("/checkAvisAchatByIdDemande/{id}")
-    public boolean checkAvisCdgByIdDemande(@PathParam("id") Long idDemande) {
-        return avisAchatService.checkAvisAchatByIdDemande(idDemande);
-    }
+
 }
