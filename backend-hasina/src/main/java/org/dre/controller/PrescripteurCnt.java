@@ -127,15 +127,15 @@ public class PrescripteurCnt {
     }
 
 
-    @GET
-    @Path("/titre/get")
-    @PermitAll
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getTitre() {
-        // Récupérer les données depuis PostgreSQL
-        List<TitreDepense> titre_dmds = titredemadeService.getAll ();
-        return Response.ok(titre_dmds).build();
-    }
+//    @GET
+//    @Path("/titre/get")
+//    @PermitAll
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getTitre() {
+//        // Récupérer les données depuis PostgreSQL
+//        List<TitreDepense> titre_dmds = titredemadeService.getAll ();
+//        return Response.ok(titre_dmds).build();
+//    }
 
     @GET
         @Path("/titreInSession/get")
@@ -147,17 +147,8 @@ public class PrescripteurCnt {
         return Response.ok(titreInSession).build();
     }
 
-    //TITRE par id session
-    @GET
-    @Path("/titre/getBySession/{idSession}")
-    @RolesAllowed({"PRS","CDG","ACH"})
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getTitreBySession(@PathParam("idSession") Integer idSession) {
-        // Récupérer les données depuis PostgreSQL
+    //TITRE par idSession & idDirection
 
-        List<TitreDepense> titre_dmds = titredemadeService.getAllByIdSession (idSession);
-        return Response.ok(titre_dmds).build();
-    }
 
     @POST
     @Path("/titre/create")

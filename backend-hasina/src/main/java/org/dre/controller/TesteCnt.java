@@ -3,6 +3,8 @@ package org.dre.controller;
 //import io.quarkus.mailer.Mail;
 
 //import io.quarkus.mailer.Mailer;
+import io.quarkus.mailer.Mail;
+import io.quarkus.mailer.Mailer;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.Blocking;
 import jakarta.annotation.security.PermitAll;
@@ -16,15 +18,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import org.dre.model.*;
 import org.dre.model.Periode;
 import org.dre.service.*;
-//import org.eclipse.microprofile.jwt.JsonWebToken;
-    //mila esorina reto
-//import org.keycloak.AuthorizationContext;
-//import org.keycloak.KeycloakPrincipal;
-//import org.keycloak.KeycloakSecurityContext;
-//import org.keycloak.representations.AccessToken;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,14 +28,19 @@ import java.util.Objects;
 @Authenticated
 public class TesteCnt {
 
- //@Inject Mailer mailer;
+    @Inject
+    Mailer mailer;
 
+    @Inject  TitreDemandeService titredemandeService;
     @Inject
     PeriodeService periodeService;
     @Inject
     DirectionService directionService;
     @Inject
-    RubriqueService rubriqueService;
+    AvisCdgService avisCdgService;
+
+    @Inject
+    AvisAchatService avisAchatService;
     @Inject
     ValidationService validationService;
     @Inject
@@ -208,11 +207,14 @@ public class TesteCnt {
             @QueryParam("dateDebut")@DefaultValue("") String  dateDebut,
             @QueryParam("dateFin")@DefaultValue("") String  dateFin,
             @QueryParam("session")@DefaultValue("") String  session,
-            @QueryParam("idFournisseur")@DefaultValue("") String  idFournisseur
-            )  {
+            @QueryParam("idFournisseur")@DefaultValue("") String  idFournisseur,
+            @QueryParam("validAchat")@DefaultValue("") String  validAchat,
+            @QueryParam("validCdg")@DefaultValue("") String  validCdg
+
+    )  {
 
         // Récupérer les données depuis PostgreSQL
-        List<DetailDemande> detailDemandes  = detailDemandeService.chercher (idDirection,motif,session,idFournisseur,dateDebut,dateFin,statut);
+        List<DetailDemande> detailDemandes  = detailDemandeService.chercher (idDirection,motif,session,idFournisseur,dateDebut,dateFin,statut,validAchat,validCdg);
         return Response.ok(detailDemandes).build();
 
     }
@@ -234,19 +236,37 @@ public class TesteCnt {
 
 
 
-  //  @POST
+    @POST
+    @Path("/send")
+    public Response sendNotification() {
 
-   // @Path("/send")
+        Mail mail = Mail.withText("charle_andre_as@outlook.com", "Notification Subject", "Hey, This is the body of the notification.");
 
-   // public Response sendNotification() {
+        mailer.send(mail);
 
-        //Mail mail = Mail.withText("charle_andre_as@outlook.com", "Notification Subject", "Hey, This is the body of the notification.");
+        return Response.ok().build();
 
-       // mailer.send(mail);
+    }
 
-      //  return Response.ok().build();
+    @POST
+    @Path("/sessionOuverte")
+    @RolesAllowed({"PRS","CDG","ACH"})
+    public Response emailSessionOuverte( List<MyMail> listEmail  ) {
 
-   // }
+        System.out.println("I send mail");
+
+        for (MyMail  m : listEmail){
+            Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne session CD a été ouverte!");
+
+            mailer.send(mail);
+
+        }
+
+        System.out.println("I sent mail");
+
+        return Response.ok().build();
+
+    }
 //GET SESSION ACTIVE
 
     // @GET
@@ -276,6 +296,7 @@ public class TesteCnt {
 
         if(!Objects.equals(idDirection, ""))
         {
+            System.out.println("iciiiiiiiiiiii "+ idDirection);
             // Récupérer les données depuis PostgreSQL
             session = sessionCdService.getActiveSession(Integer.valueOf(idDirection));
             return Response.ok(session).build();
@@ -311,12 +332,39 @@ public class TesteCnt {
             @QueryParam("idDirection")@DefaultValue("") String  idDirection,
             @QueryParam("idSession")@DefaultValue("") String  idSession
          ) {
-        // Récupérer les données depuis PostgreSQL
+
         List<Active> active_dmds = detailDemandeService.getActive( idDirection ,  idSession) ;
         return Response.ok(active_dmds).build();
     }
 
+    // get titre by idDirection, idSession
+    @GET
+    @Path("/titre/get")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTitreBySession(
+            @QueryParam("idSession")@DefaultValue("") String idSession,
+            @QueryParam("idDirection")@DefaultValue("") String idDirection
+    ) {
+        // Récupérer les données depuis PostgreSQL
 
+        List<TitreDepense> titre_dmds = titredemandeService.getTitres (idDirection,idSession);
+        return Response.ok(titre_dmds).build();
+    }
+    //verifier existance coms cdg
+    @GET
+    @PermitAll
+    @Path("checkAvisCdgByIdDemande/{idDemande}")
+    public boolean checkAvisCdgByIdDemande(@PathParam("idDemande") Long idDemande) {
+        return avisCdgService.checkAvisCdgByIdDemande(idDemande);
+    }
+
+    @GET
+    @PermitAll               /*check avis achat*/
+    @Path("/checkAvisAchatByIdDemande/{idDemande}")
+    public boolean checkAvisAchatByIdDemande(@PathParam("idDemande") Long idDemande) {
+        return avisAchatService.checkAvisAchatByIdDemande(idDemande);
+    }
 }
 
 

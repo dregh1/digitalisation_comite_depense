@@ -3,7 +3,9 @@ package org.dre.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
+import org.dre.model.DetailDemande;
 import org.dre.model.Titre;
 import org.dre.model.TitreDepense;
 import org.dre.repository.TitreDemandeRepository;
@@ -58,6 +60,33 @@ public class TitreDemandeService {
         }
 
         return listTitreBySession;
+    }
+
+    public List<TitreDepense> getTitres(
+            String idDirection,
+            String idSession
+    ) {
+
+
+        String sql =    "SELECT * FROM Titre " ;
+        if(!idDirection.isEmpty() || !idSession.isEmpty() )
+        {
+            sql+="where 1 = 1  ";
+            if(!idDirection.isEmpty())
+                sql+= " and idDirection ="+idDirection;
+            if(!idSession.isEmpty())
+                sql+= " and idSession ="+   idSession;
+
+
+        }
+
+        System.out.println(sql);
+
+        Query query = em.createNativeQuery(sql, TitreDepense.class);
+
+        List<TitreDepense> titresDepense = query.getResultList();
+
+        return titresDepense;
     }
 
 

@@ -67,6 +67,9 @@ public class CdgCnt {
     }
 
 
+
+
+
     //creation validation,ajout commentaire, ajout montantbudgetmensuel | montantengage
     @POST
     @Path("/avisCdg/create")
@@ -105,5 +108,8 @@ public class CdgCnt {
         List<Brouillon> brouillon = detailDemandeService.getBrouillon( idDirection ,  idSession) ;
         return Response.ok(brouillon).build();
     }
+
+    //check existence avis cdg
+
 
 }

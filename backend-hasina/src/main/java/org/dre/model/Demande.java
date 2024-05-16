@@ -45,6 +45,26 @@ public class Demande   {
     private String comsCd;
     private boolean estSupprime;
 
+    private boolean estRefuseAchat;
+
+    private boolean estRefuseCdg;
+
+    public boolean isEstRefuseAchat() {
+        return estRefuseAchat;
+    }
+
+    public void setEstRefuseAchat(boolean estRefuseAchat) {
+        this.estRefuseAchat = estRefuseAchat;
+    }
+
+    public boolean isEstRefuseCdg() {
+        return estRefuseCdg;
+    }
+
+    public void setEstRefuseCdg(boolean estRefuseCdg) {
+        this.estRefuseCdg = estRefuseCdg;
+    }
+
     public String getComsCd() {
         return comsCd;
     }

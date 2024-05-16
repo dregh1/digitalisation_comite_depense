@@ -9,6 +9,7 @@ import org.dre.model.SessionCd;
 import org.dre.repository.AvisAchatRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 @ApplicationScoped
 public class AvisAchatService {
@@ -63,15 +64,15 @@ public class AvisAchatService {
         return null;
     }
 
-//    public boolean checkAvisCdg(Integer idDemande) {
-//        List <AvisCdg> sessionCds = this.getAll();
-//        for(AvisCdg session : sessionCds)
-//        {
-//            if(session.getIdDirection().equals(idDemande) && !session.isEstFerme())
-//            {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    public boolean checkAvisAchatByIdDemande(Long idDemande) {
+        List <AvisAchat> avisCds = this.getAll();
+        for(AvisAchat avis : avisCds)
+        {
+            if(Objects.equals(avis.getIdDemande(), idDemande))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
