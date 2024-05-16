@@ -111,6 +111,15 @@ export class TesteService {
       headers,
     });
   }
+
+  // checkComsCdgByIdDemande(id: number): Observable<boolean> {
+  //   const headers = this.getHeaders();
+  //   return this.http.get<boolean>(`${this.baseUrl3}/checkAvisCdgByIdDemande/${id}`, {
+  //     headers,
+  //   });
+  // }
+
+
   //avis cdg
   postCdg(formData: any): Observable<any> {
     const headers = this.getHeaders();

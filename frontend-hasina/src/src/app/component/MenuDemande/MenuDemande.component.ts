@@ -35,7 +35,7 @@ export class MenuDemandeComponent implements OnInit {
 session=new SessionCd();
   idsession:string ='';
   text: string = '';
-  constructor(
+    constructor(
     private MenuDemandeService: MenuDemandeService,
     private AuthenticationService: AuthenticationService,
     private utilitaire:UtilitaireService
@@ -47,7 +47,7 @@ session=new SessionCd();
         this.AuthenticationService.getUserInformation()
         .subscribe(response => {
           console.log("TRAITEMENT USER INFO");
-          console.log(response);
+          //console.log(response);
           console.log(response['groups']);      //tableau
           const tableRole = response['groups'];
       
@@ -64,27 +64,41 @@ session=new SessionCd();
               this.AuthenticationService.getDirectionByName(this.nomDirection).subscribe(response =>{
                  this.direction = response
                   this.direction.id = response.id;
-                  this.idsession = this.direction.id?.toString() ?? '';
-                  //maka id session
-                    this.utilitaire.getSessionByDirection(this.idsession).subscribe((data) => {
-                      this.session = data;
-                      this.idsession=data.id?.toString() ?? '';
-                      console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
-                 
-                       //maka active
-                      this.MenuDemandeService.search(this.direction.id?.toString() ??'',this.idsession.toString() ) .subscribe((data) => {
-                        this.DetailDemande = data;
-                        console.log(this.DetailDemande,"io data");
-                        
-                      });
-                      //maka brouillon
-                      this.MenuDemandeService.searchbrouillon(this.direction.id?.toString() ??'',this.idsession.toString() ) .subscribe((data) => {
-                        this.brouillon = data;
-                        console.log(this.brouillon,"io brouillon");
-                        
-                      });
-                 
-                    });
+                    
+                  
+
+
+                        //RECUPERATION id session
+
+
+                          this.utilitaire.getSessionByDirection(this.direction.id?.toString() ??'' ).subscribe((data) => {
+                                    if(data !== null)
+                                    {
+                                          console.log("------------ session ------------");
+                                          console.log(data);
+                                          
+                                          this.session = data;
+                                          this.idsession = data.id?.toString() ?? '';
+                                        console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
+                                      }
+                            
+                                            //RECUPERATION active
+                                            this.MenuDemandeService.search(this.direction.id?.toString() ??'',this.idsession.toString() ) .subscribe((donnees) => {
+                                              this.DetailDemande = donnees;
+                                              console.log(this.DetailDemande,"io data");
+                                              
+                                            });
+      
+      
+                                            //RECUPERATION brouillon
+                                            this.MenuDemandeService.searchbrouillon(this.direction.id?.toString() ??'',this.idsession.toString() ) .subscribe((datas) => {
+                                              this.brouillon = datas;
+                                              console.log(this.brouillon,"io brouillon");
+                                              
+                                            });
+
+                      
+                          });
                    
                   console.log('blaoohi',response);
                 });
@@ -111,7 +125,7 @@ session=new SessionCd();
   ngOnInit(): void {
     
 
-    //maka brouillon
+    //RECUPERATION brouillon
     // this.MenuDemandeService.getBrouillon().subscribe((DetailDemande) => {
     //   this.DetailDemande = DetailDemande;
     //   console.log(DetailDemande);
@@ -120,15 +134,16 @@ session=new SessionCd();
    
 
 
-    // //maka active
+    // //RECUPERATION active
     // this.MenuDemandeService.getdmdactive().subscribe(Response => {
     //   this.actives = Response;
     // });
   }
 //exporter excel
 exportToExcel(): void {
-   //aectation données eccdel
-   for (const detail of this.DetailDemande) {
+  //aectation données eccdel
+
+  for (const detail of this.DetailDemande) {
     this.DonneExcels.push({
       Typereference: detail.typereference,
       Motif: detail.motif,
@@ -144,8 +159,12 @@ exportToExcel(): void {
       Decision: detail.etatFinal,
       commentaireCd: detail.comsCd,
     });
+
   }
+
   this.MenuDemandeService.exportToExcel(this.DonneExcels, 'MyData.xlsx');
+
+
 
  // this.MenuDemandeService.exportToExcel('montable', 'MyData.xlsx');
 }

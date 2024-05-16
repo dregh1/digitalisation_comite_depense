@@ -20,6 +20,11 @@ import { SessionCd } from 'src/app/models/SessionCd';
   styleUrls: ['./DetailParDemande.component.scss'],
 })
 export class TestComponent implements OnInit {
+
+  existanceAvisAchat : boolean =false;
+  existanceAvisCdg : boolean =false;
+
+
   role: string | null = '';
   token: string | null = '';
   isUp1 = false; // Initial state for first button
@@ -55,6 +60,10 @@ export class TestComponent implements OnInit {
     validationCdg: false,
     typeReference: '',
   };
+  
+  titre = new Titre();
+
+
   AvisCdg = {
     id: '',
     idDemande: '',
@@ -80,8 +89,7 @@ export class TestComponent implements OnInit {
   reliquat: number = 0;
   type: string = '';
   devise: string = '';
-  titres: Titre[] = []; 
-  titre = new Titre();
+  titres: Titre[] = [];
   fournisseurs: Fournisseur[] = [];
   DetailDemande = new DetailDemande();
   rubriques: Rubrique[] = [];
@@ -90,7 +98,7 @@ export class TestComponent implements OnInit {
   message: string = '';
   idsession:string='';
 session=new SessionCd();
-  ///variable maka session
+  ///variable recuperation session
   existanceSession : boolean= false;
 
 
@@ -120,21 +128,25 @@ session=new SessionCd();
                 this.direction.id = response.id;  
                 console.log('blaoohi!!!!!!!!!!!!!!!!!',response);
     
-               ///maka session
-          this.TesteService.checkSession(this.direction.id).subscribe((data) => {
-            this.existanceSession= data;
-            console.log('existendjjgjg',this.existanceSession);
-            
-            this.idsession = this.direction.id?.toString() ?? '';
-             //maka id session
-            this.utilitaire.getSessionByDirection(this.idsession).subscribe((data) => {
-              this.session = data;
-              this.idsession=data.id?.toString() ?? '';
-              console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
-              
-            });
+                          ///recuperation session
+                          this.TesteService.checkSession(this.direction.id).subscribe((data) => {
+                            console.log("------------ session ------------");
+                            console.log(data);
+                            
+                            this.existanceSession= data;
+                            console.log('existendjjgjg',this.existanceSession);
+                            
+                                      //this.idsession = this.direction.id?.toString() ?? '';
+                                      //recuperation id session
 
-          });
+                                      this.utilitaire.getSessionByDirection(this.direction.id?.toString() ?? '').subscribe((data) => {
+                                        this.session = data;
+                                        this.idsession=data.id?.toString() ?? '';
+                                        console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
+                                        
+                                      });
+
+                          });
 
               });
              
@@ -145,6 +157,8 @@ session=new SessionCd();
       
     }
     
+
+    
   }
   //calcul sur le reliquat
   calculerResultat() {
@@ -153,30 +167,43 @@ session=new SessionCd();
       parseFloat(this.AvisCdg.montantEngage);
   }
   ngOnInit(): void {
+    //verification avisCdg
+    this.utilitaire.checkAvisCdgByIdDemande("").subscribe((data) => {
+      this.existanceAvisCdg = data;
+    });
     
-
-    //maka titre
+    //recuperation titre
     this.TesteService.getTitre().subscribe((data) => {
       this.titres = data;
     });
-    // maka ny periode
+    // recuperation ny periode
     this.TesteService.getPeriode().subscribe((data) => {
       this.periodes = data;
     });
-    // maka ny fournisseur
+    // recuperation ny fournisseur
     this.TesteService.getFournisseur().subscribe((data) => {
       this.fournisseurs = data;
     });
-    //maka rubrique
+    //recuperation rubrique
     this.TesteService.getRubrique().subscribe((data) => {
       this.rubriques = data;
     });
    
-    //  //maka titre
+    //  //recuperation titre
 
-    //maka par detail
+    //recuperation par detail
     this.TesteService.getDetailDemandebyId(this.id).subscribe((response) => {
       this.DetailDemande = response;
+      
+      //check AvisCdg
+      this.utilitaire.checkAvisCdgByIdDemande(this.DetailDemande.id?.toString() ?? '').
+        subscribe((result)=>{ this.existanceAvisCdg = result ;});
+
+      //check AvisAchat
+      this.utilitaire.checkAvisAchatByIdDemande(this.DetailDemande.id?.toString() ?? '').
+      subscribe((result)=>{ this.existanceAvisAchat = result;
+      });
+
       console.log(response, '////////////////');
       this.demande.estRegularisation = Boolean(
         this.DetailDemande.estregularisation ?? ''
@@ -200,7 +227,7 @@ session=new SessionCd();
       this.demande.sousRubrique =this.DetailDemande.sousrubrique?.toString() ?? '';
       this.demande.idRubrique = this.DetailDemande.idrubrique?.toString() ?? '';
       this.demande.validationPrescripteur = Boolean(
-      this.DetailDemande.validationprescripteur ?? ''
+        this.DetailDemande.validationprescripteur ?? ''
       );
       this.demande.validationCdg = Boolean(
         this.DetailDemande.validationcdg ?? ''
@@ -208,49 +235,60 @@ session=new SessionCd();
       this.demande.validationAchat = Boolean(
         this.DetailDemande.validationachat ?? ''
       );
-      console.log(this.DetailDemande);
+      // console.log(this.DetailDemande);
       this.setSelected(this.demande.idTitreDepense);
-      console.log(this.DetailDemande.sousrubrique, 'io brouilon');
-      console.log(this.demande.fournisseur, 'ourinisseurs');
+      // console.log(this.DetailDemande.sousrubrique, 'io brouilon');
+      // console.log(this.demande.fournisseur, 'ourinisseurs');
+      
+      //
     });
     
     //////////Affichage du commentaire Cdg
-   
-      this.TesteService.getCdgById(this.id).subscribe((response) => {
-        this.aviscdgs = response;
-       // console.log(this.aviscdgs.id,'ito id cdg');
-        //  console.log(this.AvisCdg.id, 'ID null');
-          try{
-          this.AvisCdg.id = this.aviscdgs.id?.toString() ?? '';
-       // if (this.AvisCdg.id !==null) {
-          this.AvisCdg.commentaire = this.aviscdgs.commentaire ?? '';
-          this.AvisCdg.montantBudgetMensuel = this.aviscdgs.montantBudgetMensuel?.toString() ?? '';
-          this.AvisCdg.montantEngage = this.aviscdgs.montantEngage?.toString() ?? '';
-          this.reliquat = parseFloat(this.AvisCdg.montantBudgetMensuel) - parseFloat(this.AvisCdg.montantEngage);
-        console.log(this.AvisCdg.id,'ito id');
-      }catch(error){console.log(error);
-      }
-        //}
-         //else{
-          
-          
-        //}
-        ////aichage aviscdg
+    this.TesteService.getCdgById(this.id).subscribe((response) => {
+      this.aviscdgs = response;
+     // console.log(this.aviscdgs.id,'ito id cdg');
+      //  console.log(this.AvisCdg.id, 'ID null');
+        try{
+        this.AvisCdg.id = this.aviscdgs.id?.toString() ?? '';
+     // if (this.AvisCdg.id !==null) {
+        this.AvisCdg.commentaire = this.aviscdgs.commentaire ?? '';
+        this.AvisCdg.montantBudgetMensuel = this.aviscdgs.montantBudgetMensuel?.toString() ?? '';
+        this.AvisCdg.montantEngage = this.aviscdgs.montantEngage?.toString() ?? '';
+        this.reliquat = parseFloat(this.AvisCdg.montantBudgetMensuel) - parseFloat(this.AvisCdg.montantEngage);
+      console.log(this.AvisCdg.id,'ito id');
+    }catch(error){console.log(error);
+    }
+
+      //}
+
+       //else{
+
         
-      },
-       error=>{
-        console.log(error);
-        });
-    
-      // maka avisAchat
+
+        
+
+      //}
+
+      ////aichage aviscdg
+
+      
+
+    },
+
+     error=>{
+
+      console.log(error);
+
+      });
+
+  
+      // recuperation avisAchat
       this.TesteService.getAchatById(this.id).subscribe((response) => {
         this.avisAchat = response;
-        if (this.AvisCdg.id) {
         this.AvisAchat.id= this.avisAchat.id?.toString() ?? '';
-        this.AvisAchat.commentaire = this.avisAchat.commentaire ?? '';}
+        this.AvisAchat.commentaire = this.avisAchat.commentaire ?? '';
       },
       error=>{
-          console.log(error);
           
       });
   }
@@ -302,14 +340,14 @@ session=new SessionCd();
     this.demande.validationPrescripteur = true;
     this.updatetitre();
     console.log(this.demande.validationPrescripteur);
-   // this.update();
+    this.update();
   }
   //modication prescripteur
   updatetitre(): void { 
     console.log(this.demande.idTitreDepense,'titredepense');
     console.log(this.idsession,'idsessionjjjjjj');
     
-    //maka titre by id
+    //recuperation titre by id
     this.TesteService.gettitreById(parseInt(this.demande.idTitreDepense)).subscribe((data) => {
       this.titre = data;
     console.log(this.titre,'ito ');
@@ -324,8 +362,10 @@ session=new SessionCd();
             });
   });
     
-
+    
    }
+  
+
   //modication prescripteur
   update(): void {
     console.log('moulle');
@@ -349,7 +389,7 @@ session=new SessionCd();
     //this.enregistrerCdg();
     this.demande.validationPrescripteur = false;
     console.log(this.demande.validationPrescripteur);
-   // this.update();
+    this.update();
   }
   
 
@@ -357,7 +397,7 @@ session=new SessionCd();
 
   //Ajout titre demande
   Ajouttitre() {
-    //this.titredepense.idSession = this.demande.idSession ??"";
+    this.titredepense.idSession = this.DetailDemande.idSession ??"";
     
     this.TesteService.posttitre(this.titredepense).subscribe((response) => {
       console.log(response);
@@ -372,25 +412,27 @@ session=new SessionCd();
 
   /////enregistrer cdg
   enregistrerCdg() {
-   
-
-     setTimeout(() => {
+    
+      setTimeout(() => {
         this.errorMessage = ''; // Clear the error message after 3 seconds
       }, 3000);
-   
-      //maka ID
+    
+      //recuperation ID
       this.AvisCdg.idDemande = this.id?.toString() ?? '';
       console.log(this.AvisCdg);
+
+
       this.TesteService.postCdg(this.AvisCdg).subscribe((Response) => {
         console.log(Response);
-         this.AvisCdg.id = Response.id;
-         //manova id cdg
-          this.AvisCdg.commentaire = Response.commentaire ;
-          this.AvisCdg.montantBudgetMensuel =Response.montantBudgetMensuel;
-          this.AvisCdg.montantEngage = Response.montantEngage;
-          this.reliquat = parseFloat(this.AvisCdg.montantBudgetMensuel) - parseFloat(this.AvisCdg.montantEngage);
-            this.errorMessage = 'Demande enregistré!';
-          });
+        this.AvisCdg.id = Response.id;
+        //manova id cdg
+        this.AvisCdg.commentaire = Response.commentaire ;
+        this.AvisCdg.montantBudgetMensuel =Response.montantBudgetMensuel;
+        this.AvisCdg.montantEngage = Response.montantEngage;
+        this.reliquat = parseFloat(this.AvisCdg.montantBudgetMensuel) - parseFloat(this.AvisCdg.montantEngage);
+
+        this.errorMessage = 'Demande enregistré!';
+      });
       setTimeout(() => {
         this.errorStatus1 = false; // Hide the message by setting errorStatus to false
         this.errorMessage = ''; // Optionally, clear the error message
@@ -421,26 +463,26 @@ session=new SessionCd();
   //refuser cdg
   refuserCdg() {
     this.demande.validationCdg = false;
-   // this.update();
+    this.update();
   }
   //validationcdg
   validationCdg() {
     this.demande.validationCdg = true;
-   // this.update();
+    this.update();
   }
    //annuation prescripteur
    annulationCdg(){
     //this.enregistrerCdg();
     this.demande.validationCdg = false;
-   // this.update();
+    this.update();
   }
   //enregistrement achat
   EnregistrerAchat() {
-   
+    
       setTimeout(() => {
         this.errorMessage = ''; // Clear the error message after 3 seconds
       }, 3000);
-  
+    
       this.AvisAchat.idDemande = this.id?.toString() ?? '';
       console.log(this.AvisAchat);
       this.TesteService.postAchat(this.AvisAchat).subscribe((Response) => {
@@ -477,18 +519,22 @@ session=new SessionCd();
   ///validation Achat
   validationAchat() {
     this.demande.validationAchat = true;
-  //  this.update();
+    // this.update();
   }
   //refuser Achat
   refuserAchat() {
     this.demande.validationAchat = false;
-    //this.update();
+    // this.update();
   }
     //annuation prescripteur
     annulationAchat(){
       //this.enregistrerCdg();
       this.demande.validationAchat = false;
-     // this.update();
+      this.update();
     }
-    //maka idsession 
-    }
+    //recuperation idsession 
+    
+  
+  //validation prescripteur
+    
+  }
