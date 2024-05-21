@@ -270,4 +270,17 @@ public class PrescripteurCnt {
         List<Brouillon> brouillon = brouillonService.getAll ();
         return Response.ok(brouillon).build();
     }
+
+    //recuperation des demandes En Attente de session
+    @GET
+    @Path("/attenteSession/s")
+    @RolesAllowed("PRS")
+//    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllDemandeAttenteSession(
+            @QueryParam("idDirection")@DefaultValue("") String  idDirection
+    ) {
+        // Récupérer les données depuis PostgreSQL
+        List<AttenteSession> attenteSession = detailDemandeService.getDemandeAttenteSession (idDirection);
+        return Response.ok(attenteSession).build();
+    }
 }

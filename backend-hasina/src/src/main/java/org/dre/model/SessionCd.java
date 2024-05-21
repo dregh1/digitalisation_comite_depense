@@ -18,6 +18,9 @@ public class SessionCd  {
 
     @JsonProperty("dateCloture")
     private Timestamp dateCloture;
+
+    @JsonProperty("dateFermeture")
+    private Timestamp dateFermeture;
     @JsonProperty("dateDebut")
     private Timestamp dateDebut;
 
@@ -32,6 +35,15 @@ public class SessionCd  {
     private float tauxMga;
 
     private boolean estFerme;
+
+
+    public Timestamp getDateFermeture() {
+        return dateFermeture;
+    }
+
+    public void setDateFermeture(Timestamp dateFermeture) {
+        this.dateFermeture = dateFermeture;
+    }
 
     public boolean isEstFerme() {
         return estFerme;

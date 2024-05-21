@@ -370,14 +370,17 @@ public class TesteCnt {
     @PermitAll               /*get validation*/
     @Path("/getValidation")
     public Response getValidation(
-            @QueryParam("idSession")@DefaultValue("") String idSession,
+            @QueryParam("montantMga")@DefaultValue("") String montantMga,
             @QueryParam("idDirection")@DefaultValue("") String idDirection
 
 
     ) {
-        List <Active> listeValidation = detailDemandeService.getValidation(idDirection,idSession);
+        List <Active> listeValidation = detailDemandeService.getValidation(idDirection,montantMga);
         return Response.ok(listeValidation).build();
     }
+
+    //valider demande
+    //refuser demande
 
 }
 

@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.dre.service.EmailService;
 
 @Entity
 
@@ -48,6 +49,16 @@ public class Demande   {
     private boolean estRefuseAchat;
 
     private boolean estRefuseCdg;
+
+    private String depense;
+
+    public String getDepense() {
+        return depense;
+    }
+
+    public void setDepense(String depense) {
+        this.depense = depense;
+    }
 
     public boolean isEstRefuseAchat() {
         return estRefuseAchat;
@@ -197,7 +208,11 @@ public class Demande   {
         return validationAchat;
     }
 
-    public void setValidationAchat(boolean validationAchat) {
+    public void setValidationAchat(boolean validationAchat)
+    {
+        //  si qqcn valide
+
+        //  si qqcn refuse
         this.validationAchat = validationAchat;
     }
 
@@ -206,6 +221,15 @@ public class Demande   {
     }
 
     public void setValidationPrescripteur(boolean validationPrescripteur) {
+        //  si qqcn valide
+            if(validationPrescripteur)
+            {
+               EmailService es = new EmailService();
+
+//               es.notifValidationPrescripteur();
+
+            }
+        //  si qqcn refuse
         this.validationPrescripteur = validationPrescripteur;
     }
 

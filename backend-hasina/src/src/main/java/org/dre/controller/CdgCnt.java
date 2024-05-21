@@ -36,7 +36,7 @@ public class CdgCnt {
     @Path("/session/create")
     public Response createSessionCd(SessionCd sessionCd) {
 
-        String dateString  = sessionCd.getDateCloture().toString();
+        String dateString  = sessionCd.getDateDebut().toString();
         String [] parts = dateString.split(" ");
         String formatDate =  parts[0];
         String [] date = formatDate.split("-");
@@ -109,7 +109,20 @@ public class CdgCnt {
         return Response.ok(brouillon).build();
     }
 
-    //check existence avis cdg
+    //cloture session
+    @POST
+    @Path("/session/cloture")
+    public Response clotureSessionCd(SessionCd sessionCd) {
+
+        String dateString  = sessionCd.getDateDebut().toString();
+        String [] parts = dateString.split(" ");
+        String formatDate =  parts[0];
+        String [] date = formatDate.split("-");
+        String ref = "CD-"+date[2]+date[1]+date[0] ;
+        sessionCd.setRef(ref);
+        sessionCdService.createSessionCd(sessionCd);
+        return Response.status(Response.Status.CREATED).entity(sessionCd).build();
+    }
 
 
 }
