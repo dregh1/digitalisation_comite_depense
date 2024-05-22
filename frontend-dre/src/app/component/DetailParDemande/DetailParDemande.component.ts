@@ -20,6 +20,11 @@ import { SessionCd } from 'src/app/models/SessionCd';
   styleUrls: ['./DetailParDemande.component.scss'],
 })
 export class TestComponent implements OnInit {
+
+  existanceAvisAchat : boolean =false;
+  existanceAvisCdg : boolean =false;
+
+
   role: string | null = '';
   token: string | null = '';
   isUp1 = false; // Initial state for first button
@@ -54,6 +59,10 @@ export class TestComponent implements OnInit {
     validationAchat: false,
     validationCdg: false,
     typeReference: '',
+    estRefuseCdg:false,
+    estRefuseAchat:false,
+    estSoumis:false,
+    depense:''
   };
   
   titre = new Titre();
@@ -93,7 +102,7 @@ export class TestComponent implements OnInit {
   message: string = '';
   idsession:string='';
 session=new SessionCd();
-  ///variable maka session
+  ///variable recuperation session
   existanceSession : boolean= false;
 
 
@@ -123,21 +132,41 @@ session=new SessionCd();
                 this.direction.id = response.id;  
                 console.log('blaoohi!!!!!!!!!!!!!!!!!',response);
     
-               ///maka session
-          this.TesteService.checkSession(this.direction.id).subscribe((data) => {
-            this.existanceSession= data;
-            console.log('existendjjgjg',this.existanceSession);
-            
-            this.idsession = this.direction.id?.toString() ?? '';
-             //maka id session
-            this.utilitaire.getSessionByDirection(this.idsession).subscribe((data) => {
-              this.session = data;
-              this.idsession=data.id?.toString() ?? '';
-              console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
-              
-            });
+                          ///recuperation session
+                          this.TesteService.checkSession(this.direction.id).subscribe((data) => {
+                            console.log("------------ session ------------");
+                            console.log(data);
+                            
+                            this.existanceSession= data;
+                            console.log('existendjjgjg',this.existanceSession);
+                            
+                                      //this.idsession = this.direction.id?.toString() ?? '';
+                                      //recuperation id session
 
-          });
+                                      this.utilitaire.getSessionByDirection(this.direction.id?.toString() ?? '').subscribe((data) => {
+                                        this.session = data;
+                                        if(data!==null)
+                                        {
+                                          this.idsession=data.id?.toString() ?? '';
+                                          console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
+                                         
+                                          console.log('////////directiontitre',this.direction.id);
+                                          console.log('///////session titrz',this.idsession);
+  
+                                        }
+                                        
+                                          //RECUPERATION active
+                                                this.TesteService.GetTitreParSession(this.direction.id?.toString() ??'' ) .subscribe((donnees) => {
+                                                  
+                                                  this.titres = donnees;
+                                                  console.log("--------------vvvvvvvv---------------");
+                                                  console.log(this.titres,"io titre");
+                                                 
+                                                  
+                                                });
+                                      });
+
+                          });
 
               });
              
@@ -158,34 +187,49 @@ session=new SessionCd();
       parseFloat(this.AvisCdg.montantEngage);
   }
   ngOnInit(): void {
-    
-
-    //maka titre
-    this.TesteService.getTitre().subscribe((data) => {
-      this.titres = data;
-    });
-    // maka ny periode
+    //verification avisCdg
+    // this.utilitaire.checkAvisCdgByIdDemande("").subscribe((data) => {
+    //   this.existanceAvisCdg = data;
+    // });
+       //check AvisCdg
+       console.log(this.id,'id demande ty o');
+            
+       this.utilitaire.checkAvisCdgByIdDemande(this.id?.toString() ?? '').
+       subscribe((result)=>{ this.existanceAvisCdg = result ;});
+       console.log(this.existanceAvisCdg,'checkaviscdgbyiddemande');
+ 
+       //check AvisAchat
+       this.utilitaire.checkAvisAchatByIdDemande(this.id?.toString() ?? '').
+       subscribe((result)=>{ this.existanceAvisAchat = result;
+       });
+    //recuperation titre
+    // this.TesteService.getTitre().subscribe((data) => {
+    //   this.titres = data;
+    // });
+   
+    // recuperation ny periode
     this.TesteService.getPeriode().subscribe((data) => {
       this.periodes = data;
     });
-    // maka ny fournisseur
+    // recuperation ny fournisseur
     this.TesteService.getFournisseur().subscribe((data) => {
       this.fournisseurs = data;
     });
-    //maka rubrique
+    //recuperation rubrique
     this.TesteService.getRubrique().subscribe((data) => {
       this.rubriques = data;
     });
    
-    //  //maka titre
+    //  //recuperation titre
 
-    //maka par detail
+    //recuperation par detail
     this.TesteService.getDetailDemandebyId(this.id).subscribe((response) => {
       this.DetailDemande = response;
-      console.log(response, '////////////////');
-      this.demande.estRegularisation = Boolean(
-        this.DetailDemande.estregularisation ?? ''
-      );
+      
+     
+
+      console.log(response, '//////////////// ito responsse');
+      this.demande.estRegularisation = Boolean( this.DetailDemande.estregularisation ?? '');
       this.demande.titre = this.DetailDemande.titre ?? '';
       this.demande.typeReference = this.DetailDemande.typereference ?? '';
       // this.demande.typereference=this.demande.typereference;
@@ -204,49 +248,58 @@ session=new SessionCd();
       this.demande.idTitreDepense = this.DetailDemande.idtitre?.toString() ?? '';
       this.demande.sousRubrique =this.DetailDemande.sousrubrique?.toString() ?? '';
       this.demande.idRubrique = this.DetailDemande.idrubrique?.toString() ?? '';
-      this.demande.validationPrescripteur = Boolean(
-        this.DetailDemande.validationprescripteur ?? ''
-      );
-      this.demande.validationCdg = Boolean(
-        this.DetailDemande.validationcdg ?? ''
-      );
-      this.demande.validationAchat = Boolean(
-        this.DetailDemande.validationachat ?? ''
-      );
-      console.log(this.DetailDemande);
+      this.demande.validationPrescripteur = Boolean( this.DetailDemande.validationprescripteur ?? '' );
+      this.demande.validationCdg = Boolean( this.DetailDemande.validationcdg ?? '');
+      this.demande.validationAchat = Boolean(this.DetailDemande.validationachat ?? '' );
+      this.demande.estRefuseCdg=Boolean(this.DetailDemande.estRefuseCdg ?? '' );
+      this.demande.estRefuseAchat=Boolean(this.DetailDemande.estRefuseAchat ?? '' );
+      this.demande.estSoumis=Boolean(this.DetailDemande.estsoumis);
+      this.demande.depense=this.DetailDemande.depense??'';
+       console.log(this.DetailDemande);
+       console.log('LLLOOGKOJ');
+       console.log(this.demande,'demande iioiooo');
+       
       this.setSelected(this.demande.idTitreDepense);
-      console.log(this.DetailDemande.sousrubrique, 'io brouilon');
-      console.log(this.demande.fournisseur, 'ourinisseurs');
+      // console.log(this.DetailDemande.sousrubrique, 'io brouilon');
+      // console.log(this.demande.fournisseur, 'ourinisseurs')
+
+
     });
     
     //////////Affichage du commentaire Cdg
     this.TesteService.getCdgById(this.id).subscribe((response) => {
       this.aviscdgs = response;
-      console.log(response, '/:///.////././');
+     // console.log(this.aviscdgs.id,'ito id cdg');
+      //  console.log(this.AvisCdg.id, 'ID null');
+        try{
+        this.AvisCdg.id = this.aviscdgs.id?.toString() ?? '';
+     // if (this.AvisCdg.id !==null) {
+        this.AvisCdg.commentaire = this.aviscdgs.commentaire ?? '';
+        this.AvisCdg.montantBudgetMensuel = this.aviscdgs.montantBudgetMensuel?.toString() ?? '';
+        this.AvisCdg.montantEngage = this.aviscdgs.montantEngage?.toString() ?? '';
+        this.reliquat = parseFloat(this.AvisCdg.montantBudgetMensuel) - parseFloat(this.AvisCdg.montantEngage);
+      console.log(this.AvisCdg.id,'ito id');
+    }catch(error){console.log(error);
+    }
 
-      console.log(this.aviscdgs);
-      ////aichage aviscdg
-      this.AvisCdg.id = this.aviscdgs.id?.toString() ?? '';
-      this.AvisCdg.commentaire = this.aviscdgs.commentaire ?? '';
-      this.AvisCdg.montantBudgetMensuel =
-        this.aviscdgs.montantBudgetMensuel?.toString() ?? '';
-      this.AvisCdg.montantEngage =
-        this.aviscdgs.montantEngage?.toString() ?? '';
-      this.reliquat =
-        parseFloat(this.AvisCdg.montantBudgetMensuel) -
-        parseFloat(this.AvisCdg.montantEngage);
+    
     },
-  error=>{
-      
-  });
-      // maka avisAchat
+
+     error=>{
+
+      console.log(error);
+
+      });
+
+
+      // recuperation avisAchat
       this.TesteService.getAchatById(this.id).subscribe((response) => {
         this.avisAchat = response;
+        try{
         this.AvisAchat.id= this.avisAchat.id?.toString() ?? '';
         this.AvisAchat.commentaire = this.avisAchat.commentaire ?? '';
-      },
-      error=>{
-          
+      }catch(error){console.log(error);
+      }
       });
   }
   //toggle ieldsetprescripteur
@@ -292,19 +345,24 @@ session=new SessionCd();
   }
   //validation prescripteur
   valider(): void {
-    console.log(this.idsession,'+///////////sessionnnn///////////////');
-    this.demande.idSession=this.idsession;
+    
+   // console.log(this.idsession,'+///////////sessionnnn///////////////');
+    //this.demande.idSession=this.idsession;
     this.demande.validationPrescripteur = true;
+    this.demande.estSoumis=true;
+    console.log(this.demande,'demande vaovao');
+    
     this.updatetitre();
-    console.log(this.demande.validationPrescripteur);
+    console.log(this.demande.estSoumis,'soumission');
     this.update();
+    //this.utilitaire.getTokenAdmin();
   }
   //modication prescripteur
   updatetitre(): void { 
     console.log(this.demande.idTitreDepense,'titredepense');
     console.log(this.idsession,'idsessionjjjjjj');
     
-    //maka titre by id
+    //recuperation titre by id
     this.TesteService.gettitreById(parseInt(this.demande.idTitreDepense)).subscribe((data) => {
       this.titre = data;
     console.log(this.titre,'ito ');
@@ -348,14 +406,9 @@ session=new SessionCd();
     console.log(this.demande.validationPrescripteur);
     this.update();
   }
-  
-
-
-
   //Ajout titre demande
   Ajouttitre() {
-    this.titredepense.idSession = this.DetailDemande.idSession ??"";
-    
+    this.titredepense.idSession = this.DetailDemande.idSession ??""; 
     this.TesteService.posttitre(this.titredepense).subscribe((response) => {
       console.log(response);
       this.ajoutOpt(response.id, response.designation);
@@ -366,44 +419,46 @@ session=new SessionCd();
       this.errorMessage = ''; // Optionally, clear the error message
     }, 3000);
   }
-
   /////enregistrer cdg
   enregistrerCdg() {
-    let missingField: keyof Demande | null = null; // Type for the missing field name
+    let missingField: keyof AvisCdg | null = null; // Type for the missing field name
 
-    if (!this.demande.typeDevise) {
-      missingField = 'typeDevise' as keyof Demande; // Type assertion
+    if (!this.AvisCdg.montantBudgetMensuel) {
+      missingField = 'montant budget mensuel' as keyof AvisCdg; // Type assertion
     }
-    if (!this.demande.motif) {
-      missingField = 'motif' as keyof Demande;
+    if (!this.AvisCdg.montantEngage) {
+      missingField = 'montant engagé' as keyof AvisCdg;
     }
-    if (!this.demande.idRubrique) {
-      missingField = 'rubrique' as keyof Demande; // Type assertion
-    }
-    if (!this.demande.montantHt) {
-      missingField = 'montantHt' as keyof Demande;
-    }
-    if (!this.demande.idPeriode) {
-      missingField = 'periode' as keyof Demande;
-    }
-
+    
     if (missingField) {
       this.errorMessage = `Veuillez remplir le champ ${missingField}`; // More specific error message
       setTimeout(() => {
         this.errorMessage = ''; // Clear the error message after 3 seconds
       }, 3000);
     } else {
-      //maka ID
+      setTimeout(() => {
+        this.errorMessage = ''; // Clear the error message after 3 seconds
+      }, 3000);
+      //recuperation ID
       this.AvisCdg.idDemande = this.id?.toString() ?? '';
       console.log(this.AvisCdg);
       this.TesteService.postCdg(this.AvisCdg).subscribe((Response) => {
         console.log(Response);
-
+        this.AvisCdg.id = Response.id;
+        //manova id cdg
+        this.AvisCdg.commentaire = Response.commentaire ;
+        this.AvisCdg.montantBudgetMensuel =Response.montantBudgetMensuel;
+        this.AvisCdg.montantEngage = Response.montantEngage;
+        this.reliquat = parseFloat(this.AvisCdg.montantBudgetMensuel) - parseFloat(this.AvisCdg.montantEngage);
         this.errorMessage = 'Demande enregistré!';
       });
       setTimeout(() => {
         this.errorStatus1 = false; // Hide the message by setting errorStatus to false
-        this.errorMessage = ''; // Optionally, clear the error message
+        this.errorMessage = ''; 
+        this.utilitaire.checkAvisCdgByIdDemande(this.id?.toString() ?? '').
+        subscribe((result)=>{ this.existanceAvisCdg = result ;});
+        console.log(this.existanceAvisCdg,'checkaviscdgbyiddemande');
+        // Optionally, clear the error message
       }, 3000);
       console.log(this.message);
     }
@@ -430,8 +485,11 @@ session=new SessionCd();
   }
   //refuser cdg
   refuserCdg() {
-    this.demande.validationCdg = false;
+   
+    this.demande.estRefuseCdg = true;
     this.update();
+    this.errorMessage='refusé';
+  
   }
   //validationcdg
   validationCdg() {
@@ -442,45 +500,44 @@ session=new SessionCd();
    annulationCdg(){
     //this.enregistrerCdg();
     this.demande.validationCdg = false;
+    this.demande.estRefuseCdg=false;
+    this.errorMessage='';
     this.update();
   }
   //enregistrement achat
   EnregistrerAchat() {
-    let missingField: keyof Demande | null = null; // Type for the missing field name
+    let missingField: keyof AvisCdg | null = null; // Type for the missing field name
 
-    if (!this.demande.typeDevise) {
-      missingField = 'typeDevise' as keyof Demande; // Type assertion
-    }
-    if (!this.demande.motif) {
-      missingField = 'motif' as keyof Demande;
-    }
-    if (!this.demande.idRubrique) {
-      missingField = 'rubrique' as keyof Demande; // Type assertion
-    }
-    if (!this.demande.montantHt) {
-      missingField = 'montantHt' as keyof Demande;
-    }
-    if (!this.demande.idPeriode) {
-      missingField = 'periode' as keyof Demande;
-    }
-
+    if (!this.AvisAchat.commentaire) {
+      missingField = 'montant budget mensuel' as keyof AvisCdg; // Type assertion
+    } 
     if (missingField) {
       this.errorMessage = `Veuillez remplir le champ ${missingField}`; // More specific error message
       setTimeout(() => {
         this.errorMessage = ''; // Clear the error message after 3 seconds
       }, 3000);
     } else {
+      setTimeout(() => {
+        this.errorMessage = ''; // Clear the error message after 3 seconds
+      }, 3000);
+    
       this.AvisAchat.idDemande = this.id?.toString() ?? '';
       console.log(this.AvisAchat);
       this.TesteService.postAchat(this.AvisAchat).subscribe((Response) => {
         console.log(Response);
         console.log('ok');
-
+        this.AvisAchat.id= Response.id;
+        this.AvisAchat.commentaire = Response.commentaire;
         this.errorMessage = 'Demande enregistré!';
       });
       setTimeout(() => {
         this.errorStatus1 = false; // Hide the message by setting errorStatus to false
-        this.errorMessage = ''; // Optionally, clear the error message
+        this.errorMessage = '';
+                //check AvisAchat
+                this.utilitaire.checkAvisAchatByIdDemande(this.id?.toString() ?? '').
+                subscribe((result)=>{ this.existanceAvisAchat = result;
+                });
+        // Optionally, clear the error message
       }, 3000);
       console.log(this.message);
     }
@@ -505,22 +562,23 @@ session=new SessionCd();
   ///validation Achat
   validationAchat() {
     this.demande.validationAchat = true;
-    this.update();
+     this.update();
   }
   //refuser Achat
   refuserAchat() {
-    this.demande.validationAchat = false;
-    this.update();
+    this.demande.estRefuseAchat = true;
+     this.update();
+     this.errorMessage='refusé';
   }
     //annuation prescripteur
     annulationAchat(){
       //this.enregistrerCdg();
       this.demande.validationAchat = false;
+      this.demande.estRefuseAchat=false;
       this.update();
+      this.errorMessage='';
     }
-    //maka idsession 
-    
-  
+    //recuperation idsession 
   //validation prescripteur
     
   }

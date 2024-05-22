@@ -29,7 +29,7 @@ export class AuthenticationService {
   //POSTMAN
   // getUserInfo(token: string) {
   //   var data =
-  //     'grant_type=password&client_id=quarkus-client&client_secret=eIRXkLaEnLubyFr1mqwv6bu862oHIIn9';
+  //     'grant_type=password&client_id=angular-client&client_secret=eIRXkLaEnLubyFr1mqwv6bu862oHIIn9';
 
   //   var xhr = new XMLHttpRequest();
   //   xhr.withCredentials = true;
@@ -142,13 +142,13 @@ export class AuthenticationService {
 
     const params = new HttpParams()
     .set('grant_type', 'password')
-    .set('client_id', 'quarkus-client')
-    .set('client_secret', 'Ulb4eedexOT9Kgw9TzBaqi458JJM3peh');
+    .set('client_id', 'angular-client')
+    .set('client_secret', 'F6ONL3ox63NBv1h1J5wmmibHlDhLA1MI');
 
 
     const headers = this.getHeaders();
     // return this.http.get<any>("http://localhost:8081/realms/oma/protocol/openid-connect/userinfo",body.toString())
-    return this.http.get<any>("http://localhost:8081/realms/oma/protocol/openid-connect/userinfo",{headers,params})
+    return this.http.get<any>("http://localhost:8083/realms/oma/protocol/openid-connect/userinfo",{headers,params})
   
   }
 
@@ -208,7 +208,7 @@ export class AuthenticationService {
           }
   }
   // async getUserInfo(token : string) {
-  //   const data = "grant_type=password&client_id=quarkus-client&client_secret=Ulb4eedexOT9Kgw9TzBaqi458JJM3peh";
+  //   const data = "grant_type=password&client_id=angular-client&client_secret=Ulb4eedexOT9Kgw9TzBaqi458JJM3peh";
   
   //   try {
   //     //Faire une requete USERINFO chez keycloak

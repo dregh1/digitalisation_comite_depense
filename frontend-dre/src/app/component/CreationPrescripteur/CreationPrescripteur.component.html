@@ -7,26 +7,32 @@
         <div class="card card-body">
           <div class="mx-4 p-4">
             <div class="justify-content-around d-flex">
+              
+
               <div class="d-flex">
+                
                 <div class="label">
                   <span class="input-group-text mb-2" id="basic-addon1"
                     >Regularisation *</span
                   >
                   <span class="input-group-text mb-2" id="basic-addon1"
-                    >Type</span
+                  >opax/capex</span
+                >
+                  <span class="input-group-text mb-2" id="basic-addon1"
+                    >Type Réference</span
                   >
-                  <span class="input-group-text mb-2" id="basic-addon1" 
-                    >Motif Besoin *</span
-                  >
+                  <!-- <span class="input-group-text mb-2" id="basic-addon1" 
+                    >Réference</span
+                  > -->
                   <span class="input-group-text mb-2" id="basic-addon1"
                     >Devise *</span
                   >
                   <span class="input-group-text mb-2" id="basic-addon1"
                     >Rubrique *</span
                   >
-                  <span class="input-group-text mb-2" id="basic-addon1"
+                  <!-- <span class="input-group-text mb-2" id="basic-addon1"
                     >Commentaire prescripteur</span
-                  >
+                  > -->
                 </div>
                 <div class="mx-3">
                   <!-- <input type="text" class="form-control mb-2" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">-->
@@ -43,23 +49,40 @@
                   <div class="input-group mb-2">
                     <select
                       class="form-select"
-                      [(ngModel)]="this.demande.typeReference"
-                      id="inputGroupSelect04"
+                      [(ngModel)]="this.demande.depense"
+                     
                       aria-label="Example select with button addon"
                     >
-                      <option selected value="BC">Réference BC</option>
-                      <option value="DED">Réference DED</option>
+                      <option value="OPAX">OPAX</option>
+                      <option value="CAPEX">CAPEX</option>
                     </select>
                   </div>
-                  <input
-                    type="text"
-                    class="form-control mb-2"
-                    [(ngModel)]="this.demande.motif"
-                    placeholder=""
-                    aria-label=""
-                    aria-describedby="basic-addon1"
-                    required
-                  />
+                  <div class="input-group mb-2">
+                    <select
+                      class="form-select"
+                      [(ngModel)]="this.demande.typeReference"
+                      id="inputGroupSelect04"
+                      aria-label="Example select with button addon" (ngModelChange)="refencedemande()"
+                    >
+                      <option selected value="BC"> BC</option>
+                      <option value="DED"> DED</option>
+                    </select>
+                  
+                    <div *ngIf="nomrefence===true">
+                      <input
+                      type="text"
+                      step="any"
+                      [(ngModel)]="this.demande.nomReference"
+                      class="form-control mb-2 mx-2"
+                      placeholder=""
+                      aria-label=""
+                      aria-describedby="basic-addon1"
+                    />
+                    </div>
+                  
+                  </div>
+                 
+                  
                   <!-- <span *ngIf="!this.demande.motif" class="text-danger fs-6"> champ vide</span> -->
                   <div class="input-group mb-2">
                     <select
@@ -88,7 +111,7 @@
                       </option>
                     </select>
                   </div>
-                  <input
+                  <!-- <input
                     type="text"
                     type="text"
                     [(ngModel)]="this.demande.comsPrescripteur"
@@ -96,7 +119,7 @@
                     placeholder=""
                     aria-label=""
                     aria-describedby="basic-addon1"
-                  />
+                  /> -->
                 </div>
               </div>
 
@@ -105,9 +128,9 @@
                   <span class="input-group-text mb-2" id="basic-addon1"
                     >Titre</span
                   >
-                  <span class="input-group-text mb-3" id="basic-addon1"
-                    >Réference</span
-                  >
+                  <!-- <span class="input-group-text mb-4" id="basic-addon1"
+                    >Motif Besoin *</span
+                  > -->
                   <span class="input-group-text mb-2" id="basic-addon1"
                     >fournisseurs</span
                   >
@@ -132,7 +155,7 @@
                     >
                       <ng-container *ngFor="let titre of this.titres">
                         <option
-                          *ngIf="titre.idDirection === this.direction.id"
+                          *ngIf="titre.idDirection === this.direction.id && titre.designation!='sans titre'"
                           [value]="titre.id"
                         >
                           {{ titre.designation }}
@@ -152,16 +175,18 @@
                       +
                     </button>
                   </div>
-
-                  <input
+                  <!-- <input
                     type="text"
-                    step="any"
-                    [(ngModel)]="this.demande.nomReference"
                     class="form-control mb-2"
+                    [(ngModel)]="this.demande.motif"
                     placeholder=""
                     aria-label=""
                     aria-describedby="basic-addon1"
-                  />
+                    required
+                  /> -->
+                  <!-- <div class="input-group mb-2">
+                    <textarea class="form-control" [(ngModel)]="this.demande.motif" ></textarea>
+                  </div> -->
                   <div class="input-group mb-2">
                     <select
                       class="form-select"
@@ -211,21 +236,29 @@
                   </div>
                 </div>
               </div>
+              
             </div>
-          </div>
+            <label for="validationTextarea" class="form-label is-required">Motif<span class="visually-hidden"> (required)</span></label>
+            <textarea class="form-control" [(ngModel)]="this.demande.motif" ></textarea>
+            <label for="validationTextarea" class="form-label is-required">Commentaire<span class="visually-hidden"> (required)</span></label>
+            <textarea class="form-control" [(ngModel)]="this.demande.comsPrescripteur" ></textarea>
+         
+            </div>
         </div>
       </fieldset>
       <div class="bt p-3 d-flex justify-content-end">
         <div class="error-message">
           <p class="text-success">{{ errorMessage }}</p>
         </div>
-        <button
-          type="button"
-          class="btn btn-primary p-2 mx-2"
-          (click)="creerDemande()"
-        >
-          Ajouter
-        </button>
+       
+              <button
+              type="button"
+              class="btn btn-primary "
+              (click)="creerDemande()"
+            >
+              Enregistrer
+            </button>
+        
       </div>
     </div>
   </section>

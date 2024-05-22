@@ -17,6 +17,7 @@ export class DetailDemande {
     public idperiode?: number,
     public periode?: string,
     public devise?: string,
+    public depense?: string,
     public validationprescripteur?: boolean,
     public validationcdg?: boolean,
     public validationachat?: boolean,
@@ -26,6 +27,9 @@ export class DetailDemande {
     public comsCd?: string,
     public etatFinal?: string,
     public montantMga?: string,
-    public idSession?: string
+    public idSession?: string,
+    public estRefuseCdg?:boolean,
+    public estRefuseAchat?:boolean,
+    public estsoumis?:boolean
   ) {}
 }

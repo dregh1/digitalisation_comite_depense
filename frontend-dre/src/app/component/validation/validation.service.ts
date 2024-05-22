@@ -62,17 +62,17 @@ export class ValidationService {
     });
   }
    //filtre DETAILDEMANDE
-   getFiltreDetailDemande(idDirection : string , sessionCd : string): Observable<DetailDemande[]> {
+   getFiltreDetailDemande(idDirection : string , montantMga : string): Observable<DetailDemande[]> {
     const headers = this.getHeaders();
     // search(idDirection : string | '' , statut: string | '', motif : string | '', datedebut :string | '', datefin :string | '', session : string | '' , idfournisseur : string | '' ): Observable<DetailDemande[]>{
 
       const queryParams = new URLSearchParams();
       queryParams.append('idDirection', idDirection ? encodeURIComponent(idDirection) : ''); // Handle empty strings and special characters
-      queryParams.append('session', sessionCd ? encodeURIComponent(sessionCd) : '');
+      queryParams.append('montantMga', montantMga ? encodeURIComponent(montantMga) : '');
     
 
       
-      const url = `${this.baseUrl}/detailDemande/search?${queryParams.toString()}`; // Build URL with encoded params
+      const url = `${this.baseUrl}/getValidation?${queryParams.toString()}`; // Build URL with encoded params
 
       return this.http.get<DetailDemande[]>(url, { headers });
     //  return this.http.get<DetailDemande[]>(this.baseUrl+`/search?idDirection=${idDirection}&statut=${statut}&motif=${motif}&dateDebut=${datedebut}&dateFin=${datefin}&session=${session}&idFournisseur=${idfournisseur}`,{headers});
@@ -105,7 +105,7 @@ export class ValidationService {
   //   xhr.send(data);
   // }
   // getUserInfo(token : string){
-  //   var data = "grant_type=password&client_id=quarkus-client&client_secret=eIRXkLaEnLubyFr1mqwv6bu862oHIIn9";
+  //   var data = "grant_type=password&client_id=angular-client&client_secret=eIRXkLaEnLubyFr1mqwv6bu862oHIIn9";
 
   //             var xhr = new XMLHttpRequest();
   //             xhr.withCredentials = true;
@@ -118,7 +118,7 @@ export class ValidationService {
   //               }
   //             });
 
-  //             xhr.open("GET", "http://localhost:8081/realms/oma/protocol/openid-connect/userinfo");
+  //             xhr.open("GET", "http://localhost:/realms/oma/protocol/openid-connect/userinfo");
   //             xhr.setRequestHeader("Authorization", "bearer "+token);
   //             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
