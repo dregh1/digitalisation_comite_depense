@@ -2,9 +2,13 @@ create database oma;
 	alter database oma owner to dre;
 
 --TRUNCATE
---truncate table sessioncd cascade;
---truncate table demande cascade;
---truncate table titredepense cascade;
+truncate table sessioncd cascade;
+truncate table demande cascade;
+truncate table titredepense cascade;
+truncate table avisachat cascade;
+truncate table aviscdg cascade;
+
+
 --truncate table fournisseur cascade;
 --truncate table periode cascade;
 --truncate table avisAchat cascade;
@@ -95,7 +99,9 @@ create database oma;
 						validationCdg boolean default false,
 
                         comsCd text,
-						estSupprime boolean default false
+						estSupprime boolean default false,
+						depense varchar(20),
+						estSoumis default false
 
 					);
 
@@ -212,12 +218,24 @@ create database oma;
 	-- INSERTION 		------------------------------------------
 			insert into etatFinal(designation) values ('OK'),('NOK'),('En attente');
 			insert into direction (designation) values ('DTI'),('ODC'),('DF'),('DRH');
-			
+
 
 			insert into fournisseur(nom) values ('Socobis'),('Chocolat Robert');
-			insert into rubrique(designation) values('achat nourrire');
-	        insert into titreDepense (designation) values ('Team Building');
-			insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
+            INSERT INTO rubrique (designation) VALUES ('Fournitures generales'),('achat nourrire'), ('Locaux'), ('Materiel informatique');
+    -- Insert data into fournisseur table
+            INSERT INTO fournisseur (nom)  VALUES ('Fournisseur X'), ('Hôtel Y'), ('Prestataire Z'), ('Fournisseur Logiciel');
+            insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
+
+truncate table sessioncd cascade;
+truncate table demande cascade;
+truncate table titredepense cascade;
+
+-- Insert data into titreDepense table
+--INSERT INTO titreDepense (idDirection, idSession, designation)
+--VALUES (1, 1, 'Fournitures de bureau'),
+--       (2, 1, 'Frais de mission'),
+--       (3, 2, 'Loyer du bureau principal'),
+--       (1, 2, 'Logiciels');
 
 
 INSERT INTO demande (
@@ -257,48 +275,7 @@ VALUES (
 
 	-- VIEW 			------------------------------------------
 		-- BROUILLON
-        create or replace view brouillon as
-            (
 
-					select
-                    dm.id as id,
-
-                        dm.idTitreDepense as idTitre,
-                        coalesce(td.designation, 'sans titre')  as titre,
-                        dm.motif as motif,
-                        dm.montantHt as montantHt,
-                        dm.typeReference as typeReference,
-                        dm.nomReference as reference,
-                        dm.estRegularisation as estRegularisation,
-
-                        dm.comsPrescripteur as comsPrescripteur,
-                    -- dm.id_etatFinal as id_etatFinal,
-
-                        dm.idRubrique as idRubrique,
-                        r.designation as nomRubrique,
-
-                        dm.sousRubrique as sousRubrique,
-
-
-                        dm.idPeriode as idPeriode,
-                        p.designation as periode,
-
-                        dm.idDirection as idDirection,
-
-                        dm.typeDevise as devise,
-
-                        f.id as idFournisseur,
-                        f.nom as fournisseur
-                from demande dm join fournisseur f on dm.idFournisseur = f.id
-                                join periode p on p.id= dm.idPeriode
-                                join rubrique r on r.id =  dm.idRubrique
-
-                                full join titreDepense td on dm.idTitreDepense = td.id
-                where validationPrescripteur = false
-                group by idTitre,dm.id ,f.id,td.id,p.id,r.id
-
-
-                );
 
         -- active_dmd
 
@@ -334,7 +311,8 @@ VALUES (
                         dm.typeDevise as devise,
 
                         f.id as idFournisseur,
-                        f.nom as fournisseur
+                        f.nom as fournisseur,
+
                 from demande dm join fournisseur f on dm.idFournisseur = f.id
                                 join periode p on p.id= dm.idPeriode
                                 join rubrique r on r.id =  dm.idRubrique
@@ -345,6 +323,29 @@ VALUES (
 
 
                 );
+        create or replace view activeview as
+
+        (select * from detailDemande d where d.id =  45 )
+
+
+        create or replace view active as
+        (
+            select * from  detailDemande t
+            where t.validationPrescripteur = true and t.estSoumis=false
+        );
+
+        create or replace view brouillon as
+        (
+            select * from  detailDemande t
+            where t.validationPrescripteur = false and t.estSoumis = false
+        );
+
+        create or replace view attenteSession as
+        (
+            select * from  detailDemande t
+            where t.validationPrescripteur = true and t.estSoumis = true
+        );
+
 
         create or replace view detailDemande as
             (
@@ -379,6 +380,9 @@ VALUES (
                         dm.validationCdg,
                         dm.validationAchat,
                         dm.etatFinal,
+                        dm.estRefuseAchat,
+                        dm.estRefuseCdg,
+                        dm.depense,
 
                         f.id as idFournisseur,
                         f.nom as fournisseur,
@@ -389,6 +393,7 @@ VALUES (
                         avisCdg.commentaire as comsCdg,
 
                         dm.comsCd as comsCd,
+                        dm.estSoumis ,
 
                         s.ref as refSession,
                         s.dateDebut as debutSession,
@@ -410,7 +415,7 @@ VALUES (
                                 join periode p on p.id= dm.idPeriode
                                 join rubrique r on r.id =  dm.idRubrique
 
-                                join titreDepense td on dm.idTitreDepense = td.id
+                                left join titreDepense td on dm.idTitreDepense = td.id
                                 left join avisAchat on avisAchat.idDemande =  dm.id
                                 left join avisCdg on aviscdg.idDemande  = dm.id
                                 left join sessionCd s on s.id = dm.idSession
@@ -421,7 +426,7 @@ VALUES (
                             group by idTitre,dm.id ,f.id,td.id,p.id,r.id,avisAchat.id,aviscdg.id,s.id
                 );
 
-        --
+        -- fkuk hrjp bnzf ehbe
 
         create table decision
         (
@@ -457,7 +462,7 @@ CREATE OR REPLACE VIEW titre AS
     ) AS t
     WHERE t.etatSession =false
 );
-update sessionCd set estferme =true where id = 23;
+--update sessionCd set estferme =true where id = 23;
 -----------------------
 
 create or replace view validation as
@@ -494,4 +499,53 @@ create or replace view validation as
         and d.validationCdg =  true
         and d.validationPrescripteur =  true
 );
+
+
+alter table demande add column estRefuseAchat boolean default false;
+alter table demande add column estRefuseCdg boolean default false;
+alter table demande add column depense varchar(20) ;
+alter table demande add column estSoumis boolean default false ;
+
+alter table sessioncd add column dataFermeture timestamp;
+
+
+---  FONCTION DE TRIGGER
+
+---------
+        CREATE OR REPLACE FUNCTION ma_fonction_trigger() RETURNS TRIGGER AS $$
+        BEGIN
+            -- Logique de la fonction ici
+            -- Mettez à jour l'enregistrement dans la table demande
+            UPDATE demande
+            SET estSoumis = false,
+                idSession = NEW.id
+            WHERE estSoumis = true
+            AND idDirection = NEW.idDirection; -- Supposons que estSousmis = false
+
+            -- Retourne l'enregistrement nouvellement inséré
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+    DROP TRIGGER updating_fn_trig ON sessionCd;
+
+---------
+        CREATE TRIGGER updating_fn_trig
+        AFTER INSERT
+        ON sessionCd
+        FOR EACH ROW
+        EXECUTE PROCEDURE ma_fonction_trigger();
+
+
+--insert into sessionCd (ref,datecloture,tauxeur,tauxusd,tauxmga,idDirection) values ('CDDDDDDDD','2024-06-12',4000,4000,1,1);
+--
+--update demande set idsession = null where id = 65;
+--
+--delete from sessioncd where id !=34 ;
+--
+--update demande set validationPrescripteur = true where id = 65;
+--update demande set estsoumis = true where id = 65;
+
+
+
 
