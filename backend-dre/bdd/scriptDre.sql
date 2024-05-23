@@ -56,7 +56,6 @@ truncate table aviscdg cascade;
 					dateDebut timestamp default now(),
 					dateCloture timestamp not null,
 					estSupprime boolean default false,
---					idDirection bigint,
 					tauxEur numeric(32,3) not null,
 					tauxUsd numeric(32,3) not null,
 					tauxMga numeric(32,3) not null,
@@ -73,9 +72,10 @@ truncate table aviscdg cascade;
 			create  table demande
 					(
 						id serial primary key ,
+						identifiant varchar(50) default LPAD(id::TEXT || REPEAT('0', 8 - LENGTH(id::TEXT)), 8, '0')
 						idTitreDepense bigint,
 						motif text not null,
-						idFournisseur bigint ,
+						fournisseur text ,
 						estRegularisation boolean default false not null,
 						
 						comsPrescripteur text,
@@ -101,7 +101,10 @@ truncate table aviscdg cascade;
                         comsCd text,
 						estSupprime boolean default false,
 						depense varchar(20),
-						estSoumis default false
+						estSoumis default false,
+						dateCreation timestamp default now(),
+						dateSoumission timestamp,
+						identifiant varchar(50)
 
 					);
 
@@ -199,7 +202,7 @@ truncate table aviscdg cascade;
 			alter table demande add foreign key (idPeriode) references periode(id);
 			alter table demande add foreign key (idDirection) references direction(id);
 			alter table demande add foreign key (idTitreDepense) references titreDepense(id);
-			alter table demande add foreign key (idFournisseur) references fournisseur(id);
+--			alter table demande add foreign key (idFournisseur) references fournisseur(id);
 			alter table demande add foreign key (idRubrique) references rubrique(id);
 			alter table demande add foreign key (idSession) references sessionCd(id);
 
@@ -222,10 +225,10 @@ truncate table aviscdg cascade;
 			insert into direction (designation) values ('DTI'),('ODC'),('DF'),('DRH');
 
 
-			insert into fournisseur(nom) values ('Socobis'),('Chocolat Robert');
+--			insert into fournisseur(nom) values ('Socobis'),('Chocolat Robert');
             INSERT INTO rubrique (designation) VALUES ('Fournitures generales'),('achat nourrire'), ('Locaux'), ('Materiel informatique');
     -- Insert data into fournisseur table
-            INSERT INTO fournisseur (nom)  VALUES ('Fournisseur X'), ('Hôtel Y'), ('Prestataire Z'), ('Fournisseur Logiciel');
+--            INSERT INTO fournisseur (nom)  VALUES ('Fournisseur X'), ('Hôtel Y'), ('Prestataire Z'), ('Fournisseur Logiciel');
             insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
 
 truncate table sessioncd cascade;
@@ -240,39 +243,7 @@ truncate table titredepense cascade;
 --       (1, 2, 'Logiciels');
 
 
-INSERT INTO demande (
-    idTitreDepense,
-    motif,
-    idFournisseur,
-    estRegularisation,
-    comsPrescripteur,
-    idDirection,
-    idPeriode,
-    typeReference,
-    nomReference,
-    typeDevise,
-    montantHt,
-    idRubrique,
-    sousrubrique,
-    idDirection
 
-)
-VALUES (
-    1,
-    'Achat de fournitures de bureau',
-    1,
-    false,
-    'Livraison urgente requise',
-    1,
-    1,
-    'BC',
-    'Facture A00000123',
-    'EUR',
-    542.75,
-    1,
-    'Papeterie',
-    1
-);
 
 
 	-- VIEW 			------------------------------------------
@@ -312,16 +283,14 @@ VALUES (
 
                         dm.typeDevise as devise,
 
-                        f.id as idFournisseur,
-                        f.nom as fournisseur,
+                        dm.fournisseur as fournisseur
 
-                from demande dm join fournisseur f on dm.idFournisseur = f.id
-                                join periode p on p.id= dm.idPeriode
+                from demande dm join periode p on p.id= dm.idPeriode
                                 join rubrique r on r.id =  dm.idRubrique
 
                                 full join titreDepense td on dm.idTitreDepense = td.id
                 where validationPrescripteur = TRUE
-                group by idTitre,dm.id ,f.id,td.id,p.id,r.id
+                group by idTitre,dm.id ,td.id,p.id,r.id
 
 
                 );
@@ -386,8 +355,7 @@ VALUES (
                         dm.estRefuseCdg,
                         dm.depense,
 
-                        f.id as idFournisseur,
-                        f.nom as fournisseur,
+                        dm.fournisseur as fournisseur,
 
                         avisAchat.id as idAvisAchat,
                         avisAchat.commentaire as comsAchat,
@@ -396,10 +364,14 @@ VALUES (
 
                         dm.comsCd as comsCd,
                         dm.estSoumis ,
+                        dm.identifiant ,
+                        dm.dateCreation,
+                        dm.dateSoumission,
 
                         s.ref as refSession,
                         s.dateDebut as debutSession,
                         s.dateCloture as finSession,
+
                         coalesce
                         (
                                 (
@@ -413,8 +385,7 @@ VALUES (
                             as montantMga
 
 
-                from demande dm join fournisseur f on dm.idFournisseur = f.id
-                                join periode p on p.id= dm.idPeriode
+                from demande dm join periode p on p.id= dm.idPeriode
                                 join rubrique r on r.id =  dm.idRubrique
 
                                 left join titreDepense td on dm.idTitreDepense = td.id
@@ -425,7 +396,7 @@ VALUES (
 --                                        dm.validationAchat =  true
 --                                    and dm.validationCdg =  true
 --                                    and dm.validationPrescripteur =  true
-                            group by idTitre,dm.id ,f.id,td.id,p.id,r.id,avisAchat.id,aviscdg.id,s.id
+                            group by idTitre,dm.id ,td.id,p.id,r.id,avisAchat.id,aviscdg.id,s.id
                 );
 
         -- fkuk hrjp bnzf ehbe
@@ -473,7 +444,6 @@ create or replace view validation as
         d.id,
         d.devise,
         d.motif,
-        d.idFournisseur,
         d.fournisseur,
         d.idPeriode,
         d.periode,
@@ -503,12 +473,12 @@ create or replace view validation as
 );
 
 
-alter table demande add column estRefuseAchat boolean default false;
-alter table demande add column estRefuseCdg boolean default false;
-alter table demande add column depense varchar(20) ;
-alter table demande add column estSoumis boolean default false ;
-
-alter table sessioncd add column dataFermeture timestamp;
+--alter table demande add column estRefuseAchat boolean default false;
+--alter table demande add column estRefuseCdg boolean default false;
+--alter table demande add column depense varchar(20) ;
+--alter table demande add column estSoumis boolean default false ;
+--
+--alter table sessioncd add column dataFermeture timestamp;
 
 
 ---  FONCTION DE TRIGGER
@@ -524,9 +494,9 @@ alter table sessioncd add column dataFermeture timestamp;
             WHERE estSoumis = true; -- Supposons que estSousmis = false
 
             -- Mis a jour dur titre
-            UPDATE titredepense
-            SET idsession = NEW.id
-            WHERE id = true; -- Supposons que estSousmis = false
+--            UPDATE titredepense
+--            SET idsession = NEW.id
+--            WHERE id = true; -- Supposons que estSousmis = false
 
 
             -- Retourne l'enregistrement nouvellement inséré
@@ -555,4 +525,40 @@ alter table sessioncd add column dataFermeture timestamp;
 
 
 
+--
+--alter table demande drop column idfournisseur cascade;
+--alter table demande add column fournisseur text ;
+--alter table demande	add column dateCreation timestamp default now();
+--alter table demande add column dateSoumission timestamp;
+--alter table demande add column identifiant varchar(50);
 
+
+
+    CREATE OR REPLACE FUNCTION generate_identifiant(p_id INTEGER)
+    RETURNS TEXT AS $$
+    BEGIN
+        RETURN LPAD(p_id::TEXT || REPEAT('0', 8 - LENGTH(p_id::TEXT)), 8, '0');
+    END; $$ LANGUAGE plpgsql;
+
+    CREATE TRIGGER updating_cln_trig
+            AFTER INSERT
+            ON demande
+            FOR EACH ROW
+            EXECUTE PROCEDURE ma_fonction_trigger();
+
+
+
+
+--
+    CREATE OR REPLACE FUNCTION generate_identifiant_trigger()
+      RETURNS TRIGGER AS $$
+      BEGIN
+          NEW.identifiant := LPAD( REPEAT('0', 8 - LENGTH(NEW.id::TEXT)) ||NEW.id::TEXT , 8, '0');
+          RETURN NEW;
+      END; $$ LANGUAGE plpgsql;
+
+    DROP TRIGGER insert_demande_trigger ON demande;
+
+    CREATE  TRIGGER insert_demande_trigger
+    BEFORE INSERT ON demande
+    FOR EACH ROW EXECUTE PROCEDURE generate_identifiant_trigger();

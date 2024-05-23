@@ -29,7 +29,7 @@ public class AttenteSession {
     private boolean validationprescripteur ;
     private boolean validationcdg ;
     private boolean validationachat ;
-    private Integer idfournisseur ;
+
     private String fournisseur;
 
     private Integer idAvisCdg;
@@ -47,6 +47,34 @@ public class AttenteSession {
     private Timestamp debutSession;
     private Timestamp finSession;
     private String etatFinal;
+
+    private String identifiant;
+
+    private Timestamp dateCreation ;
+    private Timestamp dateSoumission ;
+
+    public Timestamp getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(Timestamp dateCreation) {
+        this.dateCreation = dateCreation;
+    }
+
+    public Timestamp getDateSoumission() {
+        return dateSoumission;
+    }
+
+    public void setDateSoumission(Timestamp dateSoumission) {
+        this.dateSoumission = dateSoumission;
+    }
+    public String getIdentifiant() {
+        return identifiant;
+    }
+
+    public void setIdentifiant(String identifiant) {
+        this.identifiant = identifiant;
+    }
 
     public String getRefSession() {
         return refSession;
@@ -298,13 +326,6 @@ public class AttenteSession {
         this.validationachat = validationachat;
     }
 
-    public Integer getIdfournisseur() {
-        return idfournisseur;
-    }
-
-    public void setIdfournisseur(Integer idfournisseur) {
-        this.idfournisseur = idfournisseur;
-    }
 
     public String getFournisseur() {
         return fournisseur;

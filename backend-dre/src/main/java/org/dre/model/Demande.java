@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.dre.service.EmailService;
 
+import java.sql.Timestamp;
+
 @Entity
 
 public class Demande   {
@@ -18,8 +20,8 @@ public class Demande   {
     private Long idTitreDepense;
     @JsonProperty("motif") // Annotation pour personnaliser le nom de la propriété dans JSON
     private String motif;
-    @JsonProperty("idFournisseur") // Annotation pour personnaliser le nom de la propriété dans JSON
-    private Long idFournisseur;
+    @JsonProperty("fournisseur") // Annotation pour personnaliser le nom de la propriété dans JSON
+    private String fournisseur;
 
     @JsonProperty("estRegularisation") // Annotation pour personnaliser le nom de la propriété dans JSON
     private boolean estregularisation;
@@ -52,7 +54,34 @@ public class Demande   {
     private boolean estRefuseCdg;
 
     private String depense;
+    private String identifiant;
 
+    private Timestamp dateCreation ;
+    private Timestamp dateSoumission ;
+
+    public Timestamp getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(Timestamp dateCreation) {
+        this.dateCreation = dateCreation;
+    }
+
+    public Timestamp getDateSoumission() {
+        return dateSoumission;
+    }
+
+    public void setDateSoumission(Timestamp dateSoumission) {
+        this.dateSoumission = dateSoumission;
+    }
+
+    public String getIdentifiant() {
+        return identifiant;
+    }
+
+    public void setIdentifiant(String identifiant) {
+        this.identifiant = identifiant;
+    }
     public String getDepense() {
         return depense;
     }
@@ -109,12 +138,12 @@ public class Demande   {
         this.motif = motif;
     }
 
-    public Long getIdFournisseur() {
-        return idFournisseur;
+    public String getFournisseur() {
+        return fournisseur;
     }
 
-    public void setIdFournisseur(Long idFournisseur) {
-        this.idFournisseur = idFournisseur;
+    public void setFournisseur(String fournisseur) {
+        this.fournisseur = fournisseur;
     }
 
     public boolean isEstregularisation() {
