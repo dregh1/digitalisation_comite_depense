@@ -56,7 +56,7 @@ truncate table aviscdg cascade;
 					dateDebut timestamp default now(),
 					dateCloture timestamp not null,
 					estSupprime boolean default false,
-					idDirection bigint,
+--					idDirection bigint,
 					tauxEur numeric(32,3) not null,
 					tauxUsd numeric(32,3) not null,
 					tauxMga numeric(32,3) not null,
@@ -194,7 +194,7 @@ truncate table aviscdg cascade;
 
 
 	-- ALTER 			------------------------------------------
-			alter table sessioncd add foreign key (idDirection) references direction(id);
+--			alter table sessioncd add foreign key (idDirection) references direction(id);
 					
 			alter table demande add foreign key (idPeriode) references periode(id);
 			alter table demande add foreign key (idDirection) references direction(id);
@@ -214,6 +214,8 @@ truncate table aviscdg cascade;
             alter table decision add foreign key (idEtatFinal) references etatFinal(id);
             alter table decision add foreign key (idDemande) references demande(id);
 
+    -- ALTER UTILE
+        alter table sessioncd drop column iddirection;
 
 	-- INSERTION 		------------------------------------------
 			insert into etatFinal(designation) values ('OK'),('NOK'),('En attente');
@@ -519,8 +521,13 @@ alter table sessioncd add column dataFermeture timestamp;
             UPDATE demande
             SET estSoumis = false,
                 idSession = NEW.id
-            WHERE estSoumis = true
-            AND idDirection = NEW.idDirection; -- Supposons que estSousmis = false
+            WHERE estSoumis = true; -- Supposons que estSousmis = false
+
+            -- Mis a jour dur titre
+            UPDATE titredepense
+            SET idsession = NEW.id
+            WHERE id = true; -- Supposons que estSousmis = false
+
 
             -- Retourne l'enregistrement nouvellement inséré
             RETURN NEW;
