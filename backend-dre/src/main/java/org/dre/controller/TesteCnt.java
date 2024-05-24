@@ -256,9 +256,14 @@ public class TesteCnt {
         System.out.println("I send mail");
 
         for (MyMail  m : listEmail){
-            Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne session CD a été ouverte!");
+            if(m.getEmail()!=null)
+            {
 
-            mailer.send(mail);
+                Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne session CD a été ouverte!");
+                System.out.println(m.getEmail())   ;
+                mailer.send(mail);
+            }
+
 
         }
 
@@ -382,6 +387,16 @@ public class TesteCnt {
     //valider demande
     //refuser demande
 
+    //
+    @GET
+    @PermitAll               /* supprimer demande */
+    @Path("/supprimerDemande/{idDemande}")
+    public void supprimerDemande(
+            @PathParam("idDemande")@DefaultValue("") String id
+
+    ) {
+        this.demandeService.deleteDemande(Long.valueOf(id));
+    }
 }
 
 

@@ -36,13 +36,12 @@ public class DemandeService
     }
 
     @Transactional
-    public boolean deleteDemande(Long id) {
+    public void deleteDemande(Long id) {
         Demande demande = demandeRepository.findById(id);
         if (demande != null) {
-            demandeRepository.delete(demande);
-            return true;
+            demande.setEstSupprime(true);
+            demandeRepository.getEntityManager().merge(demande);
         }
-        return false;
 }
 
 

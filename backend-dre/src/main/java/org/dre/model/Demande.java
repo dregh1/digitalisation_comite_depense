@@ -275,8 +275,10 @@ public class Demande   {
         return estSupprime;
     }
 
-    public void setEstSupprime(boolean estSupprime) {
+    public void setEstSupprime(boolean estSupprime)
+    {
         this.estSupprime = estSupprime;
+
     }
 
     public Long getIdSession() {
