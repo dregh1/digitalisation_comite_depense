@@ -1,10 +1,21 @@
 
 
+<nav class="navbar">
+  <div class="container-fluid">
+    <div class="navbar-brand me-auto">
+      
+    </div>
+    <div class="input-group mb-3 p-3 d-flex justify-content-end recherche">
+      <input [(ngModel)]="nomAchercher" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="button-addon2">
+      <button class="btn btn-primary" type="button"  (click)="rechercheUser()">Chercher</button>
+    </div>
+  </div>
+</nav>
   
-  <div class="input-group mb-3 p-3 d-flex justify-content-end recherche">
+  <!-- <div class="input-group mb-3 p-3 d-flex justify-content-end recherche">
     <input [(ngModel)]="nomAchercher" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="button-addon2">
     <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="rechercheUser()">Chercher</button>
-  </div>
+  </div> -->
   <!-- table liste  users -->
   <table class="table mx-2">
     <caption class="visually-hidden">Boosted tables basic look</caption>
