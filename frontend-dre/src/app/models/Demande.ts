@@ -29,7 +29,11 @@ export class Demande {
     public comsCd?: string,
     public estRefuseCdg?:boolean,
     public estRefuseAchat?:boolean,
-    public estSoumis?:boolean
+    public estSoumis?:boolean,
+    public identifiant?: string,
+    public dateCreation?: string,
+    public dateSoumission?: string,
+
   ) // Autres propriétés de votre modèle de données personnel
   {}
 }
