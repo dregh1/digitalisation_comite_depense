@@ -72,7 +72,6 @@ truncate table aviscdg cascade;
 			create  table demande
 					(
 						id serial primary key ,
-						identifiant varchar(50) default LPAD(id::TEXT || REPEAT('0', 8 - LENGTH(id::TEXT)), 8, '0')
 						idTitreDepense bigint,
 						motif text not null,
 						fournisseur text ,
@@ -100,11 +99,13 @@ truncate table aviscdg cascade;
 
                         comsCd text,
 						estSupprime boolean default false,
-						depense varchar(20),
-						estSoumis default false,
 						dateCreation timestamp default now(),
 						dateSoumission timestamp,
-						identifiant varchar(50)
+						identifiant varchar(50),
+						estRefuseAchat boolean default false,
+                        estRefuseCdg boolean default false,
+                        depense varchar(20) ,
+                        estSoumis boolean default false
 
 					);
 
@@ -202,7 +203,6 @@ truncate table aviscdg cascade;
 			alter table demande add foreign key (idPeriode) references periode(id);
 			alter table demande add foreign key (idDirection) references direction(id);
 			alter table demande add foreign key (idTitreDepense) references titreDepense(id);
---			alter table demande add foreign key (idFournisseur) references fournisseur(id);
 			alter table demande add foreign key (idRubrique) references rubrique(id);
 			alter table demande add foreign key (idSession) references sessionCd(id);
 
@@ -218,22 +218,22 @@ truncate table aviscdg cascade;
             alter table decision add foreign key (idDemande) references demande(id);
 
     -- ALTER UTILE
-        alter table sessioncd drop column iddirection;
+--        alter table sessioncd drop column iddirection;
 
 	-- INSERTION 		------------------------------------------
-			insert into etatFinal(designation) values ('OK'),('NOK'),('En attente');
-			insert into direction (designation) values ('DTI'),('ODC'),('DF'),('DRH');
+--			insert into etatFinal(designation) values ('OK'),('NOK'),('En attente');
+--			insert into direction (designation) values ('DTI'),('ODC'),('DF'),('DRH');
+--
+--
+----			insert into fournisseur(nom) values ('Socobis'),('Chocolat Robert');
+--            INSERT INTO rubrique (designation) VALUES ('Fournitures generales'),('achat nourrire'), ('Locaux'), ('Materiel informatique');
+--    -- Insert data into fournisseur table
+----            INSERT INTO fournisseur (nom)  VALUES ('Fournisseur X'), ('Hôtel Y'), ('Prestataire Z'), ('Fournisseur Logiciel');
+--            insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
 
-
---			insert into fournisseur(nom) values ('Socobis'),('Chocolat Robert');
-            INSERT INTO rubrique (designation) VALUES ('Fournitures generales'),('achat nourrire'), ('Locaux'), ('Materiel informatique');
-    -- Insert data into fournisseur table
---            INSERT INTO fournisseur (nom)  VALUES ('Fournisseur X'), ('Hôtel Y'), ('Prestataire Z'), ('Fournisseur Logiciel');
-            insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
-
-truncate table sessioncd cascade;
-truncate table demande cascade;
-truncate table titredepense cascade;
+--truncate table sessioncd cascade;
+--truncate table demande cascade;
+--truncate table titredepense cascade;
 
 -- Insert data into titreDepense table
 --INSERT INTO titreDepense (idDirection, idSession, designation)
@@ -253,69 +253,6 @@ truncate table titredepense cascade;
         -- active_dmd
 
         -- ACTIVE
-        create or replace view active as
-            (
-
-					select
-                    dm.id as id,
-
-                        dm.idTitreDepense as idTitre,
-                        coalesce(td.designation, 'sans titre')  as titre,
-                        dm.motif as motif,
-                        dm.montantHt as montantHt,
-                        dm.typeReference as typeReference,
-                        dm.nomReference as reference,
-                        dm.estRegularisation as estRegularisation,
-
-                        dm.comsPrescripteur as comsPrescripteur,
-                    -- dm.id_etatFinal as id_etatFinal,
-
-                        dm.idRubrique as idRubrique,
-                        r.designation as nomRubrique,
-
-                        dm.sousRubrique as sousRubrique,
-
-
-                        dm.idPeriode as idPeriode,
-                        p.designation as periode,
-
-                        dm.idDirection as idDirection,
-
-                        dm.typeDevise as devise,
-
-                        dm.fournisseur as fournisseur
-
-                from demande dm join periode p on p.id= dm.idPeriode
-                                join rubrique r on r.id =  dm.idRubrique
-
-                                full join titreDepense td on dm.idTitreDepense = td.id
-                where validationPrescripteur = TRUE
-                group by idTitre,dm.id ,td.id,p.id,r.id
-
-
-                );
-        create or replace view activeview as
-
-        (select * from detailDemande d where d.id =  45 )
-
-
-        create or replace view active as
-        (
-            select * from  detailDemande t
-            where t.validationPrescripteur = true and t.estSoumis=false
-        );
-
-        create or replace view brouillon as
-        (
-            select * from  detailDemande t
-            where t.validationPrescripteur = false and t.estSoumis = false
-        );
-
-        create or replace view attenteSession as
-        (
-            select * from  detailDemande t
-            where t.validationPrescripteur = true and t.estSoumis = true
-        );
 
 
         create or replace view detailDemande as
@@ -399,6 +336,26 @@ truncate table titredepense cascade;
                             group by idTitre,dm.id ,td.id,p.id,r.id,avisAchat.id,aviscdg.id,s.id
                 );
 
+        create or replace view active as
+        (
+            select * from  detailDemande t
+            where t.validationPrescripteur = true and t.estSoumis=false
+        );
+
+        create or replace view brouillon as
+        (
+            select * from  detailDemande t
+            where t.validationPrescripteur = false and t.estSoumis = false
+        );
+
+        create or replace view attenteSession as
+        (
+            select * from  detailDemande t
+            where t.validationPrescripteur = true and t.estSoumis = true
+        );
+
+
+
         -- fkuk hrjp bnzf ehbe
 
         create table decision
@@ -410,7 +367,6 @@ truncate table titredepense cascade;
         );
 
 
-insert into titredepense (iddirection,designation) values(1,'Kick off');
 
 
 
@@ -483,7 +439,7 @@ create or replace view validation as
 
 ---  FONCTION DE TRIGGER
 
----------
+--------- Trigger pour SESSION
         CREATE OR REPLACE FUNCTION ma_fonction_trigger() RETURNS TRIGGER AS $$
         BEGIN
             -- Logique de la fonction ici
@@ -506,13 +462,13 @@ create or replace view validation as
 
     DROP TRIGGER updating_fn_trig ON sessionCd;
 
----------
         CREATE TRIGGER updating_fn_trig
         AFTER INSERT
         ON sessionCd
         FOR EACH ROW
         EXECUTE PROCEDURE ma_fonction_trigger();
 
+---------
 
 --insert into sessionCd (ref,datecloture,tauxeur,tauxusd,tauxmga,idDirection) values ('CDDDDDDDD','2024-06-12',4000,4000,1,1);
 --
@@ -534,17 +490,19 @@ create or replace view validation as
 
 
 
-    CREATE OR REPLACE FUNCTION generate_identifiant(p_id INTEGER)
-    RETURNS TEXT AS $$
-    BEGIN
-        RETURN LPAD(p_id::TEXT || REPEAT('0', 8 - LENGTH(p_id::TEXT)), 8, '0');
-    END; $$ LANGUAGE plpgsql;
-
-    CREATE TRIGGER updating_cln_trig
-            AFTER INSERT
-            ON demande
-            FOR EACH ROW
-            EXECUTE PROCEDURE ma_fonction_trigger();
+--    CREATE OR REPLACE FUNCTION generate_identifiant(p_id INTEGER)
+--    RETURNS TEXT AS $$
+--    BEGIN
+--        RETURN LPAD(p_id::TEXT || REPEAT('0', 8 - LENGTH(p_id::TEXT)), 8, '0');
+--    END; $$ LANGUAGE plpgsql;
+--
+--
+--
+--    CREATE TRIGGER updating_cln_trig
+--            AFTER INSERT
+--            ON demande
+--            FOR EACH ROW
+--            EXECUTE PROCEDURE ma_fonction_trigger();
 
 
 
