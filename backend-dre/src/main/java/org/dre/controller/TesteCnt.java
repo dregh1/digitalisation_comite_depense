@@ -18,6 +18,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import org.dre.model.*;
 import org.dre.model.Periode;
 import org.dre.service.*;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +29,8 @@ import java.util.Objects;
 @Authenticated
 public class TesteCnt {
 
+    @Inject
+    JsonWebToken jwt;
     @Inject
     Mailer mailer;
 
@@ -388,14 +391,40 @@ public class TesteCnt {
     //refuser demande
 
     //
-    @GET
+    @DELETE
     @PermitAll               /* supprimer demande */
     @Path("/supprimerDemande/{idDemande}")
     public void supprimerDemande(
-            @PathParam("idDemande")@DefaultValue("") String id
+            @PathParam("idDemande")@DefaultValue("") Long id
 
     ) {
-        this.demandeService.deleteDemande(Long.valueOf(id));
+        System.out.println("#########################################");
+        this.demandeService.delete(id);
+    }
+
+    @POST
+    @Path("/demandeSoumise")
+    @RolesAllowed({"PRS","CDG","ACH"})
+    public Response notifierDemandeSoumise( List<MyMail> listEmail  ) {
+
+        System.out.println("I send mail");
+
+        for (MyMail  m : listEmail){
+            if(m.getEmail()!=null)
+            {
+
+                Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne demande soumise!");
+                System.out.println(m.getEmail())   ;
+                mailer.send(mail);
+            }
+
+
+        }
+
+        System.out.println("I sent mail")   ;
+
+        return Response.ok().build();
+
     }
 }
 
