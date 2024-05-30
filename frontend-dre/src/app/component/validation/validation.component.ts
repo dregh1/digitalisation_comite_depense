@@ -265,6 +265,7 @@ export class ValidationComponent implements OnInit {
     de: any,
     etatFinal: any
   ) {
+    
     setTimeout(() => {
       // Optionally, clear the error message
 
@@ -272,22 +273,25 @@ export class ValidationComponent implements OnInit {
       this.comsCd = nouvelleValeur ?? '';
       this.idPeriode = idPeriode;
       this.etatfinal = etatFinal;
-      this.enregistrer(de);
+      // this.enregistrer(de);
+
+
+      
       //console.log("la valeur ",nouvelleValeur);
-      this.enregistrer(de);
+      // this.enregistrer(de);
     }, 3000);
   }
   ///modication demande
   enregistrer(de: any) {
     //recuperation par detail
-    this.ValidationService.getdemande(de).subscribe((response) => {
+    this.ValidationService.getdemande(de)
+    .subscribe((response) => {
+
       this.demandes = response;
       //console.log(response,"////////////////");
-      this.demande.estRegularisation = Boolean(
-        this.demandes.estregularisation ?? ''
-      );
-      this.demande.idTitreDepense =
-        this.demandes.idTitreDepense?.toString() ?? '';
+      this.demande.estRegularisation = Boolean( this.demandes.estregularisation ?? '' );
+      
+      this.demande.idTitreDepense = this.demandes.idTitreDepense?.toString() ?? '';
       this.demande.typeReference = this.demandes.typereference ?? '';
       // this.demande.typereference=this.demande.typereference;
       this.demande.nomReference = this.demandes.nomReference ?? '';
@@ -300,13 +304,9 @@ export class ValidationComponent implements OnInit {
       this.demande.idDirection = this.demandes.iddirection?.toString() ?? '';
       this.demande.sousRubrique = this.demandes.sousRubrique?.toString() ?? '';
       this.demande.idRubrique = this.demandes.idrubrique?.toString() ?? '';
-      this.demande.validationPrescripteur = Boolean(
-        this.demandes.validationprescripteur ?? ''
-      );
-      this.demande.validationCdg = Boolean(this.demandes.validationCdg ?? '');
-      this.demande.validationAchat = Boolean(
-        this.demandes.validationAchat ?? ''
-      );
+      this.demande.validationPrescripteur = Boolean( this.demandes.validationprescripteur ?? '');
+      this.demande.validationCdg = Boolean( this.demandes.validationCdg ?? '');
+      this.demande.validationAchat = Boolean( this.demandes.validationAchat ?? ''      );
       this.demande.idPeriode = this.idPeriode?.toString() ?? '';
       this.demande.comsCd = this.comsCd ?? '';
       this.demande.etatFinal = this.etatfinal ?? '';
@@ -316,6 +316,8 @@ export class ValidationComponent implements OnInit {
 
       //this.setSelected(this.demandes.idPeriode?.toString() ?? "", "idPeriode");
       //console.log(this.demande);
+      
+      //VALIDATION Du SERVICE
       this.ValidationService.update(de, this.demande).subscribe((Response) => {
         console.log(Response);
         this.errorMessage = 'enregistré';

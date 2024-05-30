@@ -28,7 +28,7 @@ export class ConsultationComponent implements OnInit {
   [
     { value : "OK", item : "OK"},
     { value : "NOK", item : "NOK"},
-    { value : "En Attente", item : "En Attente"},
+    { value : "En_Attente", item : "En Attente"},
   ]
   seen = new Set();
   DonneExcels: DonneeExcel[] = [];donneesSansDoublons = [];

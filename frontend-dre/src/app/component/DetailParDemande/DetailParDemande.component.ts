@@ -50,7 +50,7 @@ export class TestComponent implements OnInit {
     idTitreDepense: '',
     nomReference: '',
     titre: '',
-    idFournisseur: '',
+    // idFournisseur: '',
     montantHt: '',
     idSession:'',
     fournisseur: '',
@@ -65,7 +65,7 @@ export class TestComponent implements OnInit {
     depense:'',
     dateCreation:'',
     identifiant:'',
-    dateSoumission:'00:00:00'
+    dateSoumission:''
   };
   departement:string | null='';
   titre = new Titre();
@@ -408,14 +408,14 @@ somme='+';
 
   //modication prescripteur
   update(): void {
-    console.log('moulle');
-    console.log(this.demande.idSession,'idsesssinkk');
-    
-    console.log(this.demande);
-    this.testeService.update(this.id, this.demande).subscribe((Response) => {
-      console.log(Response);
+
+    this.testeService.update(this.id, this.demande).subscribe((response) => {
+      
+      console.log("------------------------");
+      console.log(response);
       this.message = 'modié!';
     });
+
     this.errorMessage = 'Demande modié!';
     setTimeout(() => {
       this.errorStatus1 = false; // Hide the message by setting errorStatus to false
@@ -512,6 +512,7 @@ somme='+';
   refuserCdg() {
    
     this.demande.estRefuseCdg = true;
+    
     this.update();
     this.errorMessage='refusé';
   
