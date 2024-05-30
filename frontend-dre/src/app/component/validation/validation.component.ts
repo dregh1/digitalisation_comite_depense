@@ -21,6 +21,9 @@ import { SessionCd } from 'src/app/models/SessionCd';
 export class ValidationComponent implements OnInit {
   [x: string]: any;
     
+  //VALEURS A INSERER
+  demandeToInsert!: Demande;
+
   // VALEURS PAR DEFAUT
 
           isUp1 = false; // Initial state for first button
@@ -65,6 +68,8 @@ export class ValidationComponent implements OnInit {
             idperiode: '',
             comsCd: '',
             etatFinal: '',
+            identifiant:'',
+            idSession :'',
           };
           detail = {
             comsCd: '',
@@ -273,20 +278,29 @@ export class ValidationComponent implements OnInit {
       this.comsCd = nouvelleValeur ?? '';
       this.idPeriode = idPeriode;
       this.etatfinal = etatFinal;
-      // this.enregistrer(de);
-
-
+      this.enregistrer(de);
       
+
+
       //console.log("la valeur ",nouvelleValeur);
       // this.enregistrer(de);
     }, 3000);
   }
+
+  /*
+    valeur haseho
+
+    valeur hampidirina
+  */
+
   ///modication demande
   enregistrer(de: any) {
     //recuperation par detail
     this.ValidationService.getdemande(de)
     .subscribe((response) => {
-
+      console.log("---------------------------------------");
+      console.log(response);
+      
       this.demandes = response;
       //console.log(response,"////////////////");
       this.demande.estRegularisation = Boolean( this.demandes.estregularisation ?? '' );
@@ -310,15 +324,37 @@ export class ValidationComponent implements OnInit {
       this.demande.idPeriode = this.idPeriode?.toString() ?? '';
       this.demande.comsCd = this.comsCd ?? '';
       this.demande.etatFinal = this.etatfinal ?? '';
-      console.log('ITO zanii', this.demande.comsCd);
-      console.log('ito id', this.demande.idPeriode);
-      console.log('etainal', this.demande.etatFinal);
+      this.demande.identifiant = this.demandes.identifiant?? ''   ;
+      this.demande.idSession = this.demandes.idSession?.toString() ?? ''   ;
+      this.demande.id = this.demandes.id?.toString() ?? ''   ;
+
+      // console.log('ITO zanii', this.demande.comsCd);
+      // console.log('ito id', this.demande.idPeriode);
+      // console.log('etainal', this.demande.etatFinal);
+      // this.demande = this.
+      console.log(this.demande);
+
+      this.demandes.comsCd = this.comsCd ?? '';
+      this.demandes.idPeriode = parseInt(this.idPeriode??'');
+      this.demandes.etatFinal = this.etatfinal??'' ;
+
+console.log("----------------------------------");
+
+      console.log('comsCd---  ', this.demande.comsCd);
+      console.log('idPeriode  ', this.demande.idPeriode);
+      console.log('etatFinal  ', this.demande.etatFinal);
+console.log("----------------------------------");
+
+console.log(this.demandes);
+
+      // this.demande = this.demandes;
+
 
       //this.setSelected(this.demandes.idPeriode?.toString() ?? "", "idPeriode");
       //console.log(this.demande);
-      
+  
       //VALIDATION Du SERVICE
-      this.ValidationService.update(de, this.demande).subscribe((Response) => {
+      this.ValidationService.update(de, this.demandes).subscribe((Response) => {
         console.log(Response);
         this.errorMessage = 'enregistré';
         setTimeout(() => {
@@ -331,6 +367,8 @@ export class ValidationComponent implements OnInit {
       // this.d =  this.demande;
       // console.log(this.demande);
       //  this.ValidationService.updatexhr(parseFloat(de),this.demande);
+
+
     });
   }
   //exporter excel
