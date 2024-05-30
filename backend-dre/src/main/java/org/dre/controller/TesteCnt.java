@@ -413,7 +413,7 @@ public class TesteCnt {
             if(m.getEmail()!=null)
             {
 
-                Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne demande soumise!");
+                Mail mail = Mail.withText(m.getEmail(), "Demande soumise", "Bonjour "+m.getUsername()+",\nUne demande viens d'être soumise!");
                 System.out.println(m.getEmail())   ;
                 mailer.send(mail);
             }
