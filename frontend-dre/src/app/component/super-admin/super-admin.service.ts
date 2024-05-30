@@ -70,5 +70,12 @@ export class SuperAdminService {
     
   }
 
+  // les CDG
+  //http://localhost:8083/admin/realms/oma/users/13634f98-71b2-4122-b530-b258629fa7f5/groups
   
+  // les ACH
+  //http://localhost:8083/admin/realms/oma/roles/ACH/users
+  
+
+
 }

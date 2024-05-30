@@ -16,16 +16,16 @@ import { Demande } from 'src/app/models/Demande';
 })
 export class MenuDemandeComponent implements OnInit {
   role: string | null = '';
-  
+  isUp=false;
   token: string | null = '';
   DetailDemande: DetailDemande[] = [];
   brouillon: Brouillon[]=[];
   AttenteSession: DetailDemande[]=[];
   nomDirection: string | null = '';
   DonneExcels: DonneeExcel[] = [];
-  isbrouillon=true;listesessionActive=false;
-  brouillonActive=true;buttonTextColor = 'black';
-  brouilloncliqueActive=false;
+  listesessionActive=false;
+  buttonTextColor = 'black';
+  brouilloncliqueActive=false;Activedemande=false;Activedemandeclique=false;isbrouillon=false;brouillonActive=false;
   //CREATION SESSION
   direction = new Direction();
   demande = {
@@ -41,7 +41,6 @@ export class MenuDemandeComponent implements OnInit {
     idTitreDepense: '',
     nomReference: '',
     titre: '',
-    idFournisseur: '',
     montantHt: '',
     idSession:'',
     fournisseur: '',
@@ -53,8 +52,11 @@ export class MenuDemandeComponent implements OnInit {
     estRefuseCdg:false,
     estRefuseAchat:false,
     estSoumis:false,
-    depense:''
+    depense:'',
+    dateCreation:'',
+    identifiant:''
   };
+  groupedDetailDemandes: { [titre: string]: { [iddirection: string]: DetailDemande[] } } = {};
   demandes = new Demande();
 session=new SessionCd();
   idsession:string ='';
@@ -77,7 +79,11 @@ session=new SessionCd();
       
       //chercher ROLE 
           this.role = this.AuthenticationService.getRole(tableRole);
-    
+     if(this.role==='PRS'){
+      this.isbrouillon=true;this.brouillonActive=true;
+     }else{
+      this.Activedemande=true;this.Activedemandeclique=true;
+     }
       //chercher DIRECTION (groups) a partir du token
           const tableGROUPE = response['direction'];
   
@@ -110,9 +116,42 @@ session=new SessionCd();
                                             this.MenuDemandeService.search(this.direction.id?.toString() ??'',this.idsession.toString() ) .subscribe((donnees) => {
                                               this.DetailDemande = donnees;
                                               console.log(this.DetailDemande,"io data");
+
+                                              ///aichage groupé
+                                            //   this.groupedDetailDemandes = donnees.reduce((acc, item) => {
+                                            //     if (item.titre) {
+                                            //       if (!acc[item.titre]) {
+                                            //         acc[item.titre] = [];
+                                            //       }
+                                            //       acc[item.titre].push(item);
+                                            //     }
+                                            //     return acc;
+                                            //   }, {} as { [titre: string]: DetailDemande[] });
+                                            //   console.log(this.groupedDetailDemandes,'laichage gorupé');
                                               
+                                            //const listeOriginale= DetailDemande ;
+                                            donnees.forEach(demande => {
+                                              const titre = demande.titre?? '';
+                                              const iddirection = demande.iddirection?? '';
+                                            
+                                              // Si le titre n'est pas encore présent dans l'objet, initialisez-le
+                                              if (!(titre in this.groupedDetailDemandes)) {
+                                                this.groupedDetailDemandes[titre] = {};
+                                              }
+                                            
+                                              // Vérifiez si le tableau pour cette iddirection existe déjà
+                                              if (!this.groupedDetailDemandes[titre][iddirection]) {
+                                                // Si non, initialisez-le avec un tableau vide
+                                                this.groupedDetailDemandes[titre][iddirection] = [];
+                                              }
+                                            
+                                              // Ajoutez la demande au tableau correspondant
+                                              this.groupedDetailDemandes[titre][iddirection].push(demande);
                                             });
-      
+                                            
+                                            console.log(this.groupedDetailDemandes,'test groupe detaildemande');
+                                             });
+                                                
       
                                             //RECUPERATION brouillon
                                             this.MenuDemandeService.searchbrouillon(this.direction.id?.toString() ??'',this.idsession.toString() ) .subscribe((datas) => {
@@ -199,11 +238,23 @@ brouillonclique(){
   this.brouillonActive =true; 
   this.listesessionActive=false;
   this.brouilloncliqueActive=false;
-  }
+  this.Activedemande=false;
+  this.Activedemandeclique=false;
+}
   brouilloncliqueactive(){
     this.brouilloncliqueActive=true;
     this.isbrouillon=false;
     this.listesessionActive=true;
+    this.brouillonActive =false; 
+    this.Activedemande=false;
+    this.Activedemandeclique=false;
+  }
+  brouilloncliqueactivedemande(){
+    this.Activedemande=true;
+    this.brouilloncliqueActive=false;
+    this.isbrouillon=false;
+    this.listesessionActive=false;
+    this.Activedemandeclique=true;
     this.brouillonActive =false; 
   }
   annulerdemande(id:any){
@@ -221,23 +272,29 @@ brouillonclique(){
    this.demande.idDirection=this.demandes.iddirection?.toString() ?? '';
    this.demande.idTitreDepense=this.demandes.idtitre?.toString() ?? '';
    this.demande.nomReference=this.demandes.reference?.toString() ?? '';
-   this.demande.idFournisseur=this.demandes.idfournisseur?.toString() ?? '';
+   this.demande.fournisseur=this.demandes.fournisseur?.toString() ?? '';
    this.demande.montantHt=this.demandes.montantht?.toString() ?? '';
    this.demande.idPeriode=this.demandes.idperiode?.toString() ?? '';
    this.demande.typeReference=this.demandes.typereference?.toString() ?? '';
    this.demande.validationPrescripteur=Boolean(this.demandes.validationprescripteur);
    this.demande.estSoumis=Boolean(this.demandes.estSoumis);
    this.demande.depense=this.demandes.depense?.toString() ?? '';
-   
+   this.demande.dateCreation=this.demandes.dateCreation?.toString() ?? '';
+   this.demande.identifiant=this.demandes.identifiant?.toString()??'';
    console.log(this.demande,'itodemande ');
    this.demande.validationPrescripteur=false;
      this.demande.estSoumis=false;
     this.utilitaire.update(id, this.demande).subscribe((Response) => {
       console.log(Response,'modication ooooooooo');
+      this.AttenteSession=Response;
      });
     });
     
  
    
+  }
+  btnplus(){
+  
+    this.isUp=!this.isUp;
   }
 }

@@ -6,7 +6,7 @@ export class Demande {
     public idtitre?:number,
     public iddirection?: number,
     public motif?: string,
-    public idfournisseur?: number,
+    public fournisseur?: string,
     public devise?:number,
     public montantht?: number,
     public idrubrique?: number,

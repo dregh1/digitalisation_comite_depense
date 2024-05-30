@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-//import { DemandeModel } from 'src/app/models/Demande';
+import { DatePipe } from '@angular/common';
 import { Titre } from 'src/app/models/TitreDepense';
 import { Periode } from 'src/app/models/Periode';
 import { Fournisseur } from 'src/app/models/Fournisseur';
@@ -62,9 +62,12 @@ export class TestComponent implements OnInit {
     estRefuseCdg:false,
     estRefuseAchat:false,
     estSoumis:false,
-    depense:''
+    depense:'',
+    dateCreation:'',
+    identifiant:'',
+    dateSoumission:'00:00:00'
   };
-  
+  departement:string | null='';
   titre = new Titre();
 
 
@@ -102,17 +105,20 @@ export class TestComponent implements OnInit {
   message: string = '';
   idsession:string='';
 session=new SessionCd();
+datePipe:DatePipe;
   ///variable recuperation session
   existanceSession : boolean= false;
 
-
+somme='+';
   constructor(
-    private TesteService: TesteService,
+    private testeService: TesteService,
     private autheticationServ: AuthenticationService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private utilitaire:UtilitaireService
   ) {
+    ///initialisaaiton date
+    this.datePipe= new DatePipe('en-US');
     this.id = this.activatedRoute.snapshot.params['id'];
     
     // RECUPERATION ROLE , DIRECTION , NOM utilisateur
@@ -129,11 +135,12 @@ session=new SessionCd();
           {
             this.autheticationServ.getDirectionByName(this.nomDirection).subscribe(response =>{
                this.direction = response
-                this.direction.id = response.id;  
+                this.direction.id = response.id;
+                this.departement=response.designation?.toString()??'';  
                 console.log('blaoohi!!!!!!!!!!!!!!!!!',response);
     
                           ///recuperation session
-                          this.TesteService.checkSession(this.direction.id).subscribe((data) => {
+                          this.testeService.checkSession(this.direction.id).subscribe((data) => {
                             console.log("------------ session ------------");
                             console.log(data);
                             
@@ -156,7 +163,7 @@ session=new SessionCd();
                                         }
                                         
                                           //RECUPERATION active
-                                                this.TesteService.GetTitreParSession(this.direction.id?.toString() ??'' ) .subscribe((donnees) => {
+                                                this.testeService.GetTitreParSession(this.direction.id?.toString() ??'' ) .subscribe((donnees) => {
                                                   
                                                   this.titres = donnees;
                                                   console.log("--------------vvvvvvvv---------------");
@@ -177,10 +184,11 @@ session=new SessionCd();
       
     }
     
-
-    
   }
-  //calcul sur le reliquat
+  precedent()
+{
+  this.router.navigate(['/main/MenuDemande']);
+}  //calcul sur le reliquat
   calculerResultat() {
     this.reliquat =
       parseFloat(this.AvisCdg.montantBudgetMensuel) -
@@ -203,27 +211,27 @@ session=new SessionCd();
        subscribe((result)=>{ this.existanceAvisAchat = result;
        });
     //recuperation titre
-    // this.TesteService.getTitre().subscribe((data) => {
+    // this.testeService.getTitre().subscribe((data) => {
     //   this.titres = data;
     // });
    
     // recuperation ny periode
-    this.TesteService.getPeriode().subscribe((data) => {
+    this.testeService.getPeriode().subscribe((data) => {
       this.periodes = data;
     });
     // recuperation ny fournisseur
-    this.TesteService.getFournisseur().subscribe((data) => {
+    this.testeService.getFournisseur().subscribe((data) => {
       this.fournisseurs = data;
     });
     //recuperation rubrique
-    this.TesteService.getRubrique().subscribe((data) => {
+    this.testeService.getRubrique().subscribe((data) => {
       this.rubriques = data;
     });
    
     //  //recuperation titre
 
     //recuperation par detail
-    this.TesteService.getDetailDemandebyId(this.id).subscribe((response) => {
+    this.testeService.getDetailDemandebyId(this.id).subscribe((response) => {
       this.DetailDemande = response;
       
      
@@ -244,7 +252,6 @@ session=new SessionCd();
       this.demande.idPeriode = this.DetailDemande.idperiode?.toString() ?? '';
       this.demande.idDirection =this.DetailDemande.iddirection?.toString() ?? '';
       this.demande.idSession=this.DetailDemande.idSession?.toString() ?? '';
-      this.demande.idFournisseur =this.DetailDemande.idfournisseur?.toString() ?? '';
       this.demande.idTitreDepense = this.DetailDemande.idtitre?.toString() ?? '';
       this.demande.sousRubrique =this.DetailDemande.sousrubrique?.toString() ?? '';
       this.demande.idRubrique = this.DetailDemande.idrubrique?.toString() ?? '';
@@ -255,6 +262,8 @@ session=new SessionCd();
       this.demande.estRefuseAchat=Boolean(this.DetailDemande.estRefuseAchat ?? '' );
       this.demande.estSoumis=Boolean(this.DetailDemande.estsoumis);
       this.demande.depense=this.DetailDemande.depense??'';
+      this.demande.dateCreation=this.DetailDemande.dateCreation?.toString() ?? '';
+      this.demande.identifiant=this.DetailDemande.identifiant?.toString()??'';
        console.log(this.DetailDemande);
        console.log('LLLOOGKOJ');
        console.log(this.demande,'demande iioiooo');
@@ -267,7 +276,7 @@ session=new SessionCd();
     });
     
     //////////Affichage du commentaire Cdg
-    this.TesteService.getCdgById(this.id).subscribe((response) => {
+    this.testeService.getCdgById(this.id).subscribe((response) => {
       this.aviscdgs = response;
      // console.log(this.aviscdgs.id,'ito id cdg');
       //  console.log(this.AvisCdg.id, 'ID null');
@@ -293,7 +302,7 @@ session=new SessionCd();
 
 
       // recuperation avisAchat
-      this.TesteService.getAchatById(this.id).subscribe((response) => {
+      this.testeService.getAchatById(this.id).subscribe((response) => {
         this.avisAchat = response;
         try{
         this.AvisAchat.id= this.avisAchat.id?.toString() ?? '';
@@ -304,8 +313,10 @@ session=new SessionCd();
   }
   //toggle ieldsetprescripteur
   toggleUp() {
+    this.somme='-';
     this.isUp1 = !this.isUp1;
   }
+  
   //toggle CDG
   toggleDown() {
     this.isUp2 = !this.isUp2;
@@ -314,6 +325,10 @@ session=new SessionCd();
   //toggle ieldset aCHAT
   toggleIcon() {
     this.isUp3 = !this.isUp3;
+  }
+  getormatdate(){
+    const date= new Date();
+    return this.datePipe.transform(date,'yyyy-MM-dd');  
   }
   //ajout id titre
   setSelected(id: string) {
@@ -346,15 +361,25 @@ session=new SessionCd();
   //validation prescripteur
   valider(): void {
     
-   // console.log(this.idsession,'+///////////sessionnnn///////////////');
-    //this.demande.idSession=this.idsession;
-    this.demande.validationPrescripteur = true;
-    this.demande.estSoumis=true;
-    console.log(this.demande,'demande vaovao');
+    if(this.idsession===''){
+      console.log('vide session');
+    }else{
+      console.log(this.idsession,'+///////////sessionnnn///////////////');
+       this.demande.idSession=this.idsession;
+       this.demande.dateSoumission=this.getormatdate()?.toString() ?? '';
+
+       this.demande.validationPrescripteur = true;
+        this.demande.estSoumis=false;
+       console.log(this.demande,'demande vaovao');
+       
+       this.updatetitre();
+       console.log(this.demande.estSoumis,'soumission');
+       this.update();
+       console.log(this.demande,'e mis datepipe');
+      }
+  
     
-    this.updatetitre();
-    console.log(this.demande.estSoumis,'soumission');
-    this.update();
+    
     //this.utilitaire.getTokenAdmin();
   }
   //modication prescripteur
@@ -363,7 +388,7 @@ session=new SessionCd();
     console.log(this.idsession,'idsessionjjjjjj');
     
     //recuperation titre by id
-    this.TesteService.gettitreById(parseInt(this.demande.idTitreDepense)).subscribe((data) => {
+    this.testeService.gettitreById(parseInt(this.demande.idTitreDepense)).subscribe((data) => {
       this.titre = data;
     console.log(this.titre,'ito ');
     this.titredepense.idDirection=this.titre.idDirection?.toString() ?? '';;
@@ -371,7 +396,7 @@ session=new SessionCd();
     this.titredepense.idSession = this.idsession ??"";
     console.log(this.titredepense,'juu');
             ///modication titre
-            this.TesteService.updatetitredepense(parseInt(this.demande.idTitreDepense), this.titredepense).subscribe((Response) => {
+            this.testeService.updatetitredepense(parseInt(this.demande.idTitreDepense), this.titredepense).subscribe((Response) => {
               console.log(Response);
               this.message = 'modié!';
             });
@@ -387,7 +412,7 @@ session=new SessionCd();
     console.log(this.demande.idSession,'idsesssinkk');
     
     console.log(this.demande);
-    this.TesteService.update(this.id, this.demande).subscribe((Response) => {
+    this.testeService.update(this.id, this.demande).subscribe((Response) => {
       console.log(Response);
       this.message = 'modié!';
     });
@@ -409,7 +434,7 @@ session=new SessionCd();
   //Ajout titre demande
   Ajouttitre() {
     this.titredepense.idSession = this.DetailDemande.idSession ??""; 
-    this.TesteService.posttitre(this.titredepense).subscribe((response) => {
+    this.testeService.posttitre(this.titredepense).subscribe((response) => {
       console.log(response);
       this.ajoutOpt(response.id, response.designation);
     });
@@ -442,7 +467,7 @@ session=new SessionCd();
       //recuperation ID
       this.AvisCdg.idDemande = this.id?.toString() ?? '';
       console.log(this.AvisCdg);
-      this.TesteService.postCdg(this.AvisCdg).subscribe((Response) => {
+      this.testeService.postCdg(this.AvisCdg).subscribe((Response) => {
         console.log(Response);
         this.AvisCdg.id = Response.id;
         //manova id cdg
@@ -470,7 +495,7 @@ session=new SessionCd();
    
     console.log(this.AvisCdg.id,"io id");
     
-    this.TesteService.updateCdg(
+    this.testeService.updateCdg(
       parseFloat(this.AvisCdg.id),
       this.AvisCdg
     ).subscribe((Response) => {
@@ -523,7 +548,7 @@ session=new SessionCd();
     
       this.AvisAchat.idDemande = this.id?.toString() ?? '';
       console.log(this.AvisAchat);
-      this.TesteService.postAchat(this.AvisAchat).subscribe((Response) => {
+      this.testeService.postAchat(this.AvisAchat).subscribe((Response) => {
         console.log(Response);
         console.log('ok');
         this.AvisAchat.id= Response.id;
@@ -546,7 +571,7 @@ session=new SessionCd();
    modificationAchat() {
     this.AvisAchat.idDemande = this.id?.toString() ?? '';
 
-    this.TesteService.updateAchat(
+    this.testeService.updateAchat(
       parseFloat(this.AvisAchat.id),
       this.AvisAchat
     ).subscribe((Response) => {
@@ -584,4 +609,27 @@ session=new SessionCd();
       console.log(this.demande,'demand vaovao');
       
     }
+
+    //supprimer demande
+    supprimationDemande(){    
+    console.log(this.id);
+
+      this.testeService.supprimerDemande(this.id)
+      .subscribe((response)=>{},(error)=>{console.log(error);
+      });
+      
+
+      this.demande.estRegularisation=false;
+      this.demande.idRubrique='';
+      this.demande.idTitreDepense='';
+      this.demande.comsPrescripteur='';
+      this.demande.devise='';
+      this.demande.idPeriode='';
+      this.demande.depense='';
+      this.demande.fournisseur='';
+      this.demande.sousRubrique='';
+      this.demande.typeDevise='';
+      this.demande.dateCreation='';
+    }
+
   }

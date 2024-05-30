@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SuperAdminService } from './super-admin.service';
 import { User } from 'src/app/models/User';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { UtilitaireService } from 'src/app/service/utilitaire.service';
 
 @Component({
   selector: 'app-super-admin',
@@ -17,7 +18,7 @@ export class SuperAdminComponent implements OnInit {
   resultatRecherche : User[] = [];
 
   rola : string = 'ACH';
-  constructor(private superAdm : SuperAdminService, private http: HttpClient) { }
+  constructor(private superAdm : SuperAdminService, private http: HttpClient , private utilitaire : UtilitaireService) { }
 
   ngOnInit(): void {
     this.superAdm.getTokenAdmin();
@@ -128,5 +129,10 @@ export class SuperAdminComponent implements OnInit {
     console.log("------A------");
     console.log(this.iduser);
     
+  }
+
+  //teste envoye mail
+  envoyerMail(){
+    this.utilitaire.sendMail();
   }
 }
