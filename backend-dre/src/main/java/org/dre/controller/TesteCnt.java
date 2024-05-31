@@ -215,7 +215,8 @@ public class TesteCnt {
             @QueryParam("validCdg")@DefaultValue("") String  validCdg
 
     )  {
-
+        //remplacement
+        statut = statut.replace("%20", " ");
         // Récupérer les données depuis PostgreSQL
         List<DetailDemande> detailDemandes  = detailDemandeService.chercher (idDirection,motif,session,idFournisseur,dateDebut,dateFin,statut,validAchat,validCdg);
         return Response.ok(detailDemandes).build();
@@ -413,7 +414,30 @@ public class TesteCnt {
             if(m.getEmail()!=null)
             {
 
-                Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne demande soumise!");
+                Mail mail = Mail.withText(m.getEmail(), "Demande soumise", "Bonjour "+m.getUsername()+",\nUne demande viens d'être soumise!");
+                System.out.println(m.getEmail())   ;
+                mailer.send(mail);
+            }
+
+
+        }
+
+        System.out.println("I sent mail")   ;
+
+        return Response.ok().build();
+
+    }
+    @POST
+    @Path("/demandeRefuse")
+    @RolesAllowed({"PRS","CDG","ACH"})
+    public Response emailDemandeRefuse( List<MyMail> listEmail  ) {
+
+        System.out.println("I send mail");
+
+        for (MyMail  m : listEmail){
+            if(m.getEmail()!=null)
+            {
+                Mail mail = Mail.withText(m.getEmail(), "Demande refusé", "Bonjour "+m.getUsername()+",\nUne demande a été refusé dans votre direction!");
                 System.out.println(m.getEmail())   ;
                 mailer.send(mail);
             }

@@ -100,7 +100,7 @@ truncate table aviscdg cascade;
                         comsCd text,
 						estSupprime boolean default false,
 						dateCreation timestamp default now(),
-						dateSoumission timestamp,
+						dateSoumission timestamp default now(),
 						identifiant varchar(50),
 						estRefuseAchat boolean default false,
                         estRefuseCdg boolean default false,
@@ -281,7 +281,7 @@ truncate table aviscdg cascade;
                         p.designation as periode,
 
                         dm.idDirection as idDirection,
-
+                        dir.designation as direction,
                         dm.idSession as idSession,
                         dm.typeDevise as devise,
                         dm.validationPrescripteur,
@@ -329,11 +329,12 @@ truncate table aviscdg cascade;
                                 left join avisAchat on avisAchat.idDemande =  dm.id
                                 left join avisCdg on aviscdg.idDemande  = dm.id
                                 left join sessionCd s on s.id = dm.idSession
+                                left join direction dir on dir.id = dm.idDirection
 --                                where
 --                                        dm.validationAchat =  true
 --                                    and dm.validationCdg =  true
 --                                    and dm.validationPrescripteur =  true
-                            group by idTitre,dm.id ,td.id,p.id,r.id,avisAchat.id,aviscdg.id,s.id
+                            group by idTitre,dm.id ,td.id,p.id,r.id,avisAchat.id,aviscdg.id,s.id,direction
                 );
 
         create or replace view active as
@@ -520,3 +521,8 @@ create or replace view validation as
     CREATE  TRIGGER insert_demande_trigger
     BEFORE INSERT ON demande
     FOR EACH ROW EXECUTE PROCEDURE generate_identifiant_trigger();
+
+
+
+
+select id, validationprescripteur, validationcdg, validationachat from active;

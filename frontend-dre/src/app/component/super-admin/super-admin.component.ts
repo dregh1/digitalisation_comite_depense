@@ -35,10 +35,11 @@ export class SuperAdminComponent implements OnInit {
             const users : User[] =[];
             for(let i = 0 ; i<data.length ; i++)
             { 
-              const user = new User();
-              user.id = data[i].id;
-              user.lastName = data[i].lastName;
-              user.firstName = data[i].firstName;
+              const user = new User(data[i].id,
+                data[i].firstName,
+                data[i].lastName
+                );
+
               users.push(user);
             }
             this.listUserExistant = users;
@@ -133,6 +134,6 @@ export class SuperAdminComponent implements OnInit {
 
   //teste envoye mail
   envoyerMail(){
-    this.utilitaire.sendMail();
+    this.superAdm.getEmailSoumission();
   }
 }

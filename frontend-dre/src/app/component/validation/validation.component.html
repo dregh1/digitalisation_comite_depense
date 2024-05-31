@@ -212,9 +212,9 @@
                                     >
                                       <option
                                         *ngIf="
-                                          this.groupTitle.value[i].etatFinal === 'En Attente'
+                                          this.groupTitle.value[i].etatFinal === 'En attente'
                                         "
-                                        [ngValue]="'En Attente'"
+                                        [ngValue]="'En attente'"
                                         selected
                                       >
                                         En Attente
@@ -235,11 +235,11 @@
                                       </option>
                                       <option
                                         *ngIf="
-                                          this.groupTitle.value[i].etatFinal == 'OK' ||
-                                          this.groupTitle.value[i].etatFinal == 'NOK'
+                                          this.groupTitle.value[i].etatFinal === 'OK' ||
+                                          this.groupTitle.value[i].etatFinal === 'NOK'
                                         "
                                       >
-                                        En Attente
+                                        En attente
                                       </option>
                                       <option
                                         *ngIf="this.groupTitle.value[i].etatFinal === 'OK'"
@@ -253,12 +253,12 @@
                                       </option>
                   
                                       <option
-                                        *ngIf="this.groupTitle.value[i].etatFinal === 'En Attente'"
+                                        *ngIf="this.groupTitle.value[i].etatFinal === 'En attente'"
                                       >
                                       OK
                                       </option>
                                       <option
-                                        *ngIf="this.groupTitle.value[i].etatFinal === 'En Attente'"
+                                        *ngIf="this.groupTitle.value[i].etatFinal === 'En attente'"
                                       >
                                       NOK
                                       </option>
@@ -273,7 +273,7 @@
                                         OK
                                       </option>
                                       <option *ngIf="!this.groupTitle.value[i].etatFinal">
-                                        En Attente
+                                        En attente
                                       </option>
                                     </select>
                                   </td>
@@ -391,12 +391,12 @@
                         >
                           <option
                             *ngIf="
-                              this.DetailDemande[i].etatFinal === 'En Attente'
+                              this.DetailDemande[i].etatFinal === 'En attente'
                             "
-                            [ngValue]="'En Attente'"
+                            [ngValue]="'En attente'"
                             selected
                           >
-                            En Attente
+                            En attente
                           </option>
                           <option
                             *ngIf="this.DetailDemande[i].etatFinal === 'NOK'"
@@ -418,7 +418,7 @@
                               this.DetailDemande[i].etatFinal == 'NOK'
                             "
                           >
-                            En Attente
+                            En attente
                           </option>
                           <option
                             *ngIf="this.DetailDemande[i].etatFinal === 'OK'"
@@ -432,12 +432,12 @@
                           </option>
 
                           <option
-                            *ngIf="this.DetailDemande[i].etatFinal === 'En Attente'"
+                            *ngIf="this.DetailDemande[i].etatFinal === 'En attente'"
                           >
                            OK
                           </option>
                           <option
-                            *ngIf="this.DetailDemande[i].etatFinal === 'En Attente'"
+                            *ngIf="this.DetailDemande[i].etatFinal === 'En attente'"
                           >
                            NOK
                           </option> 
@@ -449,7 +449,7 @@
                             OK
                           </option>
                           <option *ngIf="!this.DetailDemande[i].etatFinal">
-                            En Attente
+                            En attente
                           </option>
                         </select>
                       </td>

@@ -274,7 +274,7 @@ brouillonclique(){
    this.demande.nomReference=this.demandes.reference?.toString() ?? '';
    this.demande.fournisseur=this.demandes.fournisseur?.toString() ?? '';
    this.demande.montantHt=this.demandes.montantht?.toString() ?? '';
-   this.demande.idPeriode=this.demandes.idperiode?.toString() ?? '';
+   this.demande.idPeriode=this.demandes.idPeriode?.toString() ?? '';
    this.demande.typeReference=this.demandes.typereference?.toString() ?? '';
    this.demande.validationPrescripteur=Boolean(this.demandes.validationprescripteur);
    this.demande.estSoumis=Boolean(this.demandes.estSoumis);

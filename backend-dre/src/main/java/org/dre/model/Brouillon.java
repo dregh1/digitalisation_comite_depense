@@ -54,6 +54,15 @@ public class Brouillon  {
     private Timestamp dateCreation ;
     private Timestamp dateSoumission ;
 
+
+    private String direction;
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
     public Timestamp getDateCreation() {
         return dateCreation;
     }

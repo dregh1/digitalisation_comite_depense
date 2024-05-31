@@ -75,7 +75,104 @@ export class SuperAdminService {
   
   // les ACH
   //http://localhost:8083/admin/realms/oma/roles/ACH/users
-  
 
+  // async getEmailSoumission(): Promise<MyMail[]> {
+  //   const urlAchat = "http://localhost:8083/admin/realms/oma/roles/ACH/users";
+  //   const urlCdg = "http://localhost:8083/admin/realms/oma/roles/CDG/users";
+  
+  //   const headers = this.getHeadersAdmin();
+  //   try {
+  //     const httpResponse = await this.http.get<any>(urlAchat, { headers }).toPromise();
+  //     const httpResponseCdg = await this.http.get<any>(urlCdg, { headers }).toPromise();
+  
+  //     if (!httpResponse) {
+  //       throw new Error('Aucune réponse valide reçue pour la liste ACH');
+  //     }
+  
+  //     if (!httpResponseCdg) {
+  //       throw new Error('Aucune réponse valide reçue pour la liste CDG');
+  //     }
+  
+  //     const responseAch = httpResponse; // Assurez-vous que la réponse contient les données attendues
+  //     const responseCdg = httpResponseCdg; // Assurez-vous que la réponse contient les données attendues
+  
+  //     const mails: MyMail[] = [];
+  //     for (let i = 0; i < responseAch.length; i++) {
+  //       if (responseAch[i].hasOwnProperty('email') && responseAch[i].hasOwnProperty('username')) {
+  //         const oneMail = new MyMail(responseAch[i].email, responseAch[i].username);
+  //         mails.push(oneMail);
+  //       }
+  //     }
+  
+  //     for (let i = 0; i < responseCdg.length; i++) {
+  //       if (responseCdg[i].hasOwnProperty('email') && responseCdg[i].hasOwnProperty('username')) {
+  //         const oneMail = new MyMail(responseCdg[i].email, responseCdg[i].username);
+  //         mails.push(oneMail);
+  //       }
+  //     }
+  
+  //     console.log('_-_-_-_-_-_-_-_-_-_-__-_-_-_-_-_-_-_-_-_-_');
+      
+  //     console.log(mails); // Pour le débogage
+  //     return mails; // Retourne le tableau de MyMail
+  //   } catch (error) {
+  //     console.error(error);
+  //     throw error; // Propage l'erreur si nécessaire
+  //   }
+  // }
+
+
+  async getEmailSoumission(): Promise<MyMail[]> {
+  
+    const urlAchat = "http://localhost:8083/admin/realms/oma/roles/ACH/users";
+    const urlCdg = "http://localhost:8083/admin/realms/oma/roles/CDG/users";
+  
+    const headers = this.getHeadersAdmin();
+    try {
+      const httpResponse = await this.http.get<any>(urlAchat, { headers }).toPromise();
+      const httpResponseCdg = await this.http.get<any>(urlCdg, { headers }).toPromise();
+      
+      if (!httpResponse  ) {
+        // console.error('Aucune réponse valide reçue', httpResponse);
+        throw new Error('Aucune réponse valide reçue pour la liste ACH');
+      }
+
+      if (!httpResponseCdg  ) {
+        // console.error('Aucune réponse valide reçue', httpResponseCdg);
+        throw new Error('Aucune réponse valide reçue pour la liste CDG');
+      }
+
+      const responseAch = httpResponse; // Assurez-vous que la réponse contient les données attendues
+      const responseCdg = httpResponseCdg; // Assurez-vous que la réponse contient les données attendues
+
+      const mails: MyMail[] = [];
+      for (let i = 0; i < responseAch.length; i++) {
+        if (responseAch[i].hasOwnProperty('email') && responseAch[i].hasOwnProperty('username')) {
+          const oneMail = new MyMail(responseAch[i].username, responseAch[i].email);
+          mails.push(oneMail);
+        }
+      }
+
+      for (let i = 0; i < responseCdg.length; i++) {
+        if (responseCdg[i].hasOwnProperty('email') && responseCdg[i].hasOwnProperty('username')) {
+          const oneMail = new MyMail( responseCdg[i].username,responseCdg[i].email);
+          // const oneMail = new MyMail();
+          // oneMail.email = responseCdg[i].email;
+          // oneMail.username = responseCdg[i].username;
+          mails.push(oneMail);
+        }
+      }
+
+
+      console.log('_-_-_-_-_-_-_-_-_-_-__-_-_-_-_-_-_-_-_-_-_');
+      
+      console.log(mails); // Pour le débogage
+      return mails; // Retourne le tableau de MyMail
+    } catch (error) {
+      console.error(error);
+      throw error; // Propage l'erreur si nécessaire
+    }
+  }
+ 
 
 }

@@ -4,6 +4,9 @@
       <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
         Prescripteur
       </button>
+      <button type="button" class="btn btn-primary mx-3"(click)="notifierPrsRefus(this.demande.direction)" >refus
+      </button> 
+
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
       <div class="accordion-body">
@@ -388,6 +391,7 @@
                     <div class="error-message">
                       <p class="text-info">{{ errorMessage }}</p>
                     </div>
+                   
                     <button type="button" class="btn btn-primary mx-3"(click)="enregistrerCdg()" >Enregistrer</button> 
                     <button type="button" class="btn btn-primary mx-3" *ngIf="this.existanceAvisCdg === true" (click)="modificationCdg()" >Modifier</button> 
                     <button type="button" class="btn btn-primary mx-3"(click)="refuserCdg()">Refuser</button>  
