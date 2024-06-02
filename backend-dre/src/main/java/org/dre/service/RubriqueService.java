@@ -20,6 +20,16 @@ public class RubriqueService {
 //        RubriqueRepository.persist(Rubrique);
     }
 
+    @Transactional
+    public void createFromString(List<String> listRubrique) {
+        for ( String s : listRubrique )
+        {
+            Rubrique r = new Rubrique();
+            r.setDesignation(s);
+            Rubrique personnelMerged = rubriqueRepository.getEntityManager().merge(r);
+        }
+    }
+
     public List<Rubrique> getAll() {
         return rubriqueRepository.listAll();
     }

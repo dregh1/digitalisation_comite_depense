@@ -1,11 +1,13 @@
 import { HttpParams, HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { MyMail } from 'src/app/models/MyMail';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SuperAdminService {
+  private baseUrl = 'http://localhost:8080/';
 
   constructor(private http: HttpClient) { }
 
@@ -175,4 +177,24 @@ export class SuperAdminService {
   }
  
 
+  //insertion de rubrique en masse
+  insertionRubriques(formData: string[]): Observable<any> {
+
+    const headers = this.getHeaders();
+    return this.http.post<string[]>(this.baseUrl + 'teste/rubrique/add', formData, {
+      headers,
+    });
+
+  }
+
+  private getHeaders(): HttpHeaders {
+    const token = sessionStorage.getItem('token'); // Replace with your token retrieval logic
+
+    if (token) {
+      return new HttpHeaders({ Authorization: `Bearer ${token}` });
+    } else {
+      // Handle the case where no token is found (e.g., throw an error or redirect to login)
+      throw new Error('No authorization token found');
+    }
+  }
 }

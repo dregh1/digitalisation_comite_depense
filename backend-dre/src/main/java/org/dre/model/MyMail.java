@@ -4,6 +4,28 @@ public class MyMail {
     private String username;
     private String email;
 
+    private String roleAuteur;
+
+    private String reference;
+
+
+
+    public String getRoleAuteur() {
+        return roleAuteur;
+    }
+
+    public void setRoleAuteur(String roleAuteur) {
+        this.roleAuteur = roleAuteur;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
     public String getUsername() {
         return username;
     }

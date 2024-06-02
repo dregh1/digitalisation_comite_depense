@@ -56,7 +56,8 @@ public class TesteCnt {
 
     @Inject
     DemandeService demandeService;
-
+    @Inject
+    RubriqueService rubriqueService;
     @Inject
     ActiveService activeService;
 
@@ -437,7 +438,15 @@ public class TesteCnt {
         for (MyMail  m : listEmail){
             if(m.getEmail()!=null)
             {
-                Mail mail = Mail.withText(m.getEmail(), "Demande refusé", "Bonjour "+m.getUsername()+",\nUne demande a été refusé dans votre direction!");
+                Mail mail = Mail.withText(m.getEmail(), "Demande refusée", "Bonjour "+m.getUsername()+",\n" +
+                    "\nUne demande ayant la référence : "+ m.getReference() +" a été refusée dans votre direction!"
+                    +"\n\n" +
+                    "Cordialement" +
+
+                    "\n\n----------------\n" +
+                    "Service : "+m.getRoleAuteur()+
+                    "\nOrange Madagascar \n"
+                );
                 System.out.println(m.getEmail())   ;
                 mailer.send(mail);
             }
@@ -448,6 +457,16 @@ public class TesteCnt {
         System.out.println("I sent mail")   ;
 
         return Response.ok().build();
+
+    }
+
+    @POST
+    @Path("/rubrique/add")
+    public Response ajoutRubrique (List<String> rubrique)
+    {
+
+        rubriqueService.createFromString(rubrique);
+        return Response.status(Response.Status.CREATED).entity(rubrique).build();
 
     }
 }

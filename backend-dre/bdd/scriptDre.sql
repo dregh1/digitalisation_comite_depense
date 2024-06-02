@@ -144,7 +144,7 @@ truncate table aviscdg cascade;
 		create table rubrique 
 				(
 					id serial primary key,
-					designation varchar(50)
+					designation varchar(100)
 				);
 
 
