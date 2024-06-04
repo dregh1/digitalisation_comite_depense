@@ -6,24 +6,12 @@ import { Direction } from 'src/app/models/Direction';
 import { SessionCd } from 'src/app/models/SessionCd';
 import { Observable } from 'rxjs';
 import { DonneeExcel } from 'src/app/models/DonneExcel';
-import { Demande } from 'src/app/models/Demande';
 @Component({
   selector: 'app-consultation',
   templateUrl: './consultation.component.html',
   styleUrls: ['./consultation.component.scss'],
 })
 export class ConsultationComponent implements OnInit {
-  isDisabled = true;
-  isChecked = false;
-  idDemandeAMettreEnBrouillon:  number [] = [];
-
-
-  //elements de pagination
-  items = []; // Vos données ici
-  currentPage = 0;
-  pageSize = 5; // Nombre d'éléments par page
-
-
   demande = {
     statut: '',
     SessionCd: '',
@@ -40,7 +28,7 @@ export class ConsultationComponent implements OnInit {
   [
     { value : "OK", item : "OK"},
     { value : "NOK", item : "NOK"},
-    { value : "En attente", item : "En attente"},
+    { value : "En Attente", item : "En Attente"},
   ]
   seen = new Set();
   DonneExcels: DonneeExcel[] = [];donneesSansDoublons = [];
@@ -176,35 +164,5 @@ exportToExcel(): void {
   this.consultationService.exportToExcel(donneesUniques, 'MyData.xlsx');
 }
 
-// ON CHECKED check box
-onchangeCheckBox(demande : DetailDemande)
-{
-  console.log("------------------------------");
-  console.log(demande);
-  
-  this.ajoutEnleve(demande.id, this.idDemandeAMettreEnBrouillon)
-  
-  if(this.idDemandeAMettreEnBrouillon.length ===0)
-  {
-    this.isDisabled = true;
-  }else this.isDisabled = false;  
-  console.log(this.idDemandeAMettreEnBrouillon);
-  
-}
-
-ajoutEnleve(id : number | undefined , table : number [])
-{
-  if(id !== undefined)
-  if(table.includes(id))
-  {
-    const index = table.indexOf(id);
-    table.splice(index, 1);
-  }else {
-
-    table.push(id);
-  
-  }
-  
-}
 
 }

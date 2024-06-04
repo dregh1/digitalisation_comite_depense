@@ -10,11 +10,6 @@ import { AvisCdg } from 'src/app/models/AvisCdg';
 import { AvisAchat } from 'src/app/models/AvisAchat';
 import { DetailDemande } from 'src/app/models/DetailDemande';
 import { HttpHeaders } from '@angular/common/http';
-import { MyMail } from 'src/app/models/MyMail';
-import { SuperAdminService } from '../super-admin/super-admin.service';
-import { KeycloakService } from 'src/app/service/keycloak.service';
-import { Token } from '@angular/compiler';
-import { User } from 'src/app/models/User';
 @Injectable({
   providedIn: 'root',
 })
@@ -26,7 +21,7 @@ export class TesteService {
   private baseUrl3 = 'http://localhost:8080/cdg';
   private baseUrl2 = 'http://localhost:8080/prescripteur';
 
-  constructor(private http: HttpClient, private supAdm : SuperAdminService , private keycloakServ : KeycloakService) {}
+  constructor(private http: HttpClient) {}
   //maka authorization
   private getHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('token'); // Replace with your token retrieval logic
@@ -215,100 +210,5 @@ export class TesteService {
 
     return this.http.delete<any>(`${this.baseUrl}/supprimerDemande/${id}`, { headers, });
   } 
-
-  notifSoumission() {
-    const headers = this.getHeaders();
-
-    let emails : MyMail;
-    this.supAdm.getEmailSoumission()
-    .then((emails: MyMail[]) => {   
-      console.log("yessssssssssssssssssssssssssssssssssss");
-      console.log(emails);
-      return this.http.post<any>(this.baseUrl + '/demandeSoumise', emails, { headers, })
-      .subscribe(
-        (response)=>{},
-
-        (error)=>{console.error(error);
-        ;}
-        
-        );
-
-    });
-  }
-
-  //notification en cas de refus
-  notifApresRefus(direction: string )
-  {
-    let t1 : User []= [];
-    let t2 : User []= [];
-    let tableauPrs : MyMail [] = [];
-    
-    this.keycloakServ.getMembreGroupe(direction)
-    .then((resu)=>{
-      // console.log('ehehehehehehehheh');
-      // console.log(resu);
-
-      //e1
-      t1 = resu;
-
-
-        //e2
-            this.keycloakServ.getMembreRole("PRS")
-            .then((resu2)=>{
-              // console.log('hohohohohohohohoh');
-              // console.log(resu2);
-                t2 = resu2;
-
-                console.log('hhhhhhhhhhhhhhhhhhhhhhhh');
-                
-                console.log(t1);
-                console.log(t2);
-              
-                tableauPrs = this.keycloakServ.findMatchingUsers(t1 ,t2 );
-
-                console.log(tableauPrs);
-
-                // envoye mail
-                
-                this.mailApresRefuse(tableauPrs);
-
-
-            });
-
-    });
- 
-    // this.keycloakServ.getMembreRole("PRS")
-    // .then((resu)=>{
-    //   console.log('hohohohohohohohoh');
-    //   console.log(resu);
-    // });
-
-    
-    
-     
-    // const newLocal = this.keycloakServ.getTokenAdmin()
-    //   .then((tokenAdmin: string | null) => {
-
-    //     console.log("-_-_-_-_-_-_-_-__-_-_-_-_-_-");
-    //     console.log(tokenAdmin);
-
-    //   });
-  }
-
-  mailApresRefuse(emails : MyMail[])
-  {
-    const headers = this.getHeaders();
-
-   
-  return this.http.post<any>(this.baseUrl + '/demandeRefuse', emails, { headers, })
-      .subscribe(
-        (response)=>{},
-
-        (error)=>{console.error(error);
-        ;}
-        
-        );
-
-  }
-
+  
 }

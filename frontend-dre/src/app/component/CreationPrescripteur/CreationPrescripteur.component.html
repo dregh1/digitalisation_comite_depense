@@ -19,7 +19,7 @@
                      
                           <div class="col-sm-4 col-md-6 mb-3">
                             <div class="mb-3">
-                              <label for="email" id="emailLabel" class="form-label is-required">Date de création<span class="visually-hidden"> (required)</span></label>
+                              <label for="email" id="emailLabel" class="form-label is-required">Date de creation<span class="visually-hidden"> (required)</span></label>
                               <span  class="form-control"  id="lastName" aria-labelledby="lastNameLabel lastNameFeedback" autocomplete="family-name" required>{{this.demande.dateCreation}}</span>
                               
                               <div class="valid-feedback">
@@ -254,13 +254,6 @@
                                 commentaire vide.
                               </div>
                             </div>
-                            <button style="float: right;"
-                            type="button"
-                            class="btn z-1 btn-primary "
-                            (click)="creerDemande()"
-                          >
-                            Enregistrer 
-                          </button>
                             <!-- <button (click)="test()">test</button> -->
                            
                           </div>
@@ -479,17 +472,24 @@
             </div> -->
         </div>
       </fieldset>
-      <div *ngIf="this.alert===true" class="alert alert-success z-3 bg-white dropdown border-success dropup position-fixed bottom-0 end-0 me-5 bd-mode-toggle"style="width:300px; " role="alert">
+     
+      <div *ngIf="this.alert===true" class="alert alert-success z-3 bg-white border-success "style="width:300px; " role="alert">
         <span class="alert-icon"><span class="visually-hidden">Success</span></span>
         <p>{{ errorMessage }}</p>
       </div>
-
       <div class="bt p-3 d-flex justify-content-end">
         <div class="error-message">
+          
           <p class="text-success">{{ errorMessage }}</p>
         </div>
        
-             
+              <button
+              type="button"
+              class="btn z-1 btn-primary "
+              (click)="creerDemande()"
+            >
+              Enregistrer 
+            </button>
         
       </div>
     </div>

@@ -1,22 +1,15 @@
 export class User {
     public id : string;
     public firstName :string;
-    public lastName : string ;
-    public email: string;
+    public lastName : String ;
     
     constructor(
-      id: string, firstName: string, lastName: string
+       
       ) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email= "";
+        this.id ='';
+        this.firstName ='';
+        this.lastName ='';
     }
 
-    // User(id: string, firstName: string, lastName: string) {
-    //   this.id = id;
-    //   this.firstName = firstName;
-    //   this.lastName = lastName;
-    // }
       
   }
