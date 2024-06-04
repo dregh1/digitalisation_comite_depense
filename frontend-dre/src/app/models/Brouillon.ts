@@ -9,6 +9,7 @@ export class Brouillon {
       public reference?: string,
       public estregularisation?: boolean,
       public iddirection?: number,
+      public direction?: string,
       public comsprescripteur?: string,
       public idrubrique?: number,
       public fournisseur?: string,

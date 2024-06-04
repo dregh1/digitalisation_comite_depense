@@ -112,7 +112,7 @@ export class UtilitaireService {
 
        
 
-           // return this.http.post<any>(url,{ params }).subscribe(response =>{ console.log(response); }) ;
+           //recuperation TOKEN ADMIN
            return this.http
            .post( url, params.toString(), 
                {  
@@ -129,6 +129,8 @@ export class UtilitaireService {
                      // console.log(tokenAdmin);
                      // console.log(response);
 
+                     //recuperation email prescripteur:
+                     const urlGetUserInRole ='http://localhost:8083/admin/realms/oma/roles/PRS/users';
                      // recuperation de id Du groupe
                      this.getIdOfGroup("DSI",tokenAdmin)
                      .subscribe(
@@ -139,14 +141,15 @@ export class UtilitaireService {
                                                  if (groupObject[0].hasOwnProperty('id'))
                                                  {
                                                    const idGroup = groupObject[0].id;
-
-                                                   //RECUPERATION DES MAIL DES UTILISATEURS
+ 
+                                                   //RECUPERATION DES MAIL DES UTILISATEURS dans la meme direction
                                                    this.getMailUser(idGroup,tokenAdmin)
                                                      .subscribe((userListe)=>
                                                      {
                                                        console.log(userListe);
                                                        //RECUPERATION des email de tous utilisateurs
-                                                       // console.log("taille :"+userListe.length);
+                                                              
+                                                              // console.log("taille :"+userListe.length);
                                                        
                                                          for(let i =0;i<userListe.length; i++ )
                                                          {
@@ -232,4 +235,6 @@ export class UtilitaireService {
     });
   }
           
+ 
+  
 }

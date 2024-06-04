@@ -182,8 +182,10 @@
             data-target="#navbarExample"
           >
             <div style="height: 480px" data-offset="50">
+              <div><button type="button" [disabled]="this.isDisabled" class="btn btn-primary text-white p-2"> Réactiver </button></div>
               <table class="table table-fixed" id="montable">
                 <tr class="titre">
+                  <th class="p-3"></th>
                   <th class="p-3">Regularisation</th>
                   <th class="p-3">Type</th>
                   <th class="p-3">Motif</th>
@@ -200,6 +202,7 @@
                 </tr>
 
                 <tr *ngFor="let detail of this.allDetails">
+                  <td> <input *ngIf="this.demande.statut === 'En attente'"  type="checkbox" (change)="onchangeCheckBox( this.detail )"></td>
                   <td class="p-3" >{{ this.detail.estregularisation? 'Oui' : 'Non' }}   </td>
                   <td class="p-3">{{ this.detail.typereference }}</td>
                   <td class="p-3">{{ this.detail.motif }}</td>

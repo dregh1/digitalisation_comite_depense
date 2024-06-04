@@ -14,6 +14,7 @@ import { Direction } from 'src/app/models/Direction';
 import { Demande } from 'src/app/models/Demande';
 import { UtilitaireService } from 'src/app/service/utilitaire.service';
 import { SessionCd } from 'src/app/models/SessionCd';
+import { SuperAdminService } from '../super-admin/super-admin.service';
 @Component({
   selector: 'app-test',
   templateUrl: './DetailParDemande.component.html',
@@ -50,7 +51,7 @@ export class TestComponent implements OnInit {
     idTitreDepense: '',
     nomReference: '',
     titre: '',
-    idFournisseur: '',
+    // idFournisseur: '',
     montantHt: '',
     idSession:'',
     fournisseur: '',
@@ -65,7 +66,9 @@ export class TestComponent implements OnInit {
     depense:'',
     dateCreation:'',
     identifiant:'',
-    dateSoumission:'00:00:00'
+    dateSoumission:'',
+    direction : ''
+
   };
   departement:string | null='';
   titre = new Titre();
@@ -115,8 +118,8 @@ somme='+';
     private autheticationServ: AuthenticationService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private utilitaire:UtilitaireService
-  ) {
+    private utilitaire:UtilitaireService,
+    private supAdm: SuperAdminService  ) {
     ///initialisaaiton date
     this.datePipe= new DatePipe('en-US');
     this.id = this.activatedRoute.snapshot.params['id'];
@@ -264,6 +267,8 @@ somme='+';
       this.demande.depense=this.DetailDemande.depense??'';
       this.demande.dateCreation=this.DetailDemande.dateCreation?.toString() ?? '';
       this.demande.identifiant=this.DetailDemande.identifiant?.toString()??'';
+      this.demande.direction = this.DetailDemande.direction?.toString()??'';
+
        console.log(this.DetailDemande);
        console.log('LLLOOGKOJ');
        console.log(this.demande,'demande iioiooo');
@@ -378,7 +383,7 @@ somme='+';
        console.log(this.demande,'e mis datepipe');
       }
   
-    
+    this.notifierAchCdgSoumis();
     
     //this.utilitaire.getTokenAdmin();
   }
@@ -408,20 +413,20 @@ somme='+';
 
   //modication prescripteur
   update(): void {
-    console.log('moulle');
-    console.log(this.demande.idSession,'idsesssinkk');
-    
-    console.log(this.demande);
-    this.testeService.update(this.id, this.demande).subscribe((Response) => {
-      console.log(Response);
+
+    this.testeService.update(this.id, this.demande).subscribe((response) => {
+      
+      console.log("------------------------");
+      console.log(response);
       this.message = 'modié!';
     });
+
     this.errorMessage = 'Demande modié!';
     setTimeout(() => {
       this.errorStatus1 = false; // Hide the message by setting errorStatus to false
       this.errorMessage = ''; // Optionally, clear the error message
     }, 3000);
-    console.log(this.message);
+    // console.log(this.message);
     // window.location.reload();
   }
   //annuation prescripteur
@@ -512,6 +517,8 @@ somme='+';
   refuserCdg() {
    
     this.demande.estRefuseCdg = true;
+    this.notifierPrsRefus(this.demande.direction);
+    
     this.update();
     this.errorMessage='refusé';
   
@@ -521,6 +528,7 @@ somme='+';
     this.demande.validationCdg = true;
     this.update();
   }
+
    //annuation prescripteur
    annulationCdg(){
     //this.enregistrerCdg();
@@ -591,6 +599,8 @@ somme='+';
   }
   //refuser Achat
   refuserAchat() {
+
+    this.notifierPrsRefus(this.demande.direction);
     this.demande.estRefuseAchat = true;
      this.update();
      this.errorMessage='refusé';
@@ -632,4 +642,15 @@ somme='+';
       this.demande.dateCreation='';
     }
 
+    notifierAchCdgSoumis(){
+      this.testeService.notifSoumission();
+    }
+
+    notifierPrsRefus(direction :  string)
+    {
+      // console.log("---------------------------------direction");
+      // console.log(direction);
+      
+      this.testeService.notifApresRefus(direction);
+    }
   }
