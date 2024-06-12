@@ -334,15 +334,28 @@ public class TesteCnt {
 
     // LIST DEMANDE ACTIVE
     @GET
-    @Path("/active/s")
+    @Path("/active/avectitre")
+    @RolesAllowed({"PRS","ACH","CDG"})
+//    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllActive_dmdAvecTitre(
+            @QueryParam("idDirection")@DefaultValue("") String  idDirection,
+            @QueryParam("idSession")@DefaultValue("") String  idSession
+         ) {
+
+        List<Active> active_dmds = activeService.getActiveAvecTitre( idDirection ,  idSession) ;
+        return Response.ok(active_dmds).build();
+    }
+
+    @GET
+    @Path("/active/sanstitre")
     @RolesAllowed({"PRS","ACH","CDG"})
 //    @Produces(MediaType.APPLICATION_JSON)
     public Response getAllActive_dmd(
             @QueryParam("idDirection")@DefaultValue("") String  idDirection,
             @QueryParam("idSession")@DefaultValue("") String  idSession
-         ) {
+    ) {
 
-        List<Active> active_dmds = detailDemandeService.getActive( idDirection ,  idSession) ;
+        List<Active> active_dmds = activeService.getActiveSansTitre( idDirection ,  idSession) ;
         return Response.ok(active_dmds).build();
     }
 
@@ -473,6 +486,8 @@ public class TesteCnt {
     public boolean isdemandeExist(@PathParam("idDemande") Long idDemande) {
         return activeService.estSoumis(idDemande);
     }
+
+
 
 }
 

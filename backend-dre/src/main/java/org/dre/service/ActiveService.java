@@ -96,4 +96,53 @@ public class ActiveService {
 
     }
 
+    public List<Active> getActiveAvecTitre(String idDirection , String idSession) {
+
+
+        String sql =    "SELECT * FROM active where titre!='sans titre' " ;
+
+        if(!idDirection.isEmpty() || !idSession.isEmpty() )
+        {
+            sql+="and validationPrescripteur = true  ";
+            if(!idDirection.isEmpty())
+                sql+= " and idDirection ="+idDirection;
+            if(!idSession.isEmpty())
+                sql+= " and idSession ="+   idSession;
+
+        }
+
+        System.out.println(sql);
+
+        Query query = entityManager.createNativeQuery(sql, DetailDemande.class);
+
+        List<Active> actives = query.getResultList();
+
+        return actives;
+
+    }
+    public List<Active> getActiveSansTitre(String idDirection , String idSession) {
+
+
+        String sql =    "SELECT * FROM active  where titre='sans titre' " ;
+
+        if(!idDirection.isEmpty() || !idSession.isEmpty() )
+        {
+            sql+="where validationPrescripteur = true and titre ='sans titre' ";
+            if(!idDirection.isEmpty())
+                sql+= " and idDirection ="+idDirection;
+            if(!idSession.isEmpty())
+                sql+= " and idSession ="+   idSession;
+
+        }
+
+        System.out.println(sql);
+
+        Query query = entityManager.createNativeQuery(sql, DetailDemande.class);
+
+        List<Active> actives = query.getResultList();
+
+        return actives;
+
+    }
+
 }

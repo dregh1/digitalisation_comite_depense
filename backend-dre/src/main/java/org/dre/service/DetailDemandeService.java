@@ -132,30 +132,6 @@ public class DetailDemandeService {
         return actives;
 
     }
-    public List<Active> getActive(String idDirection , String idSession) {
-
-
-        String sql =    "SELECT * FROM active " ;
-
-        if(!idDirection.isEmpty() || !idSession.isEmpty() )
-        {
-            sql+="where validationPrescripteur = true  ";
-            if(!idDirection.isEmpty())
-                sql+= " and idDirection ="+idDirection;
-            if(!idSession.isEmpty())
-                sql+= " and idSession ="+   idSession;
-
-        }
-
-        System.out.println(sql);
-
-        Query query = entityManager.createNativeQuery(sql, DetailDemande.class);
-
-        List<Active> actives = query.getResultList();
-
-        return actives;
-
-    }
 
     public List<Brouillon> getBrouillon(String idDirection , String idSession) {
 
