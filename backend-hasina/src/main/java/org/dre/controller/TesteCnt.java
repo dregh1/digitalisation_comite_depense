@@ -15,11 +15,9 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
-import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.dre.model.*;
 import org.dre.model.Periode;
 import org.dre.service.*;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,8 +28,6 @@ import java.util.Objects;
 @Authenticated
 public class TesteCnt {
 
-    @Inject
-    JsonWebToken jwt;
     @Inject
     Mailer mailer;
 
@@ -114,7 +110,7 @@ public class TesteCnt {
     //get id direction by name of direction
     @GET
     @Path("/getIdDir")
-    @RolesAllowed({"PRS","CDG","ACH"})
+    @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Response getIdDirByName(@QueryParam("nom") String nomDir) {
 
@@ -260,18 +256,13 @@ public class TesteCnt {
         System.out.println("I send mail");
 
         for (MyMail  m : listEmail){
-            if(m.getEmail()!=null)
-            {
+            Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne session CD a été ouverte!");
 
-                Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne session CD a été ouverte!");
-                System.out.println(m.getEmail())   ;
-                mailer.send(mail);
-            }
-
+            mailer.send(mail);
 
         }
 
-        System.out.println("I sent mail")   ;
+        System.out.println("I sent mail");
 
         return Response.ok().build();
 
@@ -374,106 +365,6 @@ public class TesteCnt {
     public boolean checkAvisAchatByIdDemande(@PathParam("idDemande") Long idDemande) {
         return avisAchatService.checkAvisAchatByIdDemande(idDemande);
     }
-
-    @GET
-    @PermitAll               /*get validation*/
-    @Path("/getValidation")
-    public Response getValidation(
-            @QueryParam("montantMga")@DefaultValue("") String montantMga,
-            @QueryParam("idDirection")@DefaultValue("") String idDirection
-
-
-    ) {
-        List <Active> listeValidation = detailDemandeService.getValidation(idDirection,montantMga);
-        return Response.ok(listeValidation).build();
-    }
-
-    //valider demande
-    //refuser demande
-
-    //
-    @DELETE
-    @PermitAll               /* supprimer demande */
-    @Path("/supprimerDemande/{idDemande}")
-    public void supprimerDemande(
-            @PathParam("idDemande")@DefaultValue("") Long id
-
-    ) {
-        System.out.println("#########################################");
-        this.demandeService.delete(id);
-    }
-
-    @POST
-    @Path("/demandeSoumise")
-    @RolesAllowed({"PRS","CDG","ACH"})
-    public Response notifierDemandeSoumise( List<MyMail> listEmail  ) {
-
-        System.out.println("I send mail");
-
-        for (MyMail  m : listEmail){
-            if(m.getEmail()!=null)
-            {
-
-                Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne demande soumise!");
-                System.out.println(m.getEmail())   ;
-                mailer.send(mail);
-            }
-
-
-        }
-
-        System.out.println("I sent mail")   ;
-
-        return Response.ok().build();
-
-    }
-
-    //soumettre une demande (fonction maika)
-    @POST
-    @Path("/soumettre/{idDemande}")
-    @RolesAllowed({"PRS","CDG","ACH"})
-    public Response sousmettreDemande(
-
-            @PathParam("idDemande") Long idDemande
-//            @PathParam("idSession") Long idSession
-    ) {
-        System.out.println("ty id ---------------");
-        System.out.println(idDemande);
-
-        //getbyid demande
-
-
-
-        Demande demande =  demandeService.getDemandeById(Long.valueOf(idDemande));
-//        // validation prs = true
-        demande.setValidationPrescripteur(true);
-//        System.out.println("montant !!!!!!!!!!!!!!");
-        System.out.println(demande.getMontantHt());
-
-        // est soumis = true
-        demande.setEstSoumis(false);
-         SessionCd c  = sessionCdService.getidSession();
-        System.out.println("IDDDDD SESSSIOSN");
-        System.out.println(c.getId());
-
-
-        //update SESSION
-        demande.setIdSession(c.getId());
-        //update
-
-        demandeService.updateDemande(demande);
-
-
-        return Response.ok().build();
-
-    }
-    @GET
-    @PermitAll
-    @Path("isExist/{idDemande}")
-    public boolean isdemandeExist(@PathParam("idDemande") Long idDemande) {
-        return activeService.estSoumis(idDemande);
-    }
-
 }
 
 

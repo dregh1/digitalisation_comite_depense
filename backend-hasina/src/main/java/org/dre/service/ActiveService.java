@@ -38,24 +38,6 @@ public class ActiveService {
         return activeRepository.findById(id);
     }
 
-    public boolean estSoumis(Long id)
-    {
-        String sql =    "SELECT * FROM active " ;
-
-
-            sql+="where id ="+id ;
-
-
-        Query query = entityManager.createNativeQuery(sql, DetailDemande.class);
-
-        List<Active> actives = query.getResultList();
-
-        if( actives.size()!=0)return  true;
-
-        return false;
-
-    }
-
     @Transactional
     public void updateActive(Active active) {
         activeRepository.getEntityManager().merge(active);

@@ -1,7 +1,5 @@
 package org.dre.controller;
 
-import io.quarkus.mailer.Mail;
-import io.quarkus.mailer.Mailer;
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -10,7 +8,10 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.dre.model.*;
-import org.dre.repository.*;
+import org.dre.repository.ActiveRepository;
+import org.dre.repository.BrouillonRepository;
+import org.dre.repository.DetailDemandeRepository;
+import org.dre.repository.TitreDemandeRepository;
 import org.dre.service.*;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 
@@ -23,11 +24,6 @@ import java.util.List;
 public class PrescripteurCnt {
     @Inject
     PeriodeService periodeService;
-    @Inject
-    Mailer mailer;
-    @Inject
-    AttenteSessionRepository attenteSessionRepository;
-
     @Inject
     SessionCdService sessionCdService;
     @Inject
@@ -273,50 +269,5 @@ public class PrescripteurCnt {
         // Récupérer les données depuis PostgreSQL
         List<Brouillon> brouillon = brouillonService.getAll ();
         return Response.ok(brouillon).build();
-    }
-
-    //recuperation des demandes En Attente de session
-    @GET
-    @Path("/attenteSession/s")
-    @RolesAllowed({"PRS","CDG","ACH"})
-//    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllDemandeAttenteSession(
-            @QueryParam("idDirection")@DefaultValue("") String  idDirection
-    ) {
-        // Récupérer les données depuis PostgreSQL
-        List<AttenteSession> attenteSession = detailDemandeService.getDemandeAttenteSession (idDirection);
-        return Response.ok(attenteSession).build();
-    }
-
-    @GET
-    @Path("attenteSession/{id}")
-    @RolesAllowed("PRS")
-    public AttenteSession getAttenteSession(@PathParam("id") Long id) {
-        return attenteSessionRepository.findById(id);
-    }
-
-    @POST
-    @Path("/demandeSoumise")
-    @RolesAllowed({"PRS","CDG","ACH"})
-    public Response notifierDemandeSoumise( List<MyMail> listEmail  ) {
-
-        System.out.println("I send mail");
-
-        for (MyMail  m : listEmail){
-            if(m.getEmail()!=null)
-            {
-
-                Mail mail = Mail.withText(m.getEmail(), "Demande soumise", "Hey "+m.getUsername()+",\nUne demande a été soumise!");
-                System.out.println(m.getEmail())   ;
-                mailer.send(mail);
-            }
-
-
-        }
-
-        System.out.println("I sent mail")   ;
-
-        return Response.ok().build();
-
     }
 }

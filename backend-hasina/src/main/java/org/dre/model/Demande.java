@@ -6,9 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.dre.service.EmailService;
-
-import java.sql.Timestamp;
 
 @Entity
 
@@ -20,8 +17,8 @@ public class Demande   {
     private Long idTitreDepense;
     @JsonProperty("motif") // Annotation pour personnaliser le nom de la propriété dans JSON
     private String motif;
-    @JsonProperty("fournisseur") // Annotation pour personnaliser le nom de la propriété dans JSON
-    private String fournisseur;
+    @JsonProperty("idFournisseur") // Annotation pour personnaliser le nom de la propriété dans JSON
+    private Long idFournisseur;
 
     @JsonProperty("estRegularisation") // Annotation pour personnaliser le nom de la propriété dans JSON
     private boolean estregularisation;
@@ -49,46 +46,8 @@ public class Demande   {
     private boolean estSupprime;
 
     private boolean estRefuseAchat;
-    private boolean estSoumis;
 
     private boolean estRefuseCdg;
-
-    private String depense;
-    private String identifiant;
-
-    private Timestamp dateCreation ;
-    private Timestamp dateSoumission ;
-
-    public Timestamp getDateCreation() {
-        return dateCreation;
-    }
-
-    public void setDateCreation(Timestamp dateCreation) {
-        this.dateCreation = dateCreation;
-    }
-
-    public Timestamp getDateSoumission() {
-        return dateSoumission;
-    }
-
-    public void setDateSoumission(Timestamp dateSoumission) {
-        this.dateSoumission = dateSoumission;
-    }
-
-    public String getIdentifiant() {
-        return identifiant;
-    }
-
-    public void setIdentifiant(String identifiant) {
-        this.identifiant = identifiant;
-    }
-    public String getDepense() {
-        return depense;
-    }
-
-    public void setDepense(String depense) {
-        this.depense = depense;
-    }
 
     public boolean isEstRefuseAchat() {
         return estRefuseAchat;
@@ -138,12 +97,12 @@ public class Demande   {
         this.motif = motif;
     }
 
-    public String getFournisseur() {
-        return fournisseur;
+    public Long getIdFournisseur() {
+        return idFournisseur;
     }
 
-    public void setFournisseur(String fournisseur) {
-        this.fournisseur = fournisseur;
+    public void setIdFournisseur(Long idFournisseur) {
+        this.idFournisseur = idFournisseur;
     }
 
     public boolean isEstregularisation() {
@@ -238,11 +197,7 @@ public class Demande   {
         return validationAchat;
     }
 
-    public void setValidationAchat(boolean validationAchat)
-    {
-        //  si qqcn valide
-
-        //  si qqcn refuse
+    public void setValidationAchat(boolean validationAchat) {
         this.validationAchat = validationAchat;
     }
 
@@ -251,15 +206,6 @@ public class Demande   {
     }
 
     public void setValidationPrescripteur(boolean validationPrescripteur) {
-//        //  si qqcn valide
-//            if(validationPrescripteur)
-//            {
-//               EmailService es = new EmailService();
-//
-////               es.notifValidationPrescripteur();
-//
-//            }
-//        //  si qqcn refuse
         this.validationPrescripteur = validationPrescripteur;
     }
 
@@ -275,10 +221,8 @@ public class Demande   {
         return estSupprime;
     }
 
-    public void setEstSupprime(boolean estSupprime)
-    {
+    public void setEstSupprime(boolean estSupprime) {
         this.estSupprime = estSupprime;
-
     }
 
     public Long getIdSession() {
@@ -287,13 +231,5 @@ public class Demande   {
 
     public void setIdSession(Long idSession) {
         this.idSession = idSession;
-    }
-
-    public boolean isEstSoumis() {
-        return estSoumis;
-    }
-
-    public void setEstSoumis(boolean estSoumis) {
-        this.estSoumis = estSoumis;
     }
 }

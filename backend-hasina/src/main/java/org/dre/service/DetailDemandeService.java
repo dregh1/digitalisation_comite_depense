@@ -102,36 +102,6 @@ public class DetailDemandeService {
         return detailDemandes;
     }
 
-
-    //get validation
-    public List<Active> getValidation(String idDirection , String montantMga) {
-
-
-        String sql =    "SELECT * FROM active " ;
-        sql+="where validationPrescripteur = true and validationCdg= true and validationAchat= true ";
-
-        if(!idDirection.isEmpty() && !montantMga.isEmpty() )
-        {
-            if(!idDirection.isEmpty())
-                sql+= " and idDirection ="+idDirection;
-            if(!montantMga.isEmpty())
-                sql+= " and montantMga >="+montantMga;
-
-
-        }else
-
-        sql+=" and 2=1 ";
-
-
-        System.out.println(sql);
-
-        Query query = entityManager.createNativeQuery(sql, DetailDemande.class);
-
-        List<Active> actives = query.getResultList();
-
-        return actives;
-
-    }
     public List<Active> getActive(String idDirection , String idSession) {
 
 
@@ -179,31 +149,6 @@ public class DetailDemandeService {
         List<Brouillon> brouillon = query.getResultList();
 
         return brouillon;
-
-    }
-
-    public List<AttenteSession> getDemandeAttenteSession(String idDirection ) {
-
-
-        String sql =    "" ;
-
-        if(!idDirection.isEmpty() )
-        {
-            sql =    "SELECT * FROM attenteSession " ;
-            sql+="where 1 = 1  ";
-            if(!idDirection.isEmpty())
-                sql+= " and idDirection ="+idDirection;
-
-
-        }
-
-        System.out.println(sql);
-
-        Query query = entityManager.createNativeQuery(sql, DetailDemande.class);
-
-        List<AttenteSession> demandeAttenteSession = query.getResultList();
-
-        return demandeAttenteSession;
 
     }
 
