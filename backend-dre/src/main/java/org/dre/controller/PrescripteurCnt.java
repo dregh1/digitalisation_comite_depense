@@ -1,7 +1,5 @@
 package org.dre.controller;
 
-import io.quarkus.mailer.Mail;
-import io.quarkus.mailer.Mailer;
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -13,6 +11,8 @@ import org.dre.model.*;
 import org.dre.repository.*;
 import org.dre.service.*;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
+//import org.keycloak.admin.client.Keycloak;
+//import org.keycloak.representations.idm.RoleRepresentation;
 
 import java.util.List;
 
@@ -23,8 +23,7 @@ import java.util.List;
 public class PrescripteurCnt {
     @Inject
     PeriodeService periodeService;
-    @Inject
-    Mailer mailer;
+
     @Inject
     AttenteSessionRepository attenteSessionRepository;
 
@@ -295,28 +294,20 @@ public class PrescripteurCnt {
         return attenteSessionRepository.findById(id);
     }
 
-    @POST
-    @Path("/demandeSoumise")
-    @RolesAllowed({"PRS","CDG","ACH"})
-    public Response notifierDemandeSoumise( List<MyMail> listEmail  ) {
 
-        System.out.println("I send mail");
+//    @Inject
+//    Keycloak keycloak;
 
-        for (MyMail  m : listEmail){
-            if(m.getEmail()!=null)
-            {
-
-                Mail mail = Mail.withText(m.getEmail(), "Demande soumise", "Hey "+m.getUsername()+",\nUne demande a été soumise!");
-                System.out.println(m.getEmail())   ;
-                mailer.send(mail);
-            }
+//    @GET
+//    @Path("/roles")
+//    public List<RoleRepresentation> getRoles() {
+//        System.out.println(keycloak.realm("oma").roles().list());
+//
+//        return keycloak.realm("oma").roles().list();
+//
+//
+//    }
 
 
-        }
 
-        System.out.println("I sent mail")   ;
-
-        return Response.ok().build();
-
-    }
 }

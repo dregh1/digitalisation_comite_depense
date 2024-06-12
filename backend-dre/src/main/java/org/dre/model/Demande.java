@@ -251,15 +251,15 @@ public class Demande   {
     }
 
     public void setValidationPrescripteur(boolean validationPrescripteur) {
-//        //  si qqcn valide
-//            if(validationPrescripteur)
-//            {
-//               EmailService es = new EmailService();
-//
-////               es.notifValidationPrescripteur();
-//
-//            }
-//        //  si qqcn refuse
+        //  si qqcn valide
+            if(validationPrescripteur)
+            {
+               EmailService es = new EmailService();
+
+//               es.notifValidationPrescripteur();
+
+            }
+        //  si qqcn refuse
         this.validationPrescripteur = validationPrescripteur;
     }
 

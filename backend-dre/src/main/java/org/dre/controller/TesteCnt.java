@@ -7,6 +7,8 @@ import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.Blocking;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -15,11 +17,13 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
-import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.dre.model.*;
 import org.dre.model.Periode;
 import org.dre.service.*;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.representations.idm.RoleRepresentation;
 
 import java.util.List;
 import java.util.Objects;
@@ -408,14 +412,13 @@ public class TesteCnt {
     @RolesAllowed({"PRS","CDG","ACH"})
     public Response notifierDemandeSoumise( List<MyMail> listEmail  ) {
 
-        System.out.println("I send mail");
 
         for (MyMail  m : listEmail){
             if(m.getEmail()!=null)
             {
 
-                Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne demande soumise!");
-                System.out.println(m.getEmail())   ;
+                Mail mail = Mail.withText(m.getEmail(), "Session Ouverte",
+                        "Hey "+m.getUsername()+",\nUne demande soumise!");
                 mailer.send(mail);
             }
 
@@ -428,45 +431,40 @@ public class TesteCnt {
 
     }
 
-    //soumettre une demande (fonction maika)
-    @POST
-    @Path("/soumettre/{idDemande}")
-    @RolesAllowed({"PRS","CDG","ACH"})
-    public Response sousmettreDemande(
+// admin keycloak
+    @Inject
+    Keycloak keycloak;
 
-            @PathParam("idDemande") Long idDemande
-//            @PathParam("idSession") Long idSession
-    ) {
-        System.out.println("ty id ---------------");
-        System.out.println(idDemande);
-
-        //getbyid demande
+    private static final String TOKEN = "";
 
 
-
-        Demande demande =  demandeService.getDemandeById(Long.valueOf(idDemande));
-//        // validation prs = true
-        demande.setValidationPrescripteur(true);
-//        System.out.println("montant !!!!!!!!!!!!!!");
-        System.out.println(demande.getMontantHt());
-
-        // est soumis = true
-        demande.setEstSoumis(false);
-         SessionCd c  = sessionCdService.getidSession();
-        System.out.println("IDDDDD SESSSIOSN");
-        System.out.println(c.getId());
-
-
-        //update SESSION
-        demande.setIdSession(c.getId());
-        //update
-
-        demandeService.updateDemande(demande);
-
-
-        return Response.ok().build();
-
+    @PostConstruct
+    public void initKeycloak() {
+        keycloak = KeycloakBuilder.builder()
+                .serverUrl("http://localhost:8083")
+                .realm("oma")
+                .clientId("quarkus-client")
+                .grantType("password")
+                .username("charlesandrea")
+                .password("password")
+                .build();
     }
+
+    @PreDestroy
+    public void closeKeycloak() {
+        keycloak.close();
+    }
+
+    @GET
+    @Path("/roles")
+    public List<RoleRepresentation> getRoles() {
+        this.initKeycloak();
+        System.out.println(keycloak.realm("oma").roles().list());
+        this.closeKeycloak();
+
+        return keycloak.realm("oma").roles().list();
+    }
+
 }
 
 

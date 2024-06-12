@@ -58,18 +58,5 @@ public class SessionCdService {
         return false;
     }
 
-    public SessionCd getidSession() {
-        SessionCd s = new SessionCd();
-        List <SessionCd> sessionCds = this.getAll();
-        for(SessionCd session : sessionCds)
-        {
-            if(!session.isEstFerme())
-            {
-                return session;
-            }
-        }
-        return s;
-    }
-
 
 }

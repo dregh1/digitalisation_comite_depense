@@ -508,13 +508,34 @@ create or replace view validation as
 
 
 
---
+--  l'ancien trigger de generate identifiant  YYXXXXXX (xxid.length)
+
+
     CREATE OR REPLACE FUNCTION generate_identifiant_trigger()
       RETURNS TRIGGER AS $$
       BEGIN
-          NEW.identifiant := LPAD( REPEAT('0', 8 - LENGTH(NEW.id::TEXT)) ||NEW.id::TEXT , 8, '0');
+          NEW.identifiant := LPAD(  REPEAT('0', 5 - LENGTH(NEW.id::TEXT)) || NEW.id::TEXT  , 5, '0');
+
           RETURN NEW;
       END; $$ LANGUAGE plpgsql;
+
+
+      ------------
+      -- mety
+          CREATE OR REPLACE FUNCTION generate_identifiant_trigger()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                NEW.identifiant := SUBSTRING(TO_CHAR(CURRENT_DATE, 'YYYY')::text, 3, 2)|| LPAD(  REPEAT('0', 5 - LENGTH(NEW.id::TEXT)) || NEW.id::TEXT  , 5, '0');
+
+                RETURN NEW;
+            END; $$ LANGUAGE plpgsql;
+--------------------------
+
+
+
+-----------------
+
+
 
     DROP TRIGGER insert_demande_trigger ON demande;
 

@@ -33,18 +33,21 @@ public class EmailService {
     // notification Session Ouverte
     public void notifOuvertureSession( List<MyMail> listEmail  ) {
 
-        System.out.println("I send mail");
 
         for (MyMail  m : listEmail){
-            Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey "+m.getUsername()+",\nUne session CD a été ouverte!");
+            Mail mail = Mail.withText(m.getEmail(),
+                    "Session Ouverte",
+                    "Hey "+m.getUsername()+
+                    ",\n Une session CD a été ouverte!" +
+
+                    "\n\nA la prochaine!" +
+
+                    "\n\n\n" +
+                    "---------------------\n" +
+                    "Service Orange Madagascar");
 
             mailer.send(mail);
-
         }
-
-        System.out.println("I sent mail")   ;
-
-
     }
 
     // notification Validation Prescripteur
@@ -59,6 +62,6 @@ public class EmailService {
             }
 
         System.out.println("I sent mail")   ;
-
+this.notifOuvertureSession(listEmail );
     }
 }

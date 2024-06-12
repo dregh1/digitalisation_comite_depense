@@ -13,8 +13,8 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 public class WorkflowCnt {
 //    COMMENTENA ALOHA RETO
 
-//    @Inject
-//    ProcessEngine processEngine;
+    @Inject
+    ProcessEngine processEngine;
 //    @Inject
 //    public RuntimeService runtimeService;
 //
