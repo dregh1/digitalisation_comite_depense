@@ -12,12 +12,15 @@ public class SessionCd  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id  ;
 
-    private Integer idDirection;
+
     @JsonProperty("ref")
     private  String ref ;
 
     @JsonProperty("dateCloture")
     private Timestamp dateCloture;
+
+    @JsonProperty("dateFermeture")
+    private Timestamp dateFermeture;
     @JsonProperty("dateDebut")
     private Timestamp dateDebut;
 
@@ -32,6 +35,15 @@ public class SessionCd  {
     private float tauxMga;
 
     private boolean estFerme;
+
+
+    public Timestamp getDateFermeture() {
+        return dateFermeture;
+    }
+
+    public void setDateFermeture(Timestamp dateFermeture) {
+        this.dateFermeture = dateFermeture;
+    }
 
     public boolean isEstFerme() {
         return estFerme;
@@ -57,13 +69,6 @@ public class SessionCd  {
         this.id = id;
     }
 
-    public Integer getIdDirection() {
-        return idDirection;
-    }
-
-    public void setIdDirection(Integer idDirection) {
-        this.idDirection = idDirection;
-    }
 
     public String getRef() {
         return ref;

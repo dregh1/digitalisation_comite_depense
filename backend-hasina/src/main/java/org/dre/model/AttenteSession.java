@@ -1,16 +1,11 @@
 package org.dre.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.sql.Timestamp;
-
 @Entity
-public class Brouillon  {
+public class AttenteSession {
     @Id
     private Integer id ;
     private Integer idtitre ;
@@ -28,6 +23,9 @@ public class Brouillon  {
     private String periode ;
     private Integer iddirection ;
     private String devise ;
+    private String depense ;
+    private boolean estSoumis;
+
     private boolean validationprescripteur ;
     private boolean validationcdg ;
     private boolean validationachat ;
@@ -49,6 +47,7 @@ public class Brouillon  {
     private Timestamp debutSession;
     private Timestamp finSession;
     private String etatFinal;
+
     private String identifiant;
 
     private Timestamp dateCreation ;
@@ -76,6 +75,7 @@ public class Brouillon  {
     public void setIdentifiant(String identifiant) {
         this.identifiant = identifiant;
     }
+
     public String getRefSession() {
         return refSession;
     }
@@ -184,6 +184,14 @@ public class Brouillon  {
 
     public String getTitre() {
         return titre;
+    }
+
+    public String getDepense() {
+        return depense;
+    }
+
+    public void setDepense(String depense) {
+        this.depense = depense;
     }
 
     public void setTitre(String titre) {
@@ -325,5 +333,13 @@ public class Brouillon  {
 
     public void setFournisseur(String fournisseur) {
         this.fournisseur = fournisseur;
+    }
+
+    public boolean isEstSoumis() {
+        return estSoumis;
+    }
+
+    public void setEstSoumis(boolean estSoumis) {
+        this.estSoumis = estSoumis;
     }
 }
