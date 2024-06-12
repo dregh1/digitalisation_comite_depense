@@ -4,7 +4,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.dre.model.Demande;
-import org.dre.model.Demande;
 import org.dre.repository.DemandeRepository;
 
 import java.util.List;
@@ -31,31 +30,20 @@ public class DemandeService
         return demandeRepository.findById(id);
     }
 
-
-
     @Transactional
     public void updateDemande(Demande demande) {
         demandeRepository.getEntityManager().merge(demande);
     }
 
     @Transactional
-    public void deleteDemande(Long id) {
-        Demande demande = demandeRepository.findById(id);
-        if (demande != null) {
-            demande.setEstSupprime(true);
-            demandeRepository.getEntityManager().merge(demande);
-        }
-    }
-
-    @Transactional
-    public boolean delete(Long id) {
+    public boolean deleteDemande(Long id) {
         Demande demande = demandeRepository.findById(id);
         if (demande != null) {
             demandeRepository.delete(demande);
             return true;
         }
         return false;
-    }
+}
 
 
 

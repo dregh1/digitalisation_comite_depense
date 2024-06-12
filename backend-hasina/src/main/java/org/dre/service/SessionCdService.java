@@ -33,7 +33,7 @@ public class SessionCdService {
 
         for(SessionCd sessionCd : allList )
         {
-            if( !sessionCd.isEstFerme())
+            if(sessionCd.getIdDirection().equals(idDirection) && !sessionCd.isEstFerme())
             {
                 return sessionCd;
             }
@@ -50,25 +50,12 @@ public class SessionCdService {
         List <SessionCd> sessionCds = this.getAll();
         for(SessionCd session : sessionCds)
         {
-            if(!session.isEstFerme())
+            if(session.getIdDirection().equals(idDirection) && !session.isEstFerme())
             {
                 return true;
             }
         }
         return false;
-    }
-
-    public SessionCd getidSession() {
-        SessionCd s = new SessionCd();
-        List <SessionCd> sessionCds = this.getAll();
-        for(SessionCd session : sessionCds)
-        {
-            if(!session.isEstFerme())
-            {
-                return session;
-            }
-        }
-        return s;
     }
 
 
