@@ -1,5 +1,7 @@
 package org.dre.controller;
 
+import io.quarkus.mailer.Mail;
+import io.quarkus.mailer.Mailer;
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -21,7 +23,8 @@ import java.util.List;
 public class PrescripteurCnt {
     @Inject
     PeriodeService periodeService;
-
+    @Inject
+    Mailer mailer;
     @Inject
     AttenteSessionRepository attenteSessionRepository;
 
@@ -292,5 +295,28 @@ public class PrescripteurCnt {
         return attenteSessionRepository.findById(id);
     }
 
+    @POST
+    @Path("/demandeSoumise")
+    @RolesAllowed({"PRS","CDG","ACH"})
+    public Response notifierDemandeSoumise( List<MyMail> listEmail  ) {
 
+        System.out.println("I send mail");
+
+        for (MyMail  m : listEmail){
+            if(m.getEmail()!=null)
+            {
+
+                Mail mail = Mail.withText(m.getEmail(), "Demande soumise", "Hey "+m.getUsername()+",\nUne demande a été soumise!");
+                System.out.println(m.getEmail())   ;
+                mailer.send(mail);
+            }
+
+
+        }
+
+        System.out.println("I sent mail")   ;
+
+        return Response.ok().build();
+
+    }
 }

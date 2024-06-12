@@ -31,6 +31,8 @@ public class DemandeService
         return demandeRepository.findById(id);
     }
 
+
+
     @Transactional
     public void updateDemande(Demande demande) {
         demandeRepository.getEntityManager().merge(demande);

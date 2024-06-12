@@ -15,6 +15,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
+import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.dre.model.*;
 import org.dre.model.Periode;
 import org.dre.service.*;
@@ -426,6 +427,53 @@ public class TesteCnt {
         return Response.ok().build();
 
     }
+
+    //soumettre une demande (fonction maika)
+    @POST
+    @Path("/soumettre/{idDemande}")
+    @RolesAllowed({"PRS","CDG","ACH"})
+    public Response sousmettreDemande(
+
+            @PathParam("idDemande") Long idDemande
+//            @PathParam("idSession") Long idSession
+    ) {
+        System.out.println("ty id ---------------");
+        System.out.println(idDemande);
+
+        //getbyid demande
+
+
+
+        Demande demande =  demandeService.getDemandeById(Long.valueOf(idDemande));
+//        // validation prs = true
+        demande.setValidationPrescripteur(true);
+//        System.out.println("montant !!!!!!!!!!!!!!");
+        System.out.println(demande.getMontantHt());
+
+        // est soumis = true
+        demande.setEstSoumis(false);
+         SessionCd c  = sessionCdService.getidSession();
+        System.out.println("IDDDDD SESSSIOSN");
+        System.out.println(c.getId());
+
+
+        //update SESSION
+        demande.setIdSession(c.getId());
+        //update
+
+        demandeService.updateDemande(demande);
+
+
+        return Response.ok().build();
+
+    }
+    @GET
+    @PermitAll
+    @Path("isExist/{idDemande}")
+    public boolean isdemandeExist(@PathParam("idDemande") Long idDemande) {
+        return activeService.estSoumis(idDemande);
+    }
+
 }
 
 
