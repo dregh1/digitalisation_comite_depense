@@ -1,14 +1,11 @@
 package org.dre.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 import java.sql.Timestamp;
-
 @Entity
-
-public class Active  {
+public class AttenteSession {
     @Id
     private Integer id ;
     private Integer idtitre ;
@@ -26,6 +23,9 @@ public class Active  {
     private String periode ;
     private Integer iddirection ;
     private String devise ;
+    private String depense ;
+    private boolean estSoumis;
+
     private boolean validationprescripteur ;
     private boolean validationcdg ;
     private boolean validationachat ;
@@ -186,6 +186,14 @@ public class Active  {
         return titre;
     }
 
+    public String getDepense() {
+        return depense;
+    }
+
+    public void setDepense(String depense) {
+        this.depense = depense;
+    }
+
     public void setTitre(String titre) {
         this.titre = titre;
     }
@@ -318,11 +326,20 @@ public class Active  {
         this.validationachat = validationachat;
     }
 
+
     public String getFournisseur() {
         return fournisseur;
     }
 
     public void setFournisseur(String fournisseur) {
         this.fournisseur = fournisseur;
+    }
+
+    public boolean isEstSoumis() {
+        return estSoumis;
+    }
+
+    public void setEstSoumis(boolean estSoumis) {
+        this.estSoumis = estSoumis;
     }
 }

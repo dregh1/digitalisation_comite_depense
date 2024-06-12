@@ -27,7 +27,7 @@ import java.sql.Timestamp;
         private boolean validationprescripteur ;
         private boolean validationcdg ;
         private boolean validationachat ;
-        private Integer idfournisseur ;
+
         private String fournisseur;
 
         private Integer idAvisCdg;
@@ -35,7 +35,7 @@ import java.sql.Timestamp;
         private Integer idAvisAchat;
         private String comsAchat;
 
-
+        private String depense;
         private String comsCd;
 
         private double  montantMga;
@@ -46,6 +46,33 @@ import java.sql.Timestamp;
         private Timestamp finSession;
         private String etatFinal;
 
+    private String identifiant;
+
+    private Timestamp dateCreation ;
+    private Timestamp dateSoumission ;
+
+    public Timestamp getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(Timestamp dateCreation) {
+        this.dateCreation = dateCreation;
+    }
+
+    public Timestamp getDateSoumission() {
+        return dateSoumission;
+    }
+
+    public void setDateSoumission(Timestamp dateSoumission) {
+        this.dateSoumission = dateSoumission;
+    }
+    public String getIdentifiant() {
+        return identifiant;
+    }
+
+    public void setIdentifiant(String identifiant) {
+        this.identifiant = identifiant;
+    }
         public String getRefSession() {
             return refSession;
         }
@@ -223,7 +250,9 @@ import java.sql.Timestamp;
         public void setNomrubrique(String nomrubrique) {
             this.nomrubrique = nomrubrique;
         }
-
+        public String getDepense() {
+                return this.depense ;
+        }
         public String getSousrubrique() {
             return sousrubrique;
         }
@@ -286,14 +315,6 @@ import java.sql.Timestamp;
 
         public void setValidationachat(boolean validationachat) {
             this.validationachat = validationachat;
-        }
-
-        public Integer getIdfournisseur() {
-            return idfournisseur;
-        }
-
-        public void setIdfournisseur(Integer idfournisseur) {
-            this.idfournisseur = idfournisseur;
         }
 
         public String getFournisseur() {

@@ -9,7 +9,6 @@ public class Validation {
     private Long id ;
     private String devise ;
     private String motif         ;
-    private Long idFournisseur;
     private String fournisseur ;
     private Long idPeriode;
     private String periode ;
@@ -45,13 +44,6 @@ public class Validation {
         this.motif = motif;
     }
 
-    public Long getIdFournisseur() {
-        return idFournisseur;
-    }
-
-    public void setIdFournisseur(Long idFournisseur) {
-        this.idFournisseur = idFournisseur;
-    }
 
     public String getFournisseur() {
         return fournisseur;
