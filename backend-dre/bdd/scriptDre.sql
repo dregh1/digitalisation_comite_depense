@@ -55,6 +55,7 @@ truncate table aviscdg cascade;
 					ref varchar(11) not null ,
 					dateDebut timestamp default now(),
 					dateCloture timestamp not null,
+					dateFermeture timestamp,
 					estSupprime boolean default false,
 					tauxEur numeric(32,3) not null,
 					tauxUsd numeric(32,3) not null,
@@ -100,7 +101,7 @@ truncate table aviscdg cascade;
                         comsCd text,
 						estSupprime boolean default false,
 						dateCreation timestamp default now(),
-						dateSoumission timestamp,
+						dateSoumission timestamp default now(),
 						identifiant varchar(50),
 						estRefuseAchat boolean default false,
                         estRefuseCdg boolean default false,
@@ -144,7 +145,7 @@ truncate table aviscdg cascade;
 		create table rubrique 
 				(
 					id serial primary key,
-					designation varchar(50)
+					designation varchar(100)
 				);
 
 
@@ -229,8 +230,8 @@ truncate table aviscdg cascade;
 --            INSERT INTO rubrique (designation) VALUES ('Fournitures generales'),('achat nourrire'), ('Locaux'), ('Materiel informatique');
 --    -- Insert data into fournisseur table
 ----            INSERT INTO fournisseur (nom)  VALUES ('Fournisseur X'), ('Hôtel Y'), ('Prestataire Z'), ('Fournisseur Logiciel');
---            insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
-
+            insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
+--
 --truncate table sessioncd cascade;
 --truncate table demande cascade;
 --truncate table titredepense cascade;
@@ -281,7 +282,7 @@ truncate table aviscdg cascade;
                         p.designation as periode,
 
                         dm.idDirection as idDirection,
-
+                        dir.designation as direction,
                         dm.idSession as idSession,
                         dm.typeDevise as devise,
                         dm.validationPrescripteur,
@@ -329,11 +330,12 @@ truncate table aviscdg cascade;
                                 left join avisAchat on avisAchat.idDemande =  dm.id
                                 left join avisCdg on aviscdg.idDemande  = dm.id
                                 left join sessionCd s on s.id = dm.idSession
+                                left join direction dir on dir.id = dm.idDirection
 --                                where
 --                                        dm.validationAchat =  true
 --                                    and dm.validationCdg =  true
 --                                    and dm.validationPrescripteur =  true
-                            group by idTitre,dm.id ,td.id,p.id,r.id,avisAchat.id,aviscdg.id,s.id
+                            group by idTitre,dm.id ,td.id,p.id,r.id,avisAchat.id,aviscdg.id,s.id,direction
                 );
 
         create or replace view active as
@@ -507,16 +509,58 @@ create or replace view validation as
 
 
 
---
+--  l'ancien trigger de generate identifiant  YYXXXXXX (xxid.length)
+
+
     CREATE OR REPLACE FUNCTION generate_identifiant_trigger()
       RETURNS TRIGGER AS $$
       BEGIN
-          NEW.identifiant := LPAD( REPEAT('0', 8 - LENGTH(NEW.id::TEXT)) ||NEW.id::TEXT , 8, '0');
+          NEW.identifiant := LPAD(  REPEAT('0', 5 - LENGTH(NEW.id::TEXT)) || NEW.id::TEXT  , 5, '0');
+
           RETURN NEW;
       END; $$ LANGUAGE plpgsql;
+
+
+      ------------
+      -- mety
+          CREATE OR REPLACE FUNCTION generate_identifiant_trigger()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                NEW.identifiant := SUBSTRING(TO_CHAR(CURRENT_DATE, 'YYYY')::text, 3, 2)|| LPAD(  REPEAT('0', 5 - LENGTH(NEW.id::TEXT)) || NEW.id::TEXT  , 5, '0');
+
+                RETURN NEW;
+            END; $$ LANGUAGE plpgsql;
+--------------------------
+
+
+
+-----------------
+
+
 
     DROP TRIGGER insert_demande_trigger ON demande;
 
     CREATE  TRIGGER insert_demande_trigger
     BEFORE INSERT ON demande
     FOR EACH ROW EXECUTE PROCEDURE generate_identifiant_trigger();
+
+
+
+
+select id, validationprescripteur, validationcdg, validationachat from active;
+
+
+insert into rubrique (designation )values
+
+('Salaires du personnel'),
+('Cotisations sociales'),
+('Loyers et frais d`entretien des bureaux'),
+('Impots et taxes locales'),
+('Maintenance des machines'),
+('Frais de restauration'),
+('Frais de transport'),
+('Frais d`emballage'),
+('Salaires variables'),
+('Remboursement des notes de frais'),
+('Charges de marketing'),
+('Frais de formation');

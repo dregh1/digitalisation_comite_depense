@@ -1,35 +1,41 @@
-
-
-table .tbody{
-  height: 300px;
-  overflow-y: auto;
-  width: 100%;
+.icon-modi{
+  width: 23px;
+  height: 19px;
 }
-tr,td{
-  position: relative;
+.icon-modi:hover{
+  color: #ff7900;
 }
-.table-fixed tbody {
-  height: 300px;
-  overflow-y: auto;
-  width: 100%;
-}
+// body{
+//   background-color:#eee;
+//   }
+// table .tbody{
+//   height: 50px;
+//   overflow-y: auto;
+//   width: 100%;
+// }
 
-.table-fixed thead,
-.table-fixed tbody,
-.table-fixed tr,
-.table-fixed td,
-.table-fixed th {
-  display: block;
-}
+// tr,td,.listetitre{
+//   position: relative;
+// }
+// .table-fixed tbody {
+//   // height: 500px;
+//   overflow-y: auto;
+//   width: 100%;
+// }
 
-.table-fixed tbody td,
-.table-fixed tbody th,
-.table-fixed thead > tr > th {
-  float: left;
-  position: relative;
 
-}
 
+
+// .table-fixed tbody td,
+// .table-fixed tbody th,
+// .table-fixed thead > tr > th {
+//    float: left;
+//    position: relative;
+
+// }
+// .texte{
+//   padding: 10px;
+// }
 
 
 
@@ -37,21 +43,44 @@ tr,td{
 //   background-color: #eee;
 //   height: 770px;
 // }
-header,.titre {
-  background-color: #eee;
-}
-// .card-header,
-// .card {
-//   background-color: #ddd;
+// table,.card,header,.titre,thead {
+//   background-color: #eee;
 // }
-tr:hover {
-  border-left: #ff7900;
-  background-color: #999;
+// .card-header,
+.card {
+  min-height: 450px;
 }
-.scrollspy-example {
-  overflow: auto;
-  position: relative;
+.titreliste{
+  background: #eee;
 }
+.bleu{
+  color: cadetblue;
+}
+
+.rouge{
+  color: red;
+}
+
+.vert{
+  color: green;
+}
+.texte1{
+  width: 100px;
+}
+// .texte2{
+//   width: 119px;
+// }
+.texte{
+  width: 150px;
+}
+
+// .texte3{
+//   width: 139px;
+// }
+// .scrollspy-example {
+//   overflow: auto;
+//   position: relative;
+// }
 .icon {
   font-size: 30px;
 }
@@ -59,8 +88,14 @@ svg {
   width: 23px;
   height: 23px;
 }
-
+.mo{
+  width: 150px;
+}
 @media (max-width: 768px) {
+  .icon-modi{
+    width: 7px;
+    height: 5px;
+  }
   .icon {
     font-size: 8px;
   }
@@ -68,4 +103,17 @@ svg {
   width: 10px;
   height: 10px;
 }
+.texte1{
+  width: 100px;
+}
+// .texte2{
+//   width: 100px;
+// }
+.texte{
+  width: 100px;
+}
+
+// .texte3{
+//   width: 100px;
+// }
 }

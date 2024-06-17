@@ -1,0 +1,12 @@
+<input type="text" [(ngModel)]="nomUtilisateur" #nomInput>
+<div *ngIf="estChampVide && boutonClique &&!nomUtilisateur.trim()" style="color:red;">
+    Veuillez remplir le champ.
+</div>
+  <input type="text" [(ngModel)]="prenomUtilisateur" #nomInput>
+  <div *ngIf="estChampVide1 && boutonClique &&!prenomUtilisateur.trim()" style="color:red;">
+    Veuillez remplir le champ.
+  </div>
+  <button (click)="verifierChamp()">Valider</button>
+
+<!-- Message d'erreur conditionnel -->
+

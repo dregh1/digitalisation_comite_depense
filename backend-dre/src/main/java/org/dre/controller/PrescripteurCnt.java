@@ -1,5 +1,7 @@
 package org.dre.controller;
 
+import io.quarkus.mailer.Mail;
+import io.quarkus.mailer.Mailer;
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -21,7 +23,8 @@ import java.util.List;
 public class PrescripteurCnt {
     @Inject
     PeriodeService periodeService;
-
+    @Inject
+    Mailer mailer;
     @Inject
     AttenteSessionRepository attenteSessionRepository;
 
@@ -45,8 +48,7 @@ public class PrescripteurCnt {
 
     @Inject
     BrouillonService brouillonService;
-    @Inject
-    FournisseurService fournisseurService;
+
     @Inject
     TitreDemandeService titredemadeService;
 
@@ -103,16 +105,7 @@ public class PrescripteurCnt {
         return Response.ok(sessionCds).build();
     }
 
-    @GET
-    @Path("/fournisseur/get")
-    @PermitAll
 
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllFournisseur() {
-        // Récupérer les données depuis PostgreSQL
-        List<Fournisseur> rubriques = fournisseurService.getAll ();
-        return Response.ok(rubriques).build();
-    }
 
 
 
@@ -265,12 +258,21 @@ public class PrescripteurCnt {
 //    @Produces(MediaType.APPLICATION_JSON)
     public Response getAllActive_dmd(
             @QueryParam("idDirection")@DefaultValue("") String  idDirection,
-            @QueryParam("idSession")@DefaultValue("") String  idSession
+            @QueryParam("idSession")@DefaultValue("") String  idSession,
+            @QueryParam("page")@DefaultValue("") int  page,
+            @QueryParam("size")@DefaultValue("") int  size
     ) {
         // Récupérer les données depuis PostgreSQL
-        List<Brouillon> brouillon = brouillonService.getAll ();
-        return Response.ok(brouillon).build();
+        List<Brouillon> brouillon =this.brouillonService.trouverBrouillonsParPage(page,size);
+
+        int totalPersonnes = brouillon.size();
+        long totalPages = (long) Math.ceil(totalPersonnes / (double) size);
+
+        return Response.ok(brouillon).header("X-Pages-Total", totalPages).build();
     }
+
+
+
 
     //recuperation des demandes En Attente de session
     @GET
@@ -292,5 +294,28 @@ public class PrescripteurCnt {
         return attenteSessionRepository.findById(id);
     }
 
+    @POST
+    @Path("/demandeSoumise")
+    @RolesAllowed({"PRS","CDG","ACH"})
+    public Response notifierDemandeSoumise( List<MyMail> listEmail  ) {
 
+        System.out.println("I send mail");
+
+        for (MyMail  m : listEmail){
+            if(m.getEmail()!=null)
+            {
+
+                Mail mail = Mail.withText(m.getEmail(), "Demande soumise", "Hey "+m.getUsername()+",\nUne demande a été soumise!");
+                System.out.println(m.getEmail())   ;
+                mailer.send(mail);
+            }
+
+
+        }
+
+        System.out.println("I sent mail")   ;
+
+        return Response.ok().build();
+
+    }
 }

@@ -23,7 +23,7 @@ export class TestComponent implements OnInit {
 
   existanceAvisAchat : boolean =false;
   existanceAvisCdg : boolean =false;
-
+  existDemande : boolean =false;
 
   role: string | null = '';
   token: string | null = '';
@@ -65,7 +65,7 @@ export class TestComponent implements OnInit {
     depense:'',
     dateCreation:'',
     identifiant:'',
-    dateSoumission:'00:00:00'
+    dateSoumission:''
   };
   departement:string | null='';
   titre = new Titre();
@@ -107,7 +107,7 @@ export class TestComponent implements OnInit {
 session=new SessionCd();
 datePipe:DatePipe;
   ///variable recuperation session
-  existanceSession : boolean= false;
+  existanceSession : boolean= false;testsoumission: boolean= false;
 
 somme='+';
   constructor(
@@ -121,6 +121,14 @@ somme='+';
     this.datePipe= new DatePipe('en-US');
     this.id = this.activatedRoute.snapshot.params['id'];
     
+
+              //recup id demdande si existe
+              this.testeService.demandesoumis(this.id).subscribe((data) => {
+                console.log(data);
+                
+                this.existDemande= data;
+                console.log('exist demande',this.existDemande);
+            });
     // RECUPERATION ROLE , DIRECTION , NOM utilisateur
     this.token = sessionStorage.getItem('token');
     if (this.token !== null) {
@@ -169,7 +177,6 @@ somme='+';
                                                   console.log("--------------vvvvvvvv---------------");
                                                   console.log(this.titres,"io titre");
                                                  
-                                                  
                                                 });
                                       });
 
@@ -183,7 +190,16 @@ somme='+';
       });
       
     }
-    
+    this.testeService.demandesoumis(this.id).subscribe((result)=>{
+      this.testsoumission=result;
+    });
+  }
+  testedatesoumission(){
+    if(this.demande.dateSoumission===''){
+      this.testsoumission=true;
+    }else{
+      this.testsoumission=false;
+    }
   }
   precedent()
 {
@@ -263,6 +279,7 @@ somme='+';
       this.demande.estSoumis=Boolean(this.DetailDemande.estsoumis);
       this.demande.depense=this.DetailDemande.depense??'';
       this.demande.dateCreation=this.DetailDemande.dateCreation?.toString() ?? '';
+      this.demande.dateSoumission=this.DetailDemande.dateSoumission?.toString()??'';
       this.demande.identifiant=this.DetailDemande.identifiant?.toString()??'';
        console.log(this.DetailDemande);
        console.log('LLLOOGKOJ');

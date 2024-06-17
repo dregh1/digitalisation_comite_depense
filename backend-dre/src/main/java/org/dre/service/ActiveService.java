@@ -38,6 +38,24 @@ public class ActiveService {
         return activeRepository.findById(id);
     }
 
+    public boolean estSoumis(Long id)
+    {
+        String sql =    "SELECT * FROM active " ;
+
+
+            sql+="where id ="+id ;
+
+
+        Query query = entityManager.createNativeQuery(sql, DetailDemande.class);
+
+        List<Active> actives = query.getResultList();
+
+        if( actives.size()!=0)return  true;
+
+        return false;
+
+    }
+
     @Transactional
     public void updateActive(Active active) {
         activeRepository.getEntityManager().merge(active);
@@ -61,6 +79,55 @@ public class ActiveService {
         if(!idDirection.isEmpty() || !idSession.isEmpty() )
         {
             sql+="where validationPrescripteur = true  ";
+            if(!idDirection.isEmpty())
+                sql+= " and idDirection ="+idDirection;
+            if(!idSession.isEmpty())
+                sql+= " and idSession ="+   idSession;
+
+        }
+
+        System.out.println(sql);
+
+        Query query = entityManager.createNativeQuery(sql, DetailDemande.class);
+
+        List<Active> actives = query.getResultList();
+
+        return actives;
+
+    }
+
+    public List<Active> getActiveAvecTitre(String idDirection , String idSession) {
+
+
+        String sql =    "SELECT * FROM active where titre!='sans titre' " ;
+
+        if(!idDirection.isEmpty() || !idSession.isEmpty() )
+        {
+            sql+="and validationPrescripteur = true  ";
+            if(!idDirection.isEmpty())
+                sql+= " and idDirection ="+idDirection;
+            if(!idSession.isEmpty())
+                sql+= " and idSession ="+   idSession;
+
+        }
+
+        System.out.println(sql);
+
+        Query query = entityManager.createNativeQuery(sql, DetailDemande.class);
+
+        List<Active> actives = query.getResultList();
+
+        return actives;
+
+    }
+    public List<Active> getActiveSansTitre(String idDirection , String idSession) {
+
+
+        String sql =    "SELECT * FROM active  where titre='sans titre' " ;
+
+        if(!idDirection.isEmpty() || !idSession.isEmpty() )
+        {
+            sql+="and validationPrescripteur = true ";
             if(!idDirection.isEmpty())
                 sql+= " and idDirection ="+idDirection;
             if(!idSession.isEmpty())
