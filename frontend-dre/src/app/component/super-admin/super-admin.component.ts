@@ -12,6 +12,12 @@ import { NEVER, never } from 'rxjs';
   styleUrls: ['./super-admin.component.scss']
 })
 export class SuperAdminComponent implements OnInit {
+joindreGroupe() {
+  this.groupe = "DTI";
+
+}
+  alertInsertion = false;
+  
   gestionUser = true;
   gestionDonnee = false;
   currentPage = 1 ;
@@ -21,9 +27,20 @@ export class SuperAdminComponent implements OnInit {
   nomAchercher : string = '';
 
   resultatRecherche : User[] = [];
-
+  // 0: Object { id: "01ee97f2-5131-440e-8e59-9e404ee7a27b", name: "CDG", description: "Controlleur de Gestion", … }
+  ​
+  // 1: Object { id: "9f5c4696-7e73-4030-b5eb-2c079a649437", name: "default-roles-oma", description: "${role_default-roles}", … }
+  ​
+  // 2: Object { id: "095fcfba-8d6e-4abf-abcd-c6a21709c955", name: "PRS", description: "prescripteur", … }
+  ​
+  // 3: Object { id: "6a68b6d7-448c-423d-801d-75f30ffc9a67", name: "ACH", 
 
   roleList : Role [] = [];
+
+  role = "";
+  groupe = "";
+
+
   roleToAssign = "";
   // role
 
@@ -74,6 +91,79 @@ export class SuperAdminComponent implements OnInit {
     );
   }
 
+  uploadFile() {
+    // Récupère le fichier sélectionné par l'utilisateur via l'élément input
+    const fileInput = document.getElementById('file-input') as HTMLInputElement;
+    const file = fileInput.files? fileInput.files[0] : null;
+  
+    // Vérifie si un fichier a été sélectionné
+    if (!file) {
+      alert('Veuillez sélectionner un fichier.');
+      return;
+    }
+
+    this.onFileSelected({ target: fileInput } as unknown as Event);
+   
+     const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      let csvData = e.target?.result;
+      
+      if (csvData && e.target) {
+        // Traiter les données CSV ici
+            if (typeof e.target.result === 'string') {
+              csvData = e.target.result;
+            } else if (e.target.result instanceof ArrayBuffer) {
+              // Convertir ArrayBuffer en String
+              const decoder = new TextDecoder();
+              csvData = decoder.decode(e.target.result);
+            } else {
+              console.error("Le résultat n'est ni une chaîne de caractères ni un ArrayBuffer.");
+              return;
+            }
+
+
+        // Exemple de traitement
+        let lines = csvData.split('\n');
+       
+        // console.log(lines);
+        
+
+        let correctLines : string [] = [];
+        
+        for( let i =0; i< lines.length ; i++)
+        {
+          correctLines.push(lines[i].replace("\r","")) ;
+        }
+            console.log(correctLines);
+            
+            // insertion en masse des rubrique
+            this.superAdm.insertionRubriques(correctLines).subscribe(
+              (response)=>{console.log(response);}, 
+              (error)=>{console.error(error)}, 
+            );
+            
+            
+      } else {
+        console.error("Erreur lors de la lecture du fichier");
+      }
+    };
+    reader.readAsText(file);
+    // Appelle la méthode onFileSelected pour traiter le fichier
+    this.alertInsertion = true;
+
+  }
+
+  onFileSelected(event :Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    
+    if (!file) {
+      console.error("Aucun fichier sélectionné");
+      return;
+    }
+
+    
+  }
+
   rechercheUser()
   {
     const tableUser : User[] =[];
@@ -121,12 +211,19 @@ export class SuperAdminComponent implements OnInit {
 
   iduser : string ="13634f98-71b2-4122-b530-b258629fa7f5";
 
+    onChange()
+    {
+      this.resultatRecherche = [];
+      this.role = "";
+      this.groupe = "";
+    }
+
   assigneRole() {
 
     const token = sessionStorage.getItem('tokenAdmin');
     let roleTableToSend : [] = [];
 
-
+    this.role = this.roleToAssign ;
     console.log("*-*-**-*-*-*-*-*-*");
     console.log(this.roleToAssign);
     
@@ -156,6 +253,8 @@ export class SuperAdminComponent implements OnInit {
     //   }, error => {
     //     console.error(error);
     //   });
+
+    this.roleToAssign
   }
 
   getIdUser(id : string)

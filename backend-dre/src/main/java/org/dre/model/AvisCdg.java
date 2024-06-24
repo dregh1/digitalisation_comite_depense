@@ -14,8 +14,8 @@ public class AvisCdg {
     private Long id;
     private  Long idDemande;
     private  String commentaire;
-    private  double montantBudgetMensuel;
-    private  double montantEngage;
+//    private  double montantBudgetMensuel;
+//    private  double montantEngage;
 
     public Long getId() {
         return id;
@@ -42,19 +42,19 @@ public class AvisCdg {
     }
 
 
-    public double getMontantBudgetMensuel() {
-        return montantBudgetMensuel;
-    }
-
-    public void setMontantBudgetMensuel(double montantBudgetMensuel) {
-        this.montantBudgetMensuel = montantBudgetMensuel;
-    }
-
-    public double getMontantEngage() {
-        return montantEngage;
-    }
-
-    public void setMontantEngage(double montantEngage) {
-        this.montantEngage = montantEngage;
-    }
+//    public double getMontantBudgetMensuel() {
+//        return montantBudgetMensuel;
+//    }
+//
+//    public void setMontantBudgetMensuel(double montantBudgetMensuel) {
+//        this.montantBudgetMensuel = montantBudgetMensuel;
+//    }
+//
+//    public double getMontantEngage() {
+//        return montantEngage;
+//    }
+//
+//    public void setMontantEngage(double montantEngage) {
+//        this.montantEngage = montantEngage;
+//    }
 }

@@ -10,13 +10,24 @@ import { Demande } from 'src/app/models/Demande';
 import { Titre } from 'src/app/models/TitreDepense';
 import { MyMail } from 'src/app/models/MyMail';
 import { SuperAdminService } from '../super-admin/super-admin.service';
+import { Activedemande } from 'src/app/models/ActiveDemande';
 @Injectable({
   providedIn: 'root',
 })
 export class MenuDemandeService {
   private baseUrl = 'http://localhost:8080/prescripteur';
   private baseUrl2 = 'http://localhost:8080/teste';
+  private api = 'http://localhost:8080';
   constructor(private http: HttpClient ,  private supAdm : SuperAdminService) {}
+
+
+  getTitres(sessionId: number): Observable<Titre[]>{
+    return this.http.get<Titre[]>(`${this.api}/teste/titres/sessions/${sessionId}`);
+  }
+
+  getActiveDemande(titreId: number): Observable<Activedemande[]>{
+    return this.http.get<Activedemande[]>(`${this.api}/teste/active/titres/${titreId}`)
+  }
   
   
   //maka authorization

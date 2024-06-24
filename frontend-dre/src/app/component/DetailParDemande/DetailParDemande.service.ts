@@ -22,6 +22,18 @@ export class TesteService {
   private baseUrl2 = 'http://localhost:8080/prescripteur';
 
   constructor(private http: HttpClient) {}
+
+  getBudget(sessionId: string) : Observable<number>{
+    const headers = this.getHeaders();
+
+    return this.http.get<number>(`${this.url}/cdg/budgetmensuel/get/${sessionId}`, {headers});
+  }
+
+  getrealBudget() : Observable<number>{
+    const headers = this.getHeaders();
+
+    return this.http.get<number>(`${this.url}/cdg/realbudgetmensuel/get`, {headers});
+  }
   //maka authorization
   private getHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('token'); // Replace with your token retrieval logic
@@ -217,5 +229,22 @@ export class TesteService {
 
     return this.http.delete<any>(`${this.baseUrl}/supprimerDemande/${id}`, { headers, });
   } 
+
+  getBudgetMensuel()
+  {
+    const headers = this.getHeaders();
+    return this.http.get<any>(
+      `${this.baseUrl3}/budgetmensuel/get`,
+      { headers }
+    )
+    .subscribe((response)=>
+    {
+      console.log("//////////////////////////");
+      
+      console.log(response);
+    
+    })
+  }
+
   
 }

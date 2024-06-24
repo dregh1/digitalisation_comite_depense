@@ -37,9 +37,17 @@ export class MenuDemandeComponent implements OnInit {
   AttenteSession: DetailDemande[]=[];
   nomDirection: string | null = '';
   DonneExcels: DonneeExcel[] = [];
-  listesessionActive=false;
   buttonTextColor = 'black';idsupprimer='';
-  brouilloncliqueActive=false;Activedemande=false;Activedemandeclique=false;isbrouillon=false;brouillonActive=false;
+  
+  // etat 
+  brouilloncliqueActive=false;
+  Activedemande=false;
+  Activedemandeclique=false;
+  isbrouillon=false;
+  listesessionActive=false;
+  brouillonActive=false;
+  
+  
   //CREATION SESSION
   direction = new Direction();
   DetailDemandeById = new DetailDemande();
@@ -81,6 +89,12 @@ export class MenuDemandeComponent implements OnInit {
   };
   titre = new Titre();datePipe:DatePipe;
   groupedDetailDemandes: { [titre: string]: { [iddirection: string]: DetailDemande[] } } = {};
+
+  activeDemandes : DetailDemande[] = []
+  titres: Titre[] = [];
+  titreLoaded: boolean = false;
+  isLoaded: boolean = false;
+
   totalMontantsHT : {[titre:string]:number;}={};
   demandes = new Demande();
 session=new SessionCd();
@@ -105,10 +119,13 @@ session=new SessionCd();
       
       //chercher ROLE 
           this.role = this.AuthenticationService.getRole(tableRole);
-     if(this.role==='PRS'){
-      this.isbrouillon=true;this.brouillonActive=true;
+     
+    if(this.role==='PRS'){
+          this.isbrouillon=true;
+          this.brouillonActive=true;
      }else{
-      this.Activedemande=true;this.Activedemandeclique=true;
+          this.Activedemande=true;
+          this.Activedemandeclique=true;
      }
       //chercher DIRECTION (groups) a partir du token
           const tableGROUPE = response['direction'];
@@ -244,6 +261,14 @@ session=new SessionCd();
     //getbytitre
   }
 
+  setActiveDemandes(){
+
+  }
+
+  setTitres(){
+    
+  }
+
 
   loadBrouillon(idDirection : string, idSession : string , page : number , size :number)  :void
   {
@@ -289,6 +314,10 @@ session=new SessionCd();
 
     
   }
+
+  // getEtatDemande(demande: Demande): string{
+  //   this.groupedDetailDemandes.
+  // }
 //exporter excel
 exportToExcel(): void {
   //aectation données eccdel
@@ -394,6 +423,8 @@ brouillonclique(){
       .subscribe((response)=>{},(error)=>{console.log(error);
       });
     }
+
+
     Soumission(){
 
     //recuperation par detail
@@ -442,10 +473,13 @@ brouillonclique(){
     window.location.reload();
     
     }
+    
     getormatdate(){
       const date= new Date();
       return this.datePipe.transform(date,'yyyy-MM-dd');  
     }
+
+
 //modication prescripteur
 update(demande:any): void {
   console.log('moulle');

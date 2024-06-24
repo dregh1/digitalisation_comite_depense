@@ -38,6 +38,7 @@ export class CreationPrescripteurComponent implements OnInit {
   refences: any[] = [];
   designation: string = '';
   texte: string = '';
+  
   // valeur
   periode: any;
   estregularisation: boolean;
@@ -45,8 +46,15 @@ export class CreationPrescripteurComponent implements OnInit {
   idTitredepense: any = 1;
   motif: any;
   montantHt: any;estChampVidetitre=true;
-  boutonClique=false;estChampVidemotif=true;estChampVidedevise=true;estChampVidemontant=true;estChampVidenomreference=true;
-  estChampVideperiode=true;estChampViderubrique=true;estChampVidedepense=true;estChampVidetypereference=true;
+  boutonClique=false;estChampVidemotif=true;estChampVidedevise=true;
+  
+  estChampVidemontant=true;
+  estChampVidenomreference=true;
+  estChampVideperiode=true;
+  estChampViderubrique=true;
+  estChampVidedepense=true;
+  estChampVidetypereference=true;
+
   demande = {
     estregularisation: '',
     typeReference: '',

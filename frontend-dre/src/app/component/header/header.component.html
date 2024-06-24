@@ -28,9 +28,7 @@
               <li class="nav-item mx-3">
                 <button class="nav-link" aria-current="page" [class.active]="consultation" (click)="consultationbtn()">Consultation</button>
               </li>
-              <li class="nav-item mx-3">
-                <button class="nav-link" aria-current="page" [class.active]="admin" (click)="adminbtn()">Admin</button>
-              </li>
+              
               <div *ngIf="role === 'CDG' || role === 'ACH' "> 
                  <li class="nav-item mx-3">
                   <button class="nav-link" aria-current="page" [class.active]="validation" (click)="validationbtn()">Validation</button>
@@ -43,6 +41,9 @@
                   </li>
               </div>
               
+              <li class="nav-item mx-3" *ngIf="role==='CDG'">
+                <button class="nav-link" aria-current="page" [class.active]="admin" (click)="adminbtn()">Admin</button>
+              </li>
           </ul>
       </div>
        <!-- Navbar with action icons  -->

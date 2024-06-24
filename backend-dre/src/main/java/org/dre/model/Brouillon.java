@@ -11,9 +11,9 @@ import java.sql.Timestamp;
 
 @Entity
 public class Brouillon  {
-    @Id
-    private Integer id ;
-    private Integer idtitre ;
+        @Id
+        private Integer id ;
+        private Integer idtitre ;
     private String titre ;
     private String motif ;
     private double montantht ;

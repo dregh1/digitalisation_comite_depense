@@ -108,9 +108,9 @@ getormatdate(){
       missingField = 'usd' as keyof SessionCd; // Type assertion
     }
    
-    if (!this.session.tauxgbp) {
-      missingField = 'gbp' as keyof SessionCd;
-    }
+    // if (!this.session.tauxgbp) {
+    //   missingField = 'gbp' as keyof SessionCd;
+    // }
 
     if (missingField) {
       this.errorMessage = `Veuillez remplir le champ ${missingField}`; // More specific error message
@@ -167,6 +167,7 @@ istauxusd(): boolean {
   // Si montantHt n'est ni un nombre ni une chaîne, retournez false par défaut
   return false;
 }
+
 istauxgbp(): boolean {
   if (typeof this.session.tauxgbp === 'number') {
       // Convertir le nombre en chaîne et vérifier si elle est non vide après trim
@@ -179,6 +180,8 @@ istauxgbp(): boolean {
   // Si montantHt n'est ni un nombre ni une chaîne, retournez false par défaut
   return false;
 }
+
+
 isdatecloture(): boolean {
   if (typeof this.session.dateCloture === 'number') {
       // Convertir le nombre en chaîne et vérifier si elle est non vide après trim

@@ -196,7 +196,7 @@
                             
                               <label for="email" id="emailLabel" class="form-label">Date de creation<span class="visually-hidden"> (required)</span></label>
                               <span  class="form-control"  id="lastName" aria-labelledby="lastNameLabel lastNameFeedback" autocomplete="family-name" required>{{this.demande.dateCreation}}</span>
-                              
+                                    
                               <div class="valid-feedback">
                                 Bien!
                               </div>
@@ -243,9 +243,9 @@
                               <div id="lastNameFeedback" class="invalid-feedback">
                                 MontantHt vide.
                               </div>
-                              <div *ngIf="estChampVidemontant && boutonClique && (!this.demande.montantHt || !this.isMontantHtTrimmed())" style="color:red;">
+                              <!-- <div *ngIf="estChampVidemontant && boutonClique && (!this.demande.montantHt || !this.isMontantHtTrimmed())" style="color:red;">
                                 Veuillez remplir le montant.
-                            </div>
+                            </div> -->
                             
                             </div>
                             <div class="mb-3">

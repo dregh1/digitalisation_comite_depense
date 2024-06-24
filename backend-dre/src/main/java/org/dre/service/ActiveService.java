@@ -6,11 +6,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import org.dre.model.Active;
-import org.dre.model.Brouillon;
 import org.dre.model.DetailDemande;
 import org.dre.repository.ActiveRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,6 +17,9 @@ import java.util.List;
 public class ActiveService {
     @Inject
     ActiveRepository activeRepository;
+
+    @Inject
+    SessionCdService  sessionCdService;
     @Inject
     EntityManager entityManager;
 
@@ -36,6 +37,24 @@ public class ActiveService {
 
     public Active getActiveById(Long id) {
         return activeRepository.findById(id);
+    }
+
+
+    public double getSomme(Integer id){
+        if(!this.sessionCdService.checkSession(id)){
+            return 0;
+        }
+
+        String sql =    "select  coalesce ( montant , 0) from (SELECT coalesce(sum(montantht ) , 0 ) as montant, idsession  FROM active group by idsession ) as tab where idsession = "+ id;
+
+        Query query = entityManager.createNativeQuery(sql, Double.class);
+
+        Double response = (Double) query.getSingleResult();
+
+        System.out.println("response ---------------- = " + response);
+//        return (double) query.getSingleResult();
+
+        return response;
     }
 
     public boolean estSoumis(Long id)
@@ -145,4 +164,14 @@ public class ActiveService {
 
     }
 
+    public List<Active> getActiveByTitre(int idTitre) {
+
+        String sql =    "SELECT * FROM active  where idtitre =  "+ idTitre ;
+
+        Query query = entityManager.createNativeQuery(sql, DetailDemande.class);
+
+        List<Active> actives = query.getResultList();
+
+        return actives;
+    }
 }

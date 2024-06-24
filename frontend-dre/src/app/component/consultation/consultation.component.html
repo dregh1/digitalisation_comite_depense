@@ -62,19 +62,28 @@
               </select>
             </div>
             <div class="input-group mb-2">
-              <select
+              <input
+              type="text"
+              class="form-control mb-2"
+              placeholder=""
+              aria-label=""
+              aria-describedby="basic-addon1"
+              [(ngModel)]="demande.motif"
+            />
+
+              <!-- <select
                 class="form-select"
                 [(ngModel)]="this.demande.idFournisseur"
                 id="inputGroupSelect04"
                 aria-label="Example select with button addon"
               >
-                <option
+              <option
                   *ngFor="let item of this.fournisseurs"
                   [value]="item.id"
                 >
                   {{ item.nom }}
                 </option>
-              </select>
+              </select> -->
             </div>
             <input
               type="text"

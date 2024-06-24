@@ -62,10 +62,7 @@ public class TitreDemandeService {
         return listTitreBySession;
     }
 
-    public List<TitreDepense> getTitres(
-            String idDirection,
-            String idSession
-    ) {
+    public List<TitreDepense> getTitres(String idDirection, String idSession) {
 
 
         String sql =    "SELECT * FROM Titre " ;
@@ -81,6 +78,16 @@ public class TitreDemandeService {
         }
 
         System.out.println(sql);
+
+        Query query = em.createNativeQuery(sql, TitreDepense.class);
+
+        List<TitreDepense> titresDepense = query.getResultList();
+
+        return titresDepense;
+    }
+
+    public List<TitreDepense> getAllTitresBySession(long idSession) {
+        String sql = "SELECT * FROM Titre where idsession = " + idSession ;
 
         Query query = em.createNativeQuery(sql, TitreDepense.class);
 

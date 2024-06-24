@@ -20,6 +20,8 @@ import { SessionCd } from 'src/app/models/SessionCd';
   styleUrls: ['./DetailParDemande.component.scss'],
 })
 export class TestComponent implements OnInit {
+  budgetMensuel =0;
+
 
   existanceAvisAchat : boolean =false;
   existanceAvisCdg : boolean =false;
@@ -71,6 +73,11 @@ export class TestComponent implements OnInit {
   titre = new Titre();
 
 
+  budgetmensuel ={
+    montant :  ""
+  }
+
+
   AvisCdg = {
     id: '',
     idDemande: '',
@@ -92,7 +99,7 @@ export class TestComponent implements OnInit {
 
   direction = new Direction();
   nomDirection: string | null = '';
-  id: number;
+  id!: number;
   reliquat: number = 0;
   type: string = '';
   devise: string = '';
@@ -105,7 +112,7 @@ export class TestComponent implements OnInit {
   message: string = '';
   idsession:string='';
 session=new SessionCd();
-datePipe:DatePipe;
+datePipe!:DatePipe;
   ///variable recuperation session
   existanceSession : boolean= false;testsoumission: boolean= false;
 
@@ -117,6 +124,28 @@ somme='+';
     private router: Router,
     private utilitaire:UtilitaireService
   ) {
+    
+  }
+  testedatesoumission(){
+    if(this.demande.dateSoumission===''){
+      this.testsoumission=true;
+    }else{
+      this.testsoumission=false;
+    }
+  }
+  precedent()
+{
+  this.router.navigate(['/main/MenuDemande']);
+}  //calcul sur le reliquat
+  calculerResultat() {
+    this.reliquat =
+      parseFloat(this.AvisCdg.montantBudgetMensuel) -
+      parseFloat(this.AvisCdg.montantEngage);
+  }
+
+
+  ngOnInit(): void {
+
     ///initialisaaiton date
     this.datePipe= new DatePipe('en-US');
     this.id = this.activatedRoute.snapshot.params['id'];
@@ -163,10 +192,23 @@ somme='+';
                                         if(data!==null)
                                         {
                                           this.idsession=data.id?.toString() ?? '';
-                                          console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
+
+
+                                          console.log("session -------------- : ", this.idsession);
+    
+                                          this.testeService.getBudget(this.idsession).subscribe((data) => {
+                                              this.AvisCdg.montantEngage = data/1000 + '';
+                                              
+                                          })
+
+                                        //   this.testeService.getrealBudget().subscribe((data) => {
+                                        //     this.AvisCdg.montantBudgetMensuel = data/1000 + '';
+                                            
+                                        // })
+                                          // console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
                                          
-                                          console.log('////////directiontitre',this.direction.id);
-                                          console.log('///////session titrz',this.idsession);
+                                          // console.log('////////directiontitre',this.direction.id);
+                                          // console.log('///////session titrz',this.idsession);
   
                                         }
                                         
@@ -193,24 +235,12 @@ somme='+';
     this.testeService.demandesoumis(this.id).subscribe((result)=>{
       this.testsoumission=result;
     });
-  }
-  testedatesoumission(){
-    if(this.demande.dateSoumission===''){
-      this.testsoumission=true;
-    }else{
-      this.testsoumission=false;
-    }
-  }
-  precedent()
-{
-  this.router.navigate(['/main/MenuDemande']);
-}  //calcul sur le reliquat
-  calculerResultat() {
-    this.reliquat =
-      parseFloat(this.AvisCdg.montantBudgetMensuel) -
-      parseFloat(this.AvisCdg.montantEngage);
-  }
-  ngOnInit(): void {
+
+
+    
+
+
+    this.testeService.getBudgetMensuel();
     //verification avisCdg
     // this.utilitaire.checkAvisCdgByIdDemande("").subscribe((data) => {
     //   this.existanceAvisCdg = data;
@@ -380,6 +410,9 @@ somme='+';
     
     if(this.idsession===''){
       console.log('vide session');
+
+
+      
     }else{
       console.log(this.idsession,'+///////////sessionnnn///////////////');
        this.demande.idSession=this.idsession;

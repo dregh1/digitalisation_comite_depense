@@ -1,6 +1,7 @@
 package org.dre.controller;
 
 import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -8,9 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.dre.model.*;
 import org.dre.repository.AvisCdgRepository;
-import org.dre.service.AvisCdgService;
-import org.dre.service.DetailDemandeService;
-import org.dre.service.SessionCdService;
+import org.dre.service.*;
 
 import java.util.List;
 
@@ -23,6 +22,11 @@ public class CdgCnt {
 
     @Inject
     AvisCdgService avisCdgService;
+
+    @Inject
+    ActiveService activeService;
+    @Inject
+    BudgetMensuelService budgetMensuelService;
     @Inject
     AvisCdgRepository avisCdgRepository;
 
@@ -124,5 +128,43 @@ public class CdgCnt {
         return Response.status(Response.Status.CREATED).entity(sessionCd).build();
     }
 
+    // get budget mensuel
 
+    @GET
+    @Path("/budgetmensuel/get/{idsession}")
+    @PermitAll
+    public Response getTotalActive(
+            @PathParam("idsession") Integer id
+    )
+    {
+
+        double a =  activeService.getSomme( id);
+
+//        Long budget = budgetMensuelService.getcurrentBudget();
+
+
+//        System.out.println(budget);
+        return  Response.ok(a).build();
+    }
+
+    @GET
+    @Path("/realbudgetmensuel/get")
+    @PermitAll
+    public Response getBudgetMensuel(
+
+    )
+    {
+
+        double a = budgetMensuelService.getcurrentBudget( );
+
+        return  Response.ok(a).build();
+    }
+//    @POST
+//    @Path("/budgetmensuel/")
+//
+//    public Response getBudgetMensuel()
+//    {
+//
+//        return  Response.ok().build();
+//    }
 }

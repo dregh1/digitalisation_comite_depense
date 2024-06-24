@@ -526,7 +526,7 @@ create or replace view validation as
           CREATE OR REPLACE FUNCTION generate_identifiant_trigger()
             RETURNS TRIGGER AS $$
             BEGIN
-                NEW.identifiant := SUBSTRING(TO_CHAR(CURRENT_DATE, 'YYYY')::text, 3, 2)|| LPAD(  REPEAT('0', 5 - LENGTH(NEW.id::TEXT)) || NEW.id::TEXT  , 5, '0');
+                NEW.identifiant :=  LPAD(  REPEAT('0', 5 - LENGTH(NEW.id::TEXT)) || NEW.id::TEXT  , 5, '0') || SUBSTRING(TO_CHAR(CURRENT_DATE, 'YYYY')::text, 3, 2);
 
                 RETURN NEW;
             END; $$ LANGUAGE plpgsql;
@@ -564,3 +564,15 @@ insert into rubrique (designation )values
 ('Remboursement des notes de frais'),
 ('Charges de marketing'),
 ('Frais de formation');
+
+
+-- budget mensuel
+create table budgetMensuel
+(
+    id serial primary key,
+    annee int default EXTRACT(YEAR FROM CURRENT_DATE) ,
+    numDuMois int default EXTRACT(MONTH FROM CURRENT_DATE),
+    montant decimal(50,3)
+);
+
+

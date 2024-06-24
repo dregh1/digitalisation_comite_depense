@@ -247,7 +247,7 @@ public class TesteCnt {
     @Path("/send")
     public Response sendNotification() {
 
-        Mail mail = Mail.withText("charle_andre_as@outlook.com", "Notification Subject", "Hey, This is the body of the notification.");
+        Mail mail = Mail.withText("prescripteur_01@outlook.com", "Notification Subject", "Hey, This is the body of the notification.");
 
         mailer.send(mail);
 
@@ -265,7 +265,23 @@ public class TesteCnt {
         for (MyMail m : listEmail) {
             if (m.getEmail() != null) {
 
-                Mail mail = Mail.withText(m.getEmail(), "Session Ouverte", "Hey " + m.getUsername() + ",\nUne session CD a été ouverte!");
+                Mail mail = Mail.withText(m.getEmail(),
+                        "Session Ouverte",
+                        "Hey "+m.getUsername()+
+                                ",\n Une session CD a été ouverte!" +
+
+
+                                "\n\nA la prochaine!" +
+
+
+                                "\n\n\n" +
+                                "---------------------\n" +
+                                "Service Orange Madagascar");
+
+
+
+
+
                 System.out.println(m.getEmail());
                 mailer.send(mail);
             }
@@ -332,6 +348,18 @@ public class TesteCnt {
         return sessionCdService.checkSession(idDirection);
     }
 
+    @GET
+    @Path("/active/titres/{idTitre}")
+    @RolesAllowed({"PRS", "ACH", "CDG"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllActiveByTitre(
+            @PathParam("idTitre") @DefaultValue("") int idTitre
+    ) {
+
+        List<Active> active_dmds = activeService.getActiveByTitre(idTitre);
+        return Response.ok(active_dmds).build();
+    }
+
 
     // LIST DEMANDE ACTIVE
     @GET
@@ -358,6 +386,18 @@ public class TesteCnt {
 
         List<Active> active_dmds = activeService.getActiveSansTitre(idDirection, idSession);
         return Response.ok(active_dmds).build();
+    }
+
+    @GET
+    @Path("/titres/sessions/{idSession}")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllTitreBySession(
+            @PathParam("idSession") int idSession
+    ) {
+
+        List<TitreDepense> titre_dmds = titredemandeService.getAllByIdSession(idSession);
+        return Response.ok(titre_dmds).build();
     }
 
     // get titre by idDirection, idSession
@@ -441,6 +481,66 @@ public class TesteCnt {
         return Response.ok().build();
 
     }
+
+    @POST
+    @Path("/demandeRefuse")
+    @RolesAllowed({"PRS", "CDG", "ACH"})
+    public Response demandeRefuse(List<MyMail> listEmail) {
+
+        System.out.println("I send mail");
+
+        for (MyMail m : listEmail) {
+            if (m.getEmail() != null) {
+
+                Mail mail = Mail.withText(m.getEmail(), "demande refusée", "Bonjour " + m.getUsername() +
+                        "Une demande ayant la référence : 0001224 a été refusée dans votre direction! " +
+                        "" +
+                        "" +
+                        "\n\n\nCordialement");
+
+
+                System.out.println(m.getEmail());
+                mailer.send(mail);
+            }
+
+
+        }
+
+        System.out.println("I sent mail");
+
+        return Response.ok().build();
+
+    }
+
+//    @POST
+//    @Path("/demandeSoumise")
+//    @RolesAllowed({"PRS", "CDG", "ACH"})
+//    public Response demandeSoumise(List<MyMail> listEmail) {
+//
+//        System.out.println("I send mail");
+//
+//        for (MyMail m : listEmail) {
+//            if (m.getEmail() != null) {
+//
+//                Mail mail = Mail.withText(m.getEmail(), "demande soumise", "Bonjour " + m.getUsername() +
+//                        "Une demande ayant la référence : 0001224 a été refusée dans votre direction! " +
+//                        "" +
+//                        "" +
+//                        "\n\n\nCordialement");
+//
+//
+//                System.out.println(m.getEmail());
+//                mailer.send(mail);
+//            }
+//
+//
+//        }
+//
+//        System.out.println("I sent mail");
+//
+//        return Response.ok().build();
+//
+//    }
 
     //soumettre une demande (fonction maika)
     @POST

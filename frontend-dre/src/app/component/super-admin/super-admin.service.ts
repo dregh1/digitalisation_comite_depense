@@ -25,6 +25,27 @@ export class SuperAdminService {
   //       }
   // }
 
+   //insertion de rubrique en masse
+   insertionRubriques(formData: string[]): Observable<any> {
+
+    const headers = this.getHeaders();
+    return this.http.post<string[]>(this.baseUrl + '/rubrique/add', formData, {
+      headers,
+    });
+
+  }
+
+  private getHeaders(): HttpHeaders {
+    const token = sessionStorage.getItem('token'); // Replace with your token retrieval logic
+
+    if (token) {
+      return new HttpHeaders({ Authorization: `Bearer ${token}` });
+    } else {
+      // Handle the case where no token is found (e.g., throw an error or redirect to login)
+      throw new Error('No authorization token found');
+    }
+  }
+
   private getHeadersAdmin(): HttpHeaders {
               
     const token = sessionStorage.getItem('tokenAdmin');                  // Recuperation token
