@@ -55,6 +55,7 @@ truncate table aviscdg cascade;
 					ref varchar(11) not null ,
 					dateDebut timestamp default now(),
 					dateCloture timestamp not null,
+					dateFermeture timestamp,
 					estSupprime boolean default false,
 					tauxEur numeric(32,3) not null,
 					tauxUsd numeric(32,3) not null,
@@ -229,8 +230,8 @@ truncate table aviscdg cascade;
 --            INSERT INTO rubrique (designation) VALUES ('Fournitures generales'),('achat nourrire'), ('Locaux'), ('Materiel informatique');
 --    -- Insert data into fournisseur table
 ----            INSERT INTO fournisseur (nom)  VALUES ('Fournisseur X'), ('Hôtel Y'), ('Prestataire Z'), ('Fournisseur Logiciel');
---            insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
-
+            insert into periode(designation) values ('mois'),('trimestre'),('semestre'),('annee');
+--
 --truncate table sessioncd cascade;
 --truncate table demande cascade;
 --truncate table titredepense cascade;
@@ -525,7 +526,7 @@ create or replace view validation as
           CREATE OR REPLACE FUNCTION generate_identifiant_trigger()
             RETURNS TRIGGER AS $$
             BEGIN
-                NEW.identifiant := SUBSTRING(TO_CHAR(CURRENT_DATE, 'YYYY')::text, 3, 2)|| LPAD(  REPEAT('0', 5 - LENGTH(NEW.id::TEXT)) || NEW.id::TEXT  , 5, '0');
+                NEW.identifiant :=  LPAD(  REPEAT('0', 5 - LENGTH(NEW.id::TEXT)) || NEW.id::TEXT  , 5, '0') || SUBSTRING(TO_CHAR(CURRENT_DATE, 'YYYY')::text, 3, 2);
 
                 RETURN NEW;
             END; $$ LANGUAGE plpgsql;
@@ -547,3 +548,31 @@ create or replace view validation as
 
 
 select id, validationprescripteur, validationcdg, validationachat from active;
+
+
+insert into rubrique (designation )values
+
+('Salaires du personnel'),
+('Cotisations sociales'),
+('Loyers et frais d`entretien des bureaux'),
+('Impots et taxes locales'),
+('Maintenance des machines'),
+('Frais de restauration'),
+('Frais de transport'),
+('Frais d`emballage'),
+('Salaires variables'),
+('Remboursement des notes de frais'),
+('Charges de marketing'),
+('Frais de formation');
+
+
+-- budget mensuel
+create table budgetMensuel
+(
+    id serial primary key,
+    annee int default EXTRACT(YEAR FROM CURRENT_DATE) ,
+    numDuMois int default EXTRACT(MONTH FROM CURRENT_DATE),
+    montant decimal(50,3)
+);
+
+

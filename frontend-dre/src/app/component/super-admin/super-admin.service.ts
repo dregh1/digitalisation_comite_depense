@@ -1,11 +1,15 @@
 import { HttpParams, HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { MyMail } from 'src/app/models/MyMail';
+import { Role } from 'src/app/models/Role';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SuperAdminService {
+
+  private baseUrl = 'http://localhost:8080/teste';
 
   constructor(private http: HttpClient) { }
 
@@ -93,6 +97,8 @@ export class SuperAdminService {
   
     const urlAchat = "http://localhost:8083/admin/realms/oma/roles/ACH/users";
     const urlCdg = "http://localhost:8083/admin/realms/oma/roles/CDG/users";
+    
+    const ursPRS = "http://localhost:8083/admin/realms/oma/roles/PRS/users";
   
     const headers = this.getHeadersAdmin();
     try {
@@ -139,5 +145,11 @@ export class SuperAdminService {
       console.error(error);
       throw error; // Propage l'erreur si nécessaire
     }
+  }
+
+
+  getAllRoles (): Observable<Role[]>
+  {
+      return this.http.get<Role[]>(this.baseUrl + '/roles');
   }
 }

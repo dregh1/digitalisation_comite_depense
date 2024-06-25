@@ -10,7 +10,6 @@ export class DetailDemande {
     public nomReference?: string,
     public estregularisation?: boolean,
     public iddirection?: number,
-    // public direction?: string,
     public comsprescripteur?: string,
     public idrubrique?: number,
     public fournisseur?: string,
