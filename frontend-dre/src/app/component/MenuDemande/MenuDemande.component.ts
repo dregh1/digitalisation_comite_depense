@@ -19,6 +19,7 @@ import { DecimalPipe } from '@angular/common';
   styleUrls: ['./MenuDemande.component.scss'],
 })
 export class MenuDemandeComponent implements OnInit {
+
   currentPage: number = 1; // Initialisation de la page courante
  
   previousDisabled : boolean = (this.currentPage = 1)? true : false ;
@@ -28,17 +29,16 @@ export class MenuDemandeComponent implements OnInit {
   totalPages!: number ; // Calculé dynamiquement
 
 
-
   role: string | null = '';
   isUp=false;
   token: string | null = '';
-  DetailDemande: DetailDemande[] = [];DetailDemandesanstitre: DetailDemande[] = [];
+  DetailDemande: DetailDemande[] = []; DetailDemandesanstitre: DetailDemande[] = [];
   brouillon: Brouillon[]=[];
   AttenteSession: DetailDemande[]=[];
   nomDirection: string | null = '';
   DonneExcels: DonneeExcel[] = [];
   listesessionActive=false;
-  buttonTextColor = 'black';idsupprimer='';
+  buttonTextColor = 'black';idsupprimer='';videbrouillon=false;videattentsession=false;videactive=false;
   brouilloncliqueActive=false;Activedemande=false;Activedemandeclique=false;isbrouillon=false;brouillonActive=false;
   //CREATION SESSION
   direction = new Direction();
@@ -98,9 +98,9 @@ session=new SessionCd();
   
         this.AuthenticationService.getUserInformation()
         .subscribe(response => {
-          console.log("TRAITEMENT USER INFO");
+          // console.log("TRAITEMENT USER INFO");
           //console.log(response);
-          console.log(response['groups']);      //tableau
+          // console.log(response['groups']);      //tableau
           const tableRole = response['groups'];
       
       //chercher ROLE 
@@ -130,18 +130,18 @@ session=new SessionCd();
                           this.utilitaire.getSessionByDirection(this.direction.id?.toString() ??'' ).subscribe((data) => {
                                     if(data !== null)
                                     {
-                                          console.log("------------ session ------------");
-                                          console.log(data);
+                                          // console.log("------------ session ------------");
+                                          // console.log(data);
                                           
                                           this.session = data;
                                           this.idsession = data.id?.toString() ?? '';
-                                        console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
+                                        // console.log(this.idsession,'sessionnnnnnnnnnnnnnnnnn');
                                       }
                             
                                             //RECUPERATION active
                                             this.MenuDemandeService.search(this.direction.id?.toString() ??'',this.idsession.toString() ) .subscribe((donnees) => {
                                               this.DetailDemande = donnees;
-                                              console.log(this.DetailDemande,"io data");
+                                              // console.log(this.DetailDemande,"io data");
 
                                             //const listeOriginale= DetailDemande ;
                                             // donnees.forEach(demande => {
@@ -170,6 +170,11 @@ session=new SessionCd();
 
                                             // console.log(this.groupedDetailDemandes,'test groupe detaildemande');
                                           ///addition
+
+                                  /* Groupement des demandes par titre */
+                                          if(donnees.length > 0){
+                                            this.videactive=true;
+                                             }
                                           donnees.forEach(demande => {
                                              const titre = demande.titre?? '';
                                              const iddirection = demande.iddirection?? '';
@@ -187,42 +192,63 @@ session=new SessionCd();
                                           
                                             // Ajoutez la demande au tableau correspondant
                                             this.groupedDetailDemandes[titre][iddirection].push(demande);
-                                          console.log('chaque montant ',demande.montantht);
-                                          console.log('somme montantht',demande.montantht);
+                                          // console.log('chaque montantMga ',demande.montantMga);
+                                          // console.log('somme montantMga',demande.montantMga);
                                           
                                             // Calculez le total des montants HT pour ce groupe
-                                            // const total = this.groupedDetailDemandes[titre][iddirection].reduce((acc, demande) => acc + (demande.montantht || 0), 0);
-                                            const total = this.groupedDetailDemandes[titre][iddirection].reduce((acc, demande) => acc + Number(demande.montantht) || 0, 0);
+                                            // const total = this.groupedDetailDemandes[titre][iddirection].reduce((acc, demande) => acc + (demande.montantMga || 0), 0);
+                                            const total = this.groupedDetailDemandes[titre][iddirection].reduce((acc, demande) => acc + Number(demande.montantMga) || 0, 0);
 
 
                                             // Stockez le total dans l'objet totalMontantsHT
                                             this.totalMontantsHT[titre] = total;
                                             
                                           });
-                                           console.log(this.groupedDetailDemandes, 'test groupe detaildemande');
+                                          //  console.log(this.groupedDetailDemandes, 'test groupe detaildemande');
+                                           
+                                          // console.log(this.direction.id,'direction id');console.log(this.idsession,'idsession');
                                           
-
-
+                                          
+                                            //RECUPERATION active sans titre
+                                            this.MenuDemandeService.sanstitre(this.direction.id?.toString() ??'',this.idsession.toString() ) .subscribe((donnees) => {
+                                              this.DetailDemandesanstitre = donnees;
+                                              // console.log(this.DetailDemandesanstitre,"io data sns titre");
+                                            });
 
 
 
 
                                           });    
       
+                                            // //RECUPERATION brouillon
+                                            // this.MenuDemandeService.searchbrouillon(this.direction.id?.toString() ??'',this.idsession.toString() ) .subscribe((datas) => {
+                                            //   this.brouillon = datas;
+                                            //   console.log(this.brouillon,"io brouillon");
+                                              
+                                            // });
                                             //RECUPERATION brouillon
                                             this.loadBrouillon(this.direction.id?.toString() ??'',this.idsession.toString() ,this.currentPage , this.itemsPerPage);
                                             
 
                                             this.MenuDemandeService.getAttenteSession(this.direction.id?.toString() ??'').subscribe((datas) => {
                                               this.AttenteSession = datas;
-                                              console.log(this.AttenteSession,"io   AttenteSession");
+                                              // console.log(this.AttenteSession,"io   AttenteSession");
+                                              if(this.AttenteSession.length > 0){
+                                                this.videattentsession=true;
+                                                // console.log('misy attente');
+                                              }
+                                            });
+                                            //RECUPERATION ATTENTE sESSION
+                                            this.MenuDemandeService.getAttenteSession(this.direction.id?.toString() ??'').subscribe((datas) => {
+                                              this.AttenteSession = datas;
+                                              // console.log(this.AttenteSession,"io   AttenteSession");
                                               
                                             });
 
                       
                           });
                    
-                  console.log('blaoohi',response);
+                  // console.log('blaoohi',response);
                 });
             }
   
@@ -230,7 +256,7 @@ session=new SessionCd();
           if(response['given_name']!==null)
           {
             const tableNOM = response['given_name'];
-            console.log('NOM!: '+tableNOM);
+            // console.log('NOM!: '+tableNOM);
     
         //Metraka nom anaty session
             sessionStorage.removeItem('nom');
@@ -243,17 +269,19 @@ session=new SessionCd();
       } 
     //getbytitre
   }
-
-
   loadBrouillon(idDirection : string, idSession : string , page : number , size :number)  :void
   {
-    this.MenuDemandeService.searchbrouillon(idDirection?.toString() ??'',idSession.toString() ,page , size) .subscribe((datas) => {
-      
+    this.MenuDemandeService.searchbrouillon(idDirection?.toString() ??'',idSession.toString()) .subscribe((datas) => {
+      // page,size
       // const totalPagesHeader = datas.headers.get('X-Pages-Total');
       // console.log("------------------------------------------------"+totalPagesHeader);
       
       this.brouillon = datas;
-      console.log(this.brouillon,"io brouillon #############################");
+      
+      // console.log(this.brouillon,"io brouillon #############################");
+      if(this.brouillon.length > 0){
+          this.videbrouillon=true;
+      }
       
     });
   }
@@ -269,9 +297,8 @@ session=new SessionCd();
         this.currentPage--;
         this.loadBrouillon(this.direction.id?.toString() ??'',this.idsession.toString() ,this.currentPage , this.itemsPerPage);    
     }
-
   ngOnInit(): void {
-    
+    this.currentPage  = 1;
 
     //RECUPERATION brouillon
     // this.MenuDemandeService.getBrouillon().subscribe((DetailDemande) => {
@@ -397,49 +424,49 @@ brouillonclique(){
     Soumission(){
 
     //recuperation par detail
-    console.log('idddemandeeeeeee',this.idsupprimer);
+    // console.log('idddemandeeeeeee',this.idsupprimer);
     
-    this.utilitaire.getDetailDemandebyId(parseInt(this.idsupprimer)).subscribe((response) => {
-      this.DetailDemandeById = response;
-      this.demande=this.DetailDemandeById;
-    console.log('detaildemande ito veriena/////////',this.demande);
+    // this.utilitaire.getDetailDemandebyId(parseInt(this.idsupprimer)).subscribe((response) => {
+    //   this.DetailDemandeById = response;
+    //   this.demande=this.DetailDemandeById;
+    // console.log('detaildemande ito veriena/////////',this.demande);
       
-    if(this.idsession===''){
-      console.log('vide session');
-    }else{
-      console.log(this.idsession,'+///////////sessionnnn///////////////');
-       this.demande.idSession=this.idsession;
-       let dateValue = this.getormatdate();
+    // if(this.idsession===''){
+    //   console.log('vide session');
+    // }else{
+    //   console.log(this.idsession,'+///////////sessionnnn///////////////');
+    //    this.demande.idSession=this.idsession;
+    //    let dateValue = this.getormatdate();
 
-        if (typeof dateValue === 'string') {
-            // Convertir la chaîne en Date
-            this.demande.dateSoumission = new Date(dateValue);
-        } else if (dateValue === null || dateValue === undefined) {
-            // Gérer les cas où la valeur est null ou undefined
-            this.demande.dateSoumission = undefined; // Ou assignez explicitement à null si c'est ce que vous souhaitez
-        } else {
-            throw new Error('Type inattendu retourné par getormatdate');
-        }
-        this.demande.idtitre=this.DetailDemandeById.idtitre;
-       this.demande.validationprescripteur = true;
-        this.demande.estsoumis=false;
-       console.log(this.demande,'demande vaovao');
+    //     if (typeof dateValue === 'string') {
+    //         // Convertir la chaîne en Date
+    //         this.demande.dateSoumission = new Date(dateValue);
+    //     } else if (dateValue === null || dateValue === undefined) {
+    //         // Gérer les cas où la valeur est null ou undefined
+    //         this.demande.dateSoumission = undefined; // Ou assignez explicitement à null si c'est ce que vous souhaitez
+    //     } else {
+    //         throw new Error('Type inattendu retourné par getormatdate');
+    //     }
+    //     this.demande.idtitre=this.DetailDemandeById.idtitre;
+    //    this.demande.validationprescripteur = true;
+    //     this.demande.estsoumis=false;
+    //    console.log(this.demande,'demande vaovao');
        
-       this.updatetitre(this.demande.idtitre);
-       console.log(this.demande,'soumission demande');
-      //  this.update(this.demande);
-      console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-      console.log(this.demande.id);
+    //    this.updatetitre(this.demande.idtitre);
+    //    console.log(this.demande,'soumission demande');
+    //   //  this.update(this.demande);
+    //   console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+    //   console.log(this.demande.id);
       
-
-      this.soumettreDemande(this.demande.id?.toString() ?? '');
-      this.notifierAchCdgSoumis();
+      console.log('&&&&&&&&&& ' + this.idsupprimer);
       
-       console.log(this.demande,'e mis datepipe');
-      }
+      this.soumettreDemande(this.idsupprimer?.toString() ?? '');
+      // this.notifierAchCdgSoumis();
+      
+      // console.log(this.demande,'e mis datepipe');
+      // }
 
-    });
-    window.location.reload();
+    // });
     
     }
     getormatdate(){
@@ -499,7 +526,7 @@ update(demande:any): void {
     console.log(this.titredepense,'juu');
             ///modication titre
             this.MenuDemandeService.updatetitredepense(parseInt(idtitre), this.titredepense).subscribe((Response) => {
-              console.log(Response);
+              // console.log(Response);
             });
   });
     
@@ -514,9 +541,11 @@ update(demande:any): void {
     
     this.MenuDemandeService.soumettreDemande(id)
     .subscribe(
-      (response)=>{console.log(response);
-
-    },(error)=>{console.error(error);}
+      (response)=>{
+        // console.log(response);
+        window.location.reload();
+    },(error)=>{
+        console.error(error);}
     
     );
    }
