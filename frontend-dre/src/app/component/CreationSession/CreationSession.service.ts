@@ -25,9 +25,10 @@ export class CreationSession1Service {
     const headers = this.getHeaders();
     return this.http.post<any>(this.baseUrl + 'cdg/session/create', formData, {
       headers,
-    }).pipe(
-      concatMap(async () => this.utilitaire.sendMail())
-    );
-    ;
+    })
+    // .pipe(
+    //   concatMap(async () => this.utilitaire.sendMail())
+    // );
+    
   }
 }

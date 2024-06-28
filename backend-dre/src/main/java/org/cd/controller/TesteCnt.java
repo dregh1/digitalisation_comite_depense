@@ -17,6 +17,11 @@ import org.cd.model.*;
 import org.cd.model.Periode;
 import org.cd.service.*;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.representations.idm.RoleRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
+import io.quarkus.oidc.runtime.OidcProviderClient;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +36,9 @@ public class TesteCnt {
     JsonWebToken jwt;
     @Inject
     Mailer mailer;
+
+    @Inject
+    MailService mailService;
 
     @Inject  TitreDemandeService titredemandeService;
     @Inject
@@ -338,8 +346,9 @@ public class TesteCnt {
             @QueryParam("idDirection")@DefaultValue("") String  idDirection,
             @QueryParam("idSession")@DefaultValue("") String  idSession
          ) {
-
         List<Active> active_dmds = activeService.getActiveAvecTitre( idDirection ,  idSession) ;
+
+
         return Response.ok(active_dmds).build();
     }
 
@@ -471,6 +480,8 @@ public class TesteCnt {
                SessionCd c  = sessionCdService.getidSession();
                demande.setIdSession(c.getId());
 
+               /* Notification des CDG et ACH*/
+               mailService.notificationDemandeSoumise(demande);
            }
        /* si la session n'existe => EnattenteSession */
             else
@@ -498,7 +509,26 @@ public class TesteCnt {
         return activeService.estSoumis(idDemande);
     }
 
+    // Récuperation des emails des CDG ACHAT
+    @Inject
+    Keycloak keycloak;
 
+
+//    @Inject
+//    @ConfigProperty(name = "my.custom.property", defaultValue = "Default Value")
+
+//    @GET
+//    @PermitAll
+//    @Path("/roles")
+//    public void getRoles() {
+//        Demande d = new Demande();
+//        d.setIdentifiant("151515");
+//        mailService.notificationDemandeSoumise(d);
+//    }
+
+    // generer token par keycloak
+//    @Inject
+//    OidcClient oidcClient;
 
 }
 

@@ -10,6 +10,7 @@ import org.cd.model.*;
 import org.cd.repository.AvisCdgRepository;
 import org.cd.service.AvisCdgService;
 import org.cd.service.DetailDemandeService;
+import org.cd.service.MailService;
 import org.cd.service.SessionCdService;
 
 import java.util.List;
@@ -31,6 +32,9 @@ public class CdgCnt {
     @Inject
     DetailDemandeService detailDemandeService;
 
+    @Inject
+    MailService mailService;
+
     //CREATION DE SESSION
     @POST
     @Path("/session/create")
@@ -43,6 +47,10 @@ public class CdgCnt {
         String ref = "CD-"+date[2]+date[1]+date[0] ;
         sessionCd.setRef(ref);
         sessionCdService.createSessionCd(sessionCd);
+
+        //Notification CREATION SESSION
+        mailService.notificationSessionOuverte();
+
         return Response.status(Response.Status.CREATED).entity(sessionCd).build();
     }
     @GET

@@ -423,50 +423,12 @@ brouillonclique(){
     }
     Soumission(){
 
-    //recuperation par detail
-    // console.log('idddemandeeeeeee',this.idsupprimer);
-    
-    // this.utilitaire.getDetailDemandebyId(parseInt(this.idsupprimer)).subscribe((response) => {
-    //   this.DetailDemandeById = response;
-    //   this.demande=this.DetailDemandeById;
-    // console.log('detaildemande ito veriena/////////',this.demande);
-      
-    // if(this.idsession===''){
-    //   console.log('vide session');
-    // }else{
-    //   console.log(this.idsession,'+///////////sessionnnn///////////////');
-    //    this.demande.idSession=this.idsession;
-    //    let dateValue = this.getormatdate();
 
-    //     if (typeof dateValue === 'string') {
-    //         // Convertir la chaîne en Date
-    //         this.demande.dateSoumission = new Date(dateValue);
-    //     } else if (dateValue === null || dateValue === undefined) {
-    //         // Gérer les cas où la valeur est null ou undefined
-    //         this.demande.dateSoumission = undefined; // Ou assignez explicitement à null si c'est ce que vous souhaitez
-    //     } else {
-    //         throw new Error('Type inattendu retourné par getormatdate');
-    //     }
-    //     this.demande.idtitre=this.DetailDemandeById.idtitre;
-    //    this.demande.validationprescripteur = true;
-    //     this.demande.estsoumis=false;
-    //    console.log(this.demande,'demande vaovao');
-       
-    //    this.updatetitre(this.demande.idtitre);
-    //    console.log(this.demande,'soumission demande');
-    //   //  this.update(this.demande);
-    //   console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-    //   console.log(this.demande.id);
       
       console.log('&&&&&&&&&& ' + this.idsupprimer);
       
       this.soumettreDemande(this.idsupprimer?.toString() ?? '');
-      // this.notifierAchCdgSoumis();
-      
-      // console.log(this.demande,'e mis datepipe');
-      // }
 
-    // });
     
     }
     getormatdate(){
